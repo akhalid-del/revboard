@@ -6,7 +6,9 @@
     <title>SYNC | Tactical Operations</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/mobile-drag-drop@2.3.0-rc.2/index.min.js"></script>
+    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -23,6 +25,12 @@
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         
+        /* Mobile Touch Safeties - Prevents drag script from eating clicks */
+        button, input, select, .pin-btn, .pin-clear { 
+            touch-action: manipulation; 
+            -webkit-tap-highlight-color: transparent;
+        }
+
         .dot-matrix {
             position: fixed; inset: 0; z-index: 0; pointer-events: none;
             background-image: radial-gradient(rgba(255, 255, 255, 0.2) 1.5px, transparent 1.5px);
@@ -51,6 +59,8 @@
             border: 1px solid rgba(255, 255, 255, 0.08); 
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             transform-style: preserve-3d;
+            /* Allows vertical scrolling on cards, but captures horizontal long-press for drag */
+            touch-action: pan-y; 
         }
         .glass-card:hover { 
             border: 1px solid rgba(56, 189, 248, 0.4); 
@@ -70,9 +80,8 @@
 <body class="bg-void text-gray-300 h-screen w-screen overflow-hidden font-sans antialiased selection:bg-white selection:text-black relative flex flex-col">
 
     <script>
-        // Activate Mobile Drag & Drop
+        // Safely init mobile drag and drop. 300ms long-press required to pick up a card.
         MobileDragDrop.polyfill({ holdToDrag: 300 });
-        window.addEventListener('touchmove', function() {}, {passive: false});
     </script>
 
     <div class="dot-matrix"></div>
@@ -233,7 +242,7 @@
             </button>
         </div>
     </div>
-    <script src="[https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2](https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2)"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // --- 0. MOUSE TRACKER FOR SPOTLIGHT ---
         document.addEventListener('mousemove', (e) => {
@@ -245,7 +254,7 @@
         });
 
         // --- 1. CORE ENGINE SETUP ---
-        const supabaseUrl = '[https://pmhmuzctbstrhtmwxlay.supabase.co](https://pmhmuzctbstrhtmwxlay.supabase.co)';
+        const supabaseUrl = 'https://pmhmuzctbstrhtmwxlay.supabase.co';
         const supabaseKey = 'sb_publishable_8dtRYPrztDbEt3bZhU3ibQ_5PAt_FsP';
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
@@ -295,17 +304,21 @@
             if (rosterNames.includes(e.target.value)) document.getElementById('pulseTL').value = e.target.value;
         });
 
+        // --- FIXED: NATIVE CLICKS REINSTATED (CSS Handles Touch Safeties) ---
         document.querySelectorAll('.pin-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 if(currentPin.length < 4) {
-                    currentPin += e.target.getAttribute('data-val');
+                    currentPin += e.currentTarget.getAttribute('data-val');
                     updatePinDots();
                     if(currentPin.length === 4) verifyPin();
                 }
             });
         });
 
-        document.querySelector('.pin-clear').addEventListener('click', () => { currentPin = ''; updatePinDots(); });
+        document.querySelector('.pin-clear').addEventListener('click', () => { 
+            currentPin = ''; 
+            updatePinDots(); 
+        });
 
         function updatePinDots() {
             for(let i=1; i<=4; i++) {
