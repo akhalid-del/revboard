@@ -102,11 +102,12 @@
             <button onclick="switchView('settings')" id="nav-settings" class="admin-only text-apple-secondary dark:text-gray-400 hover:text-apple-primary dark:hover:text-white relative group w-full flex justify-center transition-colors" title="Settings">
                 <i class="fa-solid fa-gear text-xl"></i><div id="indicator-settings" class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md hidden"></div>
             </button>
-            <button onclick="location.reload()" class="text-apple-secondary dark:text-gray-400 hover:text-red-500 transition-colors group w-full flex justify-center" title="Lock Station">
+            <button onclick="lockSystem()" class="text-apple-secondary dark:text-gray-400 hover:text-red-500 transition-colors group w-full flex justify-center" title="Lock Station">
                 <i class="fa-solid fa-power-off text-xl"></i>
             </button>
         </div>
     </aside>
+
     <div class="flex-1 flex flex-col h-full relative">
         <header class="h-16 border-b border-apple-border dark:border-[#2C2C2E] bg-white/70 dark:bg-[#1C1C1E]/80 backdrop-blur-xl z-10 flex items-center justify-between px-8 absolute top-0 left-0 right-0 transition-colors">
             <div class="flex-1"></div>
@@ -117,14 +118,23 @@
                 </div>
             </div>
         </header>
-
         <main class="flex-1 mt-16 p-6 md:p-10 overflow-y-auto scrollbar-hide bg-apple-canvas dark:bg-[#121212] transition-colors duration-300">
             <div class="max-w-7xl mx-auto h-full flex flex-col">
                 
                 <div id="ops-header" class="block shrink-0">
-                    <div class="mb-8">
-                        <h1 class="text-2xl font-bold tracking-tight text-apple-primary dark:text-white">Floor Operations</h1>
-                        <p class="text-sm text-apple-secondary dark:text-gray-400 mt-1">Live task telemetry.</p>
+                    <div class="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                        <div>
+                            <h1 class="text-2xl font-bold tracking-tight text-apple-primary dark:text-white">Floor Operations</h1>
+                            <p class="text-sm text-apple-secondary dark:text-gray-400 mt-1">Live task telemetry.</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="copyShiftReport()" class="h-10 px-4 rounded-xl text-sm font-semibold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary hover:text-apple-primary dark:text-gray-400 dark:hover:text-white shadow-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-copy"></i> Shift Report
+                            </button>
+                            <button onclick="exportToCSV()" class="h-10 px-4 rounded-xl text-sm font-semibold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-green-600 hover:text-green-700 dark:text-green-500 dark:hover:text-green-400 shadow-sm transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-file-excel"></i> Export CSV
+                            </button>
+                        </div>
                     </div>
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-10">
                         <div class="bg-apple-surface dark:bg-[#1C1C1E] rounded-2xl p-5 md:p-6 shadow-apple-soft border border-apple-border dark:border-[#2C2C2E] transition-colors">
@@ -506,8 +516,6 @@
             }
 
             logAction(`Commissioned new personnel: ${name}`);
-            document.getElementById('newMemberName').value = '';
-            document.getElementById('newMemberPin').value = '';
             btn.disabled = false; btn.innerText = "Save User";
             closeModal('addMemberModal'); showToast('Personnel added.'); initTeam();
         });
@@ -517,6 +525,63 @@
             await supabaseClient.from('pulses').delete().neq('id', 0);
             logAction("EMERGENCY DATA PURGE EXECUTED");
             showToast('Operational data wiped.'); loadData();
+        }
+
+        function exportToCSV() {
+            if(globalTasks.length === 0) { showToast("No data to export."); return; }
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "ID,Directive,Target,Assignee,Priority,Status,Notes\n";
+            
+            globalTasks.forEach(t => {
+                let notes = t.notes ? t.notes.replace(/"/g, '""').replace(/\n/g, ' ') : '';
+                let title = t.title ? t.title.replace(/"/g, '""') : '';
+                let target = t.linked_entity ? t.linked_entity.replace(/"/g, '""') : '';
+                csvContent += `"${t.id}","${title}","${target}","${t.assigned_to}","${t.priority}","${t.status}","${notes}"\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `SYNC_Export_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            logAction("Exported database to CSV");
+            showToast("Exported to CSV");
+        }
+
+        async function copyShiftReport() {
+            let active = 0, completed = 0, critical = 0;
+            let criticalList = [], completedList = [];
+            
+            globalTasks.forEach(t => {
+                if(t.status === 'Completed') {
+                    completed++;
+                    completedList.push(`- ${t.title} (${t.linked_entity || 'No Target'})`);
+                } else {
+                    active++;
+                    if(t.priority === 'Critical') {
+                        critical++;
+                        criticalList.push(`- ${t.title} [Assigned: ${t.assigned_to}]`);
+                    }
+                }
+            });
+
+            const dateStr = new Date().toLocaleString();
+            let report = `SYNC COMMAND CENTER | SHIFT REPORT\nGenerated: ${dateStr}\nOperator: ${currentUser ? currentUser.name : 'System'}\n\n`;
+            report += `📊 SUMMARY:\nTotal Active: ${active}\nCompleted Today: ${completed}\nCritical Action Items: ${critical}\n\n`;
+            
+            if(critical > 0) report += `🚨 CRITICAL PENDING:\n${criticalList.join('\n')}\n\n`;
+            if(completed > 0) report += `✅ RECENTLY COMPLETED:\n${completedList.slice(0, 5).join('\n')}${completed > 5 ? '\n...and more.' : ''}\n`;
+
+            try {
+                await navigator.clipboard.writeText(report);
+                logAction("Generated Shift Report to clipboard");
+                showToast("Shift Report copied!");
+            } catch (err) {
+                showToast("Failed to copy report.");
+            }
         }
 
         async function loadData() {
