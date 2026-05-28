@@ -113,6 +113,7 @@
             </button>
         </div>
     </aside>
+
     <div class="flex-1 flex flex-col h-full relative overflow-hidden pb-16 md:pb-0">
         <header class="h-16 border-b border-apple-border dark:border-[#2C2C2E] bg-white/70 dark:bg-[#1C1C1E]/80 backdrop-blur-xl z-10 flex items-center justify-between px-6 transition-colors">
             <div class="flex items-center gap-3">
@@ -133,7 +134,7 @@
                 <div id="ops-header" class="block">
                     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4">
                         <div>
-                            <h1 class="text-2xl font-bold tracking-tight dark:text-white">Floor Operations</h1>
+                            <h1 class="text-2xl font-bold tracking-tight dark:text-white">Operations</h1>
                             <p class="text-xs text-apple-secondary dark:text-gray-400">Live call center telemetry & routing</p>
                         </div>
                         <div class="flex gap-2">
@@ -175,7 +176,7 @@
                 <div id="view-table" class="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-apple-border dark:border-[#2C2C2E] overflow-hidden shadow-sm">
                     <div class="overflow-x-auto scrollbar-hide">
                         <table class="w-full text-left border-collapse min-w-[600px]">
-                            <thead><tr class="bg-[#FBFBFD] dark:bg-[#242426] border-b border-apple-border dark:border-[#2C2C2E]"><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Directive</th><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Target</th><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Department/Zone</th><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Assignee</th><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Status</th><th class="py-3 px-4 text-right"></th></tr></thead>
+                            <thead><tr class="bg-[#FBFBFD] dark:bg-[#242426] border-b border-apple-border dark:border-[#2C2C2E]"><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Directive</th><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Reference</th><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Department</th><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Assignee</th><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Status</th><th class="py-3 px-4 text-right"></th></tr></thead>
                             <tbody id="taskTableBody"></tbody>
                         </table>
                     </div>
@@ -252,7 +253,7 @@
                     <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Priority</label><select id="drawerPriority" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="Standard">Standard</option><option value="High">High</option><option value="Critical">Critical</option></select></div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Department/Zone</label><select id="drawerZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="General">General Floor</option><option value="Inbound">Tier 1 (Inbound)</option><option value="Escalations">Escalations</option><option value="QA">Quality Assurance</option><option value="Outbound">Outbound</option><option value="Training">Training</option></select></div>
+                    <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Department</label><select id="drawerZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="General">General Floor</option><option value="Inbound">Tier 1 (Inbound)</option><option value="Escalations">Escalations</option><option value="QA">Quality Assurance</option><option value="Outbound">Outbound</option><option value="Training">Training</option></select></div>
                     <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Assignee</label><select id="drawerAssignee" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"></select></div>
                 </div>
                 <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase text-red-500"><i class="fa-solid fa-lock mr-1"></i> Blocked By Task</label><select id="drawerBlocker" class="w-full bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-900/50 h-10 px-3 text-xs rounded-lg"><option value="">None (Unblocked)</option></select></div>
@@ -292,7 +293,7 @@
             <div class="space-y-4 mb-6">
                 <input type="text" id="newTitle" placeholder="Directive Title" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" id="newTarget" placeholder="Target..." class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
+                    <input type="text" id="newTarget" placeholder="Reference (Call ID)..." class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
                     <select id="newZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
                         <option value="General">General Floor</option>
                         <option value="Inbound">Tier 1 (Inbound)</option>
@@ -330,6 +331,7 @@
     <div id="toastAlert" class="fixed top-6 left-1/2 -translate-x-1/2 -translate-y-24 transition-transform bg-apple-primary dark:bg-apple-blue px-6 py-3 rounded-full shadow-lg z-[500] flex items-center gap-3">
         <i class="fa-solid fa-check-circle text-green-400 dark:text-white text-sm"></i><p id="toastMessage" class="text-sm font-medium text-white">Action Confirmed</p>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const supabaseUrl = 'https://pmhmuzctbstrhtmwxlay.supabase.co';
@@ -524,7 +526,7 @@
 
         function exportToCSV() {
             if(!globalTasks.length) return;
-            let csv = "ID,Directive,Target,Department/Zone,Assignee,Priority,Status\n";
+            let csv = "ID,Directive,Reference,Department,Assignee,Priority,Status\n";
             globalTasks.forEach(t => csv += `"${t.id}","${t.title}","${t.linked_entity}","${t.zone || 'General'}","${t.assigned_to}","${t.priority}","${t.status}"\n`);
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
@@ -561,7 +563,8 @@
             const bSel = document.getElementById('drawerBlocker');
             bSel.innerHTML = '<option value="">None (Unblocked)</option>';
             data.filter(t => t.status !== 'Completed').forEach(t => {
-                bSel.insertAdjacentHTML('beforeend', `<option value="${t.id}">${t.id}: ${t.title}</option>`);
+                const shortId = t.id.toString().substring(0, 6).toUpperCase();
+                bSel.insertAdjacentHTML('beforeend', `<option value="${t.id}">[${shortId}] ${t.title}</option>`);
             });
 
             renderData();
@@ -608,7 +611,9 @@
             if(!nextStat) return;
             const task = globalTasks.find(t => t.id == id);
             await supabaseClient.from('pulses').update({ status: nextStat }).eq('id', id);
-            logAction(`Moved: [${id}] ${task.title} to ${nextStat}`); loadData();
+            
+            const shortId = id.toString().substring(0, 6).toUpperCase();
+            logAction(`Moved: [${shortId}] ${task.title} to ${nextStat}`); loadData();
         }
 
         function switchDrawerTab(tab) {
@@ -641,7 +646,9 @@
                 
                 const histC = document.getElementById('drawerHistoryContainer');
                 histC.innerHTML = '';
-                const taskLogs = globalLogs.filter(log => log.action_text.includes(`[${id}]`) || log.action_text.includes(`"${t.title}"`));
+                
+                const shortId = id.toString().substring(0, 6).toUpperCase();
+                const taskLogs = globalLogs.filter(log => log.action_text.includes(`[${shortId}]`) || log.action_text.includes(`"${t.title}"`));
                 if(taskLogs.length === 0) {
                     histC.innerHTML = `<p class="text-xs text-apple-secondary dark:text-gray-400 italic">No history found.</p>`;
                 } else {
@@ -671,14 +678,19 @@
             };
             const t = globalTasks.find(x => x.id == activeDrawerId);
             await supabaseClient.from('pulses').update(upd).eq('id', activeDrawerId);
-            b.disabled = false; b.innerHTML = 'Save Changes'; showToast('Updated.'); logAction(`Updated: [${activeDrawerId}] ${t.title}`); closeDrawer(); loadData();
+            b.disabled = false; b.innerHTML = 'Save Changes'; showToast('Updated.'); 
+            
+            const shortId = activeDrawerId.toString().substring(0, 6).toUpperCase();
+            logAction(`Updated: [${shortId}] ${t.title}`); closeDrawer(); loadData();
         }
 
         document.getElementById('archiveBtn').addEventListener('click', async () => {
             if(!activeDrawerId || !confirm("Delete task?")) return;
             const t = globalTasks.find(x => x.id == activeDrawerId);
             await supabaseClient.from('pulses').delete().eq('id', activeDrawerId);
-            logAction(`Deleted: [${activeDrawerId}] ${t.title}`); showToast('Deleted.'); closeDrawer(); loadData();
+            
+            const shortId = activeDrawerId.toString().substring(0, 6).toUpperCase();
+            logAction(`Deleted: [${shortId}] ${t.title}`); showToast('Deleted.'); closeDrawer(); loadData();
         });
 
         document.getElementById('createTaskBtn').addEventListener('click', async () => {
@@ -692,7 +704,11 @@
             
             const { data, error } = await supabaseClient.from('pulses').insert([{ title, linked_entity: linked_entity || 'N/A', zone: zone, assigned_to: assigned_to, priority: 'Standard', status: 'Radar' }]).select();
             btn.disabled = false; btn.innerText = "Create"; closeModal('newTaskModal'); showToast('Created.'); 
-            if(data && data.length > 0) logAction(`Created: [${data[0].id}] ${title}`);
+            
+            if(data && data.length > 0) {
+                const shortId = data[0].id.toString().substring(0, 6).toUpperCase();
+                logAction(`Created: [${shortId}] ${title}`);
+            }
             loadData();
         });
 
