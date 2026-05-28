@@ -256,7 +256,7 @@
                     <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Department</label><select id="drawerZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="General">General Floor</option><option value="Inbound">Tier 1 (Inbound)</option><option value="Escalations">Escalations</option><option value="QA">Quality Assurance</option><option value="Outbound">Outbound</option><option value="Training">Training</option></select></div>
                     <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Assignee</label><select id="drawerAssignee" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"></select></div>
                 </div>
-                <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase text-red-500"><i class="fa-solid fa-lock mr-1"></i> Blocked By Task</label><select id="drawerBlocker" class="w-full bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-900/50 h-10 px-3 text-xs rounded-lg"><option value="">None (Unblocked)</option></select></div>
+                <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase"><i class="fa-solid fa-lock mr-1"></i> Blocked By</label><select id="drawerBlocker" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="">None (Unblocked)</option></select></div>
                 <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Notes</label><textarea id="drawerNotes" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] rounded-lg p-3 text-xs h-24 resize-none dark:text-white"></textarea></div>
             </div>
 
@@ -559,13 +559,6 @@
             const { data } = await supabaseClient.from('pulses').select('*').order('id', { ascending: false });
             if(!data) return;
             globalTasks = data;
-            
-            const bSel = document.getElementById('drawerBlocker');
-            bSel.innerHTML = '<option value="">None (Unblocked)</option>';
-            data.filter(t => t.status !== 'Completed').forEach(t => {
-                bSel.insertAdjacentHTML('beforeend', `<option value="${t.id}">${t.title}</option>`);
-            });
-
             renderData();
         }
 
@@ -633,6 +626,13 @@
         function openDrawer(id) {
             activeDrawerId = id; const t = globalTasks.find(x => x.id == id);
             if(t) {
+                // Dynamically populate Blockers to EXCLUDE the current task and Completed tasks
+                const bSel = document.getElementById('drawerBlocker');
+                bSel.innerHTML = '<option value="">None (Unblocked)</option>';
+                globalTasks.filter(task => task.status !== 'Completed' && task.id !== id).forEach(task => {
+                    bSel.insertAdjacentHTML('beforeend', `<option value="${task.id}">${task.title}</option>`);
+                });
+
                 document.getElementById('drawerTitle').innerText = t.title; 
                 document.getElementById('drawerStatus').value = t.status;
                 document.getElementById('drawerPriority').value = t.priority; 
