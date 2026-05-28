@@ -36,7 +36,7 @@
 </head>
 <body class="h-screen w-screen overflow-hidden flex antialiased selection:bg-apple-blue selection:text-white relative">
 
-    <div id="lockScreen" class="fixed inset-0 z-[100] bg-[#F5F5F7]/90 backdrop-blur-md flex flex-col items-center justify-center transition-opacity duration-500">
+    <div id="lockScreen" class="fixed inset-0 z-[100] bg-[#F5F5F7]/90 backdrop-blur-md flex flex-col items-center justify-center transition-opacity duration-500 select-none">
         <div class="bg-white border border-apple-border p-10 rounded-[24px] w-80 shadow-apple-soft text-center">
             <h1 class="text-xl font-bold tracking-tight text-apple-primary mb-2">Command Access</h1>
             <p class="text-xs text-apple-secondary mb-8">Enter your PIN to unlock</p>
@@ -47,17 +47,17 @@
                 <div class="h-3 w-3 rounded-full border-2 border-apple-border transition-colors" id="dot-4"></div>
             </div>
             <div class="grid grid-cols-3 gap-3" id="numpad">
-                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all" data-val="1">1</button>
-                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all" data-val="2">2</button>
-                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all" data-val="3">3</button>
-                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all" data-val="4">4</button>
-                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all" data-val="5">5</button>
-                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all" data-val="6">6</button>
-                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all" data-val="7">7</button>
-                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all" data-val="8">8</button>
-                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all" data-val="9">9</button>
-                <button class="col-start-2 pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all" data-val="0">0</button>
-                <button class="pin-clear h-14 text-[10px] font-bold text-apple-secondary uppercase tracking-widest transition-all hover:text-apple-primary">CLR</button>
+                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all select-none focus:outline-none" data-val="1">1</button>
+                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all select-none focus:outline-none" data-val="2">2</button>
+                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all select-none focus:outline-none" data-val="3">3</button>
+                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all select-none focus:outline-none" data-val="4">4</button>
+                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all select-none focus:outline-none" data-val="5">5</button>
+                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all select-none focus:outline-none" data-val="6">6</button>
+                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all select-none focus:outline-none" data-val="7">7</button>
+                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all select-none focus:outline-none" data-val="8">8</button>
+                <button class="pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all select-none focus:outline-none" data-val="9">9</button>
+                <button class="col-start-2 pin-btn h-14 bg-apple-canvas rounded-xl text-lg font-medium hover:bg-[#E8E8ED] transition-all select-none focus:outline-none" data-val="0">0</button>
+                <button class="pin-clear h-14 text-[10px] font-bold text-apple-secondary uppercase tracking-widest transition-all hover:text-apple-primary select-none focus:outline-none">CLR</button>
             </div>
             <p id="pinError" class="text-red-500 text-[10px] font-semibold tracking-wider uppercase text-center mt-6 h-4 opacity-0 transition-opacity">Access Denied</p>
         </div>
@@ -97,6 +97,11 @@
     <div class="flex-1 flex flex-col h-full relative">
         <header class="h-16 border-b border-apple-border bg-white/70 backdrop-blur-xl z-10 flex items-center justify-between px-8 absolute top-0 left-0 right-0">
             <div class="flex-1"></div>
+            <div class="w-[400px] h-9 bg-[#E8E8ED] rounded-full flex items-center px-4 shadow-inner hidden md:flex">
+                <i class="fa-solid fa-magnifying-glass text-apple-secondary text-sm"></i>
+                <input type="text" id="cmdInput" placeholder="Search directives..." class="bg-transparent border-none outline-none text-sm ml-3 w-full placeholder-apple-secondary text-apple-primary">
+                <span class="text-[10px] font-semibold text-apple-secondary tracking-widest bg-white shadow-sm border border-apple-border px-1.5 py-0.5 rounded ml-2">⌘K</span>
+            </div>
             <div class="flex-1 flex justify-end items-center gap-4">
                 <p id="activeUserName" class="text-xs font-semibold text-apple-secondary mr-2">LOCKED</p>
                 <div class="h-8 w-8 rounded-full bg-gradient-to-tr from-gray-200 to-gray-300 shadow-sm border border-apple-border flex items-center justify-center text-apple-primary text-xs font-bold">
@@ -171,8 +176,7 @@
                         <h1 class="text-2xl font-bold tracking-tight text-apple-primary">Activity Log</h1>
                         <p class="text-sm text-apple-secondary mt-1">Live audit trail of floor operations.</p>
                     </div>
-                    <div class="bg-white border border-apple-border rounded-2xl p-8 h-full overflow-y-auto scrollbar-hide space-y-4 shadow-sm" id="logContainer">
-                    </div>
+                    <div class="bg-white border border-apple-border rounded-2xl p-8 h-full overflow-y-auto scrollbar-hide space-y-4 shadow-sm" id="logContainer"></div>
                 </div>
 
                 <div id="view-analytics" class="hidden flex-col flex-1">
@@ -257,7 +261,7 @@
             <h3 class="text-lg font-bold mb-6 text-apple-primary">Create Directive</h3>
             <div class="space-y-4 mb-8">
                 <input type="text" id="newTitle" placeholder="Task Title" class="w-full bg-apple-canvas border h-11 px-4 rounded-lg outline-none focus:border-apple-blue font-medium text-apple-primary">
-                <input type="text" id="newTarget" placeholder="Target Entity..." class="w-full bg-apple-canvas border h-11 px-4 rounded-lg outline-none focus:border-apple-blue font-medium text-apple-primary">
+                <input type="text" id="newTarget" placeholder="Target..." class="w-full bg-apple-canvas border h-11 px-4 rounded-lg outline-none focus:border-apple-blue font-medium text-apple-primary">
             </div>
             <div class="flex gap-3">
                 <button onclick="closeModal('newTaskModal')" class="flex-1 h-11 font-bold text-sm bg-apple-canvas text-apple-secondary rounded-xl hover:text-apple-primary transition-colors">Cancel</button>
@@ -292,7 +296,6 @@
         let activeDrawerId = null;
         let globalTasks = [];
 
-        // --- GLOBAL HELPERS (Optimized input resets) ---
         function openModal(id) { 
             document.getElementById(id).style.display = 'flex'; 
             if(id === 'addMemberModal') document.getElementById('memberError').style.display = 'none';
@@ -327,7 +330,6 @@
             if(viewName === 'log') fetchLogs();
         }
 
-        // --- SECURITY ---
         function resetPinUI() {
             currentPin = ''; 
             for(let i=1; i<=4; i++) {
@@ -417,44 +419,32 @@
             }
         }
 
-        // --- BUTTON PROTECTIONS APPLIED HERE ---
         document.getElementById('submitMemberBtn').addEventListener('click', async () => {
             const btn = document.getElementById('submitMemberBtn');
-            if(btn.disabled) return; // Spam prevention
+            if(btn.disabled) return;
             
             const name = document.getElementById('newMemberName').value.trim();
             const pin = document.getElementById('newMemberPin').value.trim();
             const errEl = document.getElementById('memberError');
             
             if(!name || pin.length !== 4) { 
-                errEl.innerText = "Please provide a valid name and a 4-digit PIN."; 
-                errEl.style.display = 'block'; 
-                return; 
+                errEl.innerText = "Please provide a valid name and a 4-digit PIN."; errEl.style.display = 'block'; return; 
             }
             
             errEl.style.display = 'none';
-            const btn = document.getElementById('submitMemberBtn');
             btn.disabled = true; btn.innerText = "Saving...";
             
-            // FIX IS HERE: Added role: 'Leader'
-            const { error } = await supabaseClient.from('floor_users').insert([
-                { name: name, pin: pin, status: 'Active', role: 'Leader' }
-            ]);
+            // Fixed Insert Logic:
+            const { error } = await supabaseClient.from('floor_users').insert([{ name: name, pin: pin, status: 'Active', role: 'Leader' }]);
             
             if(error) {
-                errEl.innerText = "Database Error: " + error.message; 
-                errEl.style.display = 'block';
-                btn.disabled = false; btn.innerText = "Save User"; 
-                return;
+                errEl.innerText = "Database Error: " + error.message; errEl.style.display = 'block';
+                btn.disabled = false; btn.innerText = "Save User"; return;
             }
 
             logAction(`Commissioned new personnel: ${name}`);
-            document.getElementById('newMemberName').value = '';
-            document.getElementById('newMemberPin').value = '';
             btn.disabled = false; btn.innerText = "Save User";
-            closeModal('addMemberModal'); 
-            showToast('Personnel added.'); 
-            initTeam();
+            closeModal('addMemberModal'); showToast('Personnel added.'); initTeam();
         });
 
         async function executePurge() {
@@ -464,7 +454,6 @@
             showToast('Operational data wiped.'); loadData();
         }
 
-        // --- OPTIMIZED KPI MATH ---
         async function loadData() {
             const { data } = await supabaseClient.from('pulses').select('*').order('id', { ascending: false });
             if(!data) return;
@@ -478,12 +467,8 @@
             const next = { 'Radar': 'Assigned To', 'Assigned To': 'In Progress', 'In Progress': 'Completed' };
 
             data.forEach(item => {
-                c.t++; 
-                if(item.status === 'Radar') c.r++; 
-                if(item.status === 'Assigned To') c.a++; 
-                if(item.status === 'In Progress') c.p++;
-                if(item.status === 'Completed') c.d++; 
-                if(item.priority === 'Critical') c.crit++;
+                c.t++; if(item.status === 'Radar') c.r++; if(item.status === 'In Progress' || item.status === 'Assigned To') c.p++;
+                if(item.status === 'Completed') c.d++; if(item.priority === 'Critical') c.crit++;
 
                 let notesIco = item.notes?.trim() ? `<i class="fa-solid fa-note-sticky ml-2 text-apple-secondary/30 text-[10px]"></i>` : '';
                 let badge = item.status === 'Completed' ? `<span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest">Done</span>` : 
@@ -511,11 +496,9 @@
             });
 
             document.getElementById('kpi-total').innerText = c.t; document.getElementById('kpi-radar').innerText = c.r;
-            document.getElementById('kpi-progress').innerText = c.p + c.a; document.getElementById('kpi-completed').innerText = c.d;
-            
-            document.getElementById('board-count-radar').innerText = c.r; document.getElementById('board-count-assigned').innerText = c.a;
-            document.getElementById('board-count-progress').innerText = c.p;
-            
+            document.getElementById('kpi-progress').innerText = c.p; document.getElementById('kpi-completed').innerText = c.d;
+            document.getElementById('board-count-radar').innerText = c.r; document.getElementById('board-count-assigned').innerText = data.filter(i => i.status === 'Assigned To').length;
+            document.getElementById('board-count-progress').innerText = c.p - data.filter(i => i.status === 'Assigned To').length;
             document.getElementById('stat-critical').innerText = c.crit; document.getElementById('stat-completed').innerText = c.d;
             document.getElementById('stat-rate').innerText = c.t > 0 ? Math.round(((c.t - c.r) / c.t) * 100) + '%' : '0%';
         }
@@ -544,7 +527,7 @@
         async function saveAndClose() {
             if(!activeDrawerId) return;
             const b = document.getElementById('saveDrawerBtn');
-            if(b.disabled) return; // Spam prevention
+            if(b.disabled) return;
 
             b.disabled = true; b.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             const t = globalTasks.find(x => x.id == activeDrawerId);
@@ -566,7 +549,7 @@
 
         document.getElementById('createTaskBtn').addEventListener('click', async () => {
             const btn = document.getElementById('createTaskBtn');
-            if(btn.disabled) return; // Spam prevention
+            if(btn.disabled) return;
             
             const tit = document.getElementById('newTitle').value;
             const tar = document.getElementById('newTarget').value;
