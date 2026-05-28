@@ -134,7 +134,7 @@
                 <div id="ops-header" class="block">
                     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4">
                         <div>
-                            <h1 class="text-2xl font-bold tracking-tight dark:text-white">Operations</h1>
+                            <h1 class="text-2xl font-bold tracking-tight dark:text-white">Floor Operations</h1>
                             <p class="text-xs text-apple-secondary dark:text-gray-400">Live call center telemetry & routing</p>
                         </div>
                         <div class="flex gap-2">
@@ -563,8 +563,7 @@
             const bSel = document.getElementById('drawerBlocker');
             bSel.innerHTML = '<option value="">None (Unblocked)</option>';
             data.filter(t => t.status !== 'Completed').forEach(t => {
-                const shortId = t.id.toString().substring(0, 6).toUpperCase();
-                bSel.insertAdjacentHTML('beforeend', `<option value="${t.id}">[${shortId}] ${t.title}</option>`);
+                bSel.insertAdjacentHTML('beforeend', `<option value="${t.id}">${t.title}</option>`);
             });
 
             renderData();
@@ -611,9 +610,7 @@
             if(!nextStat) return;
             const task = globalTasks.find(t => t.id == id);
             await supabaseClient.from('pulses').update({ status: nextStat }).eq('id', id);
-            
-            const shortId = id.toString().substring(0, 6).toUpperCase();
-            logAction(`Moved: [${shortId}] ${task.title} to ${nextStat}`); loadData();
+            logAction(`Moved: "${task.title}" to ${nextStat}`); loadData();
         }
 
         function switchDrawerTab(tab) {
@@ -647,8 +644,7 @@
                 const histC = document.getElementById('drawerHistoryContainer');
                 histC.innerHTML = '';
                 
-                const shortId = id.toString().substring(0, 6).toUpperCase();
-                const taskLogs = globalLogs.filter(log => log.action_text.includes(`[${shortId}]`) || log.action_text.includes(`"${t.title}"`));
+                const taskLogs = globalLogs.filter(log => log.action_text.includes(`"${t.title}"`));
                 if(taskLogs.length === 0) {
                     histC.innerHTML = `<p class="text-xs text-apple-secondary dark:text-gray-400 italic">No history found.</p>`;
                 } else {
@@ -680,8 +676,7 @@
             await supabaseClient.from('pulses').update(upd).eq('id', activeDrawerId);
             b.disabled = false; b.innerHTML = 'Save Changes'; showToast('Updated.'); 
             
-            const shortId = activeDrawerId.toString().substring(0, 6).toUpperCase();
-            logAction(`Updated: [${shortId}] ${t.title}`); closeDrawer(); loadData();
+            logAction(`Updated: "${t.title}"`); closeDrawer(); loadData();
         }
 
         document.getElementById('archiveBtn').addEventListener('click', async () => {
@@ -689,8 +684,7 @@
             const t = globalTasks.find(x => x.id == activeDrawerId);
             await supabaseClient.from('pulses').delete().eq('id', activeDrawerId);
             
-            const shortId = activeDrawerId.toString().substring(0, 6).toUpperCase();
-            logAction(`Deleted: [${shortId}] ${t.title}`); showToast('Deleted.'); closeDrawer(); loadData();
+            logAction(`Deleted: "${t.title}"`); showToast('Deleted.'); closeDrawer(); loadData();
         });
 
         document.getElementById('createTaskBtn').addEventListener('click', async () => {
@@ -706,8 +700,7 @@
             btn.disabled = false; btn.innerText = "Create"; closeModal('newTaskModal'); showToast('Created.'); 
             
             if(data && data.length > 0) {
-                const shortId = data[0].id.toString().substring(0, 6).toUpperCase();
-                logAction(`Created: [${shortId}] ${title}`);
+                logAction(`Created: "${title}"`);
             }
             loadData();
         });
