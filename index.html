@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SYNC | Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -29,7 +29,7 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         #slideDrawer { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -41,16 +41,16 @@
         }
     </style>
 </head>
-<body class="h-screen w-screen overflow-hidden flex antialiased selection:bg-apple-blue selection:text-white relative bg-apple-canvas text-apple-primary dark:bg-[#121212] dark:text-[#F5F5F7] transition-colors duration-300">
+<body class="h-screen w-screen overflow-hidden flex flex-col md:flex-row antialiased bg-apple-canvas text-apple-primary dark:bg-[#121212] dark:text-[#F5F5F7] transition-colors duration-300">
 
-    <div id="offlineBanner" class="hidden absolute top-0 left-0 right-0 bg-red-500 text-white text-xs font-bold text-center py-1.5 z-[500] tracking-widest uppercase shadow-md">
-        <i class="fa-solid fa-triangle-exclamation mr-2"></i>Connection Lost: Operating in Offline Mode
+    <div id="offlineBanner" class="hidden fixed top-0 left-0 right-0 bg-red-500 text-white text-[10px] font-bold text-center py-1 z-[500] tracking-widest uppercase">
+        <i class="fa-solid fa-triangle-exclamation mr-1"></i>Offline Mode
     </div>
 
-    <div id="lockScreen" class="fixed inset-0 z-[100] bg-[#F5F5F7]/90 dark:bg-[#121212]/90 backdrop-blur-md flex flex-col items-center justify-center transition-opacity duration-500 select-none">
-        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-10 rounded-[24px] w-80 shadow-apple-soft text-center transition-colors">
-            <h1 class="text-xl font-bold tracking-tight text-apple-primary dark:text-white mb-2">Command Access</h1>
-            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-8">Enter your PIN to unlock</p>
+    <div id="lockScreen" class="fixed inset-0 z-[100] bg-[#F5F5F7]/95 dark:bg-[#121212]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 transition-opacity duration-500 select-none">
+        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-8 md:p-10 rounded-[24px] w-full max-w-[320px] shadow-apple-soft text-center transition-colors">
+            <h1 class="text-xl font-bold tracking-tight dark:text-white mb-2">Command Access</h1>
+            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-8">Enter PIN</p>
             <div class="flex justify-center gap-4 mb-8" id="pinDots">
                 <div class="h-3 w-3 rounded-full border-2 border-apple-border dark:border-[#3A3A3C] transition-colors" id="dot-1"></div>
                 <div class="h-3 w-3 rounded-full border-2 border-apple-border dark:border-[#3A3A3C] transition-colors" id="dot-2"></div>
@@ -58,178 +58,166 @@
                 <div class="h-3 w-3 rounded-full border-2 border-apple-border dark:border-[#3A3A3C] transition-colors" id="dot-4"></div>
             </div>
             <div class="grid grid-cols-3 gap-3" id="numpad">
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium hover:bg-[#E8E8ED] dark:hover:bg-[#3A3A3C] transition-all select-none focus:outline-none" data-val="1">1</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium hover:bg-[#E8E8ED] dark:hover:bg-[#3A3A3C] transition-all select-none focus:outline-none" data-val="2">2</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium hover:bg-[#E8E8ED] dark:hover:bg-[#3A3A3C] transition-all select-none focus:outline-none" data-val="3">3</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium hover:bg-[#E8E8ED] dark:hover:bg-[#3A3A3C] transition-all select-none focus:outline-none" data-val="4">4</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium hover:bg-[#E8E8ED] dark:hover:bg-[#3A3A3C] transition-all select-none focus:outline-none" data-val="5">5</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium hover:bg-[#E8E8ED] dark:hover:bg-[#3A3A3C] transition-all select-none focus:outline-none" data-val="6">6</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium hover:bg-[#E8E8ED] dark:hover:bg-[#3A3A3C] transition-all select-none focus:outline-none" data-val="7">7</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium hover:bg-[#E8E8ED] dark:hover:bg-[#3A3A3C] transition-all select-none focus:outline-none" data-val="8">8</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium hover:bg-[#E8E8ED] dark:hover:bg-[#3A3A3C] transition-all select-none focus:outline-none" data-val="9">9</button>
-                <button class="col-start-2 pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium hover:bg-[#E8E8ED] dark:hover:bg-[#3A3A3C] transition-all select-none focus:outline-none" data-val="0">0</button>
-                <button class="pin-clear h-14 text-[10px] font-bold text-apple-secondary dark:text-gray-400 uppercase tracking-widest transition-all hover:text-apple-primary dark:hover:text-white select-none focus:outline-none">CLR</button>
+                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="1">1</button>
+                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="2">2</button>
+                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="3">3</button>
+                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="4">4</button>
+                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="5">5</button>
+                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="6">6</button>
+                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="7">7</button>
+                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="8">8</button>
+                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="9">9</button>
+                <button class="col-start-2 pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="0">0</button>
+                <button class="pin-clear h-14 text-[10px] font-bold text-apple-secondary dark:text-gray-400 uppercase tracking-widest">CLR</button>
             </div>
-            <p id="pinError" class="text-red-500 text-[10px] font-semibold tracking-wider uppercase text-center mt-6 h-4 opacity-0 transition-opacity">Access Denied</p>
+            <p id="pinError" class="text-red-500 text-[10px] font-semibold tracking-wider uppercase text-center mt-6 h-4 opacity-0 transition-opacity">Denied</p>
         </div>
     </div>
 
-    <aside class="w-[68px] h-full bg-apple-surface dark:bg-[#1C1C1E] border-r border-apple-border dark:border-[#2C2C2E] flex flex-col items-center py-6 z-20 shrink-0 select-none transition-colors">
-        <div class="h-10 w-10 bg-apple-primary dark:bg-apple-blue rounded-xl flex items-center justify-center text-white mb-8 shadow-sm">
+    <aside class="fixed bottom-0 left-0 right-0 h-16 md:relative md:h-full md:w-[68px] bg-apple-surface dark:bg-[#1C1C1E] border-t md:border-t-0 md:border-r border-apple-border dark:border-[#2C2C2E] flex flex-row md:flex-col items-center justify-around md:justify-start md:py-6 z-40">
+        <div class="hidden md:flex h-10 w-10 bg-apple-primary dark:bg-apple-blue rounded-xl items-center justify-center text-white mb-8 shadow-sm">
             <i class="fa-solid fa-layer-group text-lg"></i>
         </div>
-        <nav class="flex flex-col gap-6 w-full items-center">
-            <button onclick="switchView('table')" id="nav-table" class="text-apple-blue relative group w-full flex justify-center transition-colors" title="Table View">
-                <i class="fa-solid fa-list text-xl"></i><div id="indicator-table" class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
+        <nav class="flex flex-row md:flex-col gap-2 md:gap-6 w-full items-center justify-around md:justify-start">
+            <button onclick="switchView('table')" id="nav-table" class="text-apple-blue relative p-2 md:w-full flex justify-center transition-colors">
+                <i class="fa-solid fa-list text-xl"></i>
+                <div id="indicator-table" class="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('board')" id="nav-board" class="text-apple-secondary dark:text-gray-400 hover:text-apple-primary dark:hover:text-white relative group w-full flex justify-center transition-colors" title="Board View">
-                <i class="fa-solid fa-border-all text-xl"></i><div id="indicator-board" class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md hidden"></div>
+            <button onclick="switchView('board')" id="nav-board" class="text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors">
+                <i class="fa-solid fa-border-all text-xl"></i>
+                <div id="indicator-board" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('team')" id="nav-team" class="admin-only text-apple-secondary dark:text-gray-400 hover:text-apple-primary dark:hover:text-white relative group w-full flex justify-center transition-colors mt-4" title="Floor Team">
-                <i class="fa-solid fa-users text-xl"></i><div id="indicator-team" class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md hidden"></div>
+            <button onclick="switchView('team')" id="nav-team" class="admin-only text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors">
+                <i class="fa-solid fa-users text-xl"></i>
+                <div id="indicator-team" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('log')" id="nav-log" class="text-apple-secondary dark:text-gray-400 hover:text-apple-primary dark:hover:text-white relative group w-full flex justify-center transition-colors" title="Activity Log">
-                <i class="fa-solid fa-bolt text-xl"></i><div id="indicator-log" class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md hidden"></div>
+            <button onclick="switchView('log')" id="nav-log" class="text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors">
+                <i class="fa-solid fa-bolt text-xl"></i>
+                <div id="indicator-log" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('analytics')" id="nav-analytics" class="text-apple-secondary dark:text-gray-400 hover:text-apple-primary dark:hover:text-white relative group w-full flex justify-center transition-colors" title="Analytics">
-                <i class="fa-solid fa-chart-line text-xl"></i><div id="indicator-analytics" class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md hidden"></div>
+            <button onclick="switchView('analytics')" id="nav-analytics" class="text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors">
+                <i class="fa-solid fa-chart-line text-xl"></i>
+                <div id="indicator-analytics" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
         </nav>
-        <div class="mt-auto flex flex-col gap-6 w-full items-center">
-            <button onclick="toggleTheme()" class="text-apple-secondary dark:text-gray-400 hover:text-apple-primary dark:hover:text-white transition-colors group w-full flex justify-center" title="Toggle Theme">
+        <div class="md:mt-auto flex flex-row md:flex-col gap-2 md:gap-6 items-center">
+            <button onclick="toggleTheme()" class="text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors">
                 <i id="themeIcon" class="fa-solid fa-moon text-xl"></i>
             </button>
-            <button onclick="switchView('settings')" id="nav-settings" class="admin-only text-apple-secondary dark:text-gray-400 hover:text-apple-primary dark:hover:text-white relative group w-full flex justify-center transition-colors" title="Settings">
-                <i class="fa-solid fa-gear text-xl"></i><div id="indicator-settings" class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md hidden"></div>
+            <button onclick="switchView('settings')" id="nav-settings" class="admin-only text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors">
+                <i class="fa-solid fa-gear text-xl"></i>
+                <div id="indicator-settings" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="lockSystem()" class="text-apple-secondary dark:text-gray-400 hover:text-red-500 transition-colors group w-full flex justify-center" title="Lock Station">
+            <button onclick="lockSystem()" class="text-apple-secondary dark:text-gray-400 hover:text-red-500 transition-colors p-2 md:w-full flex justify-center">
                 <i class="fa-solid fa-power-off text-xl"></i>
             </button>
         </div>
     </aside>
-
-    <div class="flex-1 flex flex-col h-full relative">
-        <header class="h-16 border-b border-apple-border dark:border-[#2C2C2E] bg-white/70 dark:bg-[#1C1C1E]/80 backdrop-blur-xl z-10 flex items-center justify-between px-8 absolute top-0 left-0 right-0 transition-colors">
-            <div class="flex-1"></div>
-            <div class="flex-1 flex justify-end items-center gap-4">
-                <p id="activeUserName" class="text-xs font-semibold text-apple-secondary dark:text-gray-400 mr-2">LOCKED</p>
-                <div class="h-8 w-8 rounded-full bg-gradient-to-tr from-gray-200 to-gray-300 dark:from-[#3A3A3C] dark:to-[#4A4A4C] shadow-sm border border-apple-border dark:border-[#2C2C2E] flex items-center justify-center text-apple-primary dark:text-white text-xs font-bold transition-colors">
-                    <i class="fa-solid fa-user text-white"></i>
+    <div class="flex-1 flex flex-col h-full relative overflow-hidden pb-16 md:pb-0">
+        <header class="h-16 border-b border-apple-border dark:border-[#2C2C2E] bg-white/70 dark:bg-[#1C1C1E]/80 backdrop-blur-xl z-10 flex items-center justify-between px-6 transition-colors">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-layer-group text-apple-blue text-xl md:hidden"></i>
+                <span class="font-bold text-sm tracking-tight md:hidden dark:text-white">SYNC</span>
+            </div>
+            <div class="flex items-center gap-3 ml-auto">
+                <p id="activeUserName" class="text-[10px] font-bold text-apple-secondary dark:text-gray-400 uppercase tracking-widest">LOCKED</p>
+                <div class="h-7 w-7 rounded-full bg-apple-blue flex items-center justify-center text-white text-[10px] font-black">
+                    <i class="fa-solid fa-user"></i>
                 </div>
             </div>
         </header>
-        <main class="flex-1 mt-16 p-6 md:p-10 overflow-y-auto scrollbar-hide bg-apple-canvas dark:bg-[#121212] transition-colors duration-300">
-            <div class="max-w-7xl mx-auto h-full flex flex-col">
+
+        <main class="flex-1 overflow-y-auto scrollbar-hide p-4 md:p-10">
+            <div class="max-w-7xl mx-auto flex flex-col gap-6">
                 
-                <div id="ops-header" class="block shrink-0">
-                    <div class="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div id="ops-header" class="block">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
                         <div>
-                            <h1 class="text-2xl font-bold tracking-tight text-apple-primary dark:text-white">Floor Operations</h1>
-                            <p class="text-sm text-apple-secondary dark:text-gray-400 mt-1">Live task telemetry.</p>
+                            <h1 class="text-2xl font-bold tracking-tight dark:text-white">Operations</h1>
+                            <p class="text-xs text-apple-secondary dark:text-gray-400">Live telemetry</p>
                         </div>
-                        <div class="flex gap-3">
-                            <button onclick="copyShiftReport()" class="h-10 px-4 rounded-xl text-sm font-semibold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary hover:text-apple-primary dark:text-gray-400 dark:hover:text-white shadow-sm transition-all flex items-center gap-2">
-                                <i class="fa-solid fa-copy"></i> Shift Report
+                        <div class="flex gap-2">
+                            <button onclick="copyShiftReport()" class="flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary hover:text-apple-primary dark:text-gray-400 dark:hover:text-white shadow-sm transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-copy"></i> REPORT
                             </button>
-                            <button onclick="exportToCSV()" class="h-10 px-4 rounded-xl text-sm font-semibold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-green-600 hover:text-green-700 dark:text-green-500 dark:hover:text-green-400 shadow-sm transition-all flex items-center gap-2">
-                                <i class="fa-solid fa-file-excel"></i> Export CSV
+                            <button onclick="exportToCSV()" class="flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-green-600 hover:text-green-700 dark:text-green-500 dark:hover:text-green-400 shadow-sm transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-file-csv"></i> EXPORT
                             </button>
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-10">
-                        <div class="bg-apple-surface dark:bg-[#1C1C1E] rounded-2xl p-5 md:p-6 shadow-apple-soft border border-apple-border dark:border-[#2C2C2E] transition-colors">
-                            <p class="text-[11px] uppercase tracking-wider font-semibold text-apple-secondary dark:text-gray-400 mb-2">Total Active</p>
-                            <span id="kpi-total" class="text-3xl font-bold tracking-tight text-apple-primary dark:text-white">0</span>
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+                        <div class="bg-white dark:bg-[#1C1C1E] rounded-2xl p-4 border border-apple-border dark:border-[#2C2C2E] shadow-sm">
+                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">Active</p>
+                            <span id="kpi-total" class="text-2xl font-bold dark:text-white">0</span>
                         </div>
-                        <div class="bg-apple-surface dark:bg-[#1C1C1E] rounded-2xl p-5 md:p-6 shadow-apple-soft border border-apple-border dark:border-[#2C2C2E] transition-colors">
-                            <p class="text-[11px] uppercase tracking-wider font-semibold text-apple-secondary dark:text-gray-400 mb-2">Radar</p>
-                            <span id="kpi-radar" class="text-3xl font-bold tracking-tight text-apple-primary dark:text-white">0</span>
+                        <div class="bg-white dark:bg-[#1C1C1E] rounded-2xl p-4 border border-apple-border dark:border-[#2C2C2E] shadow-sm">
+                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">Radar</p>
+                            <span id="kpi-radar" class="text-2xl font-bold dark:text-white">0</span>
                         </div>
-                        <div class="bg-apple-surface dark:bg-[#1C1C1E] rounded-2xl p-5 md:p-6 shadow-apple-soft border border-apple-border dark:border-[#2C2C2E] transition-colors">
-                            <p class="text-[11px] uppercase tracking-wider font-semibold text-apple-secondary dark:text-gray-400 mb-2">In Progress</p>
-                            <span id="kpi-progress" class="text-3xl font-bold tracking-tight text-apple-primary dark:text-white">0</span>
+                        <div class="bg-white dark:bg-[#1C1C1E] rounded-2xl p-4 border border-apple-border dark:border-[#2C2C2E] shadow-sm">
+                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">In Progress</p>
+                            <span id="kpi-progress" class="text-2xl font-bold dark:text-white">0</span>
                         </div>
-                        <div class="bg-apple-surface dark:bg-[#1C1C1E] rounded-2xl p-5 md:p-6 shadow-apple-soft border border-apple-border dark:border-[#2C2C2E] opacity-60 transition-colors">
-                            <p class="text-[11px] uppercase tracking-wider font-semibold text-apple-secondary dark:text-gray-400 mb-2">Completed</p>
-                            <span id="kpi-completed" class="text-3xl font-bold tracking-tight text-apple-primary dark:text-white">0</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="view-table" class="bg-apple-surface dark:bg-[#1C1C1E] rounded-2xl shadow-apple-soft border border-apple-border dark:border-[#2C2C2E] overflow-hidden block transition-colors">
-                    <table class="w-full text-left border-collapse min-w-[800px]">
-                        <thead><tr class="bg-[#FBFBFD] dark:bg-[#242426] border-b border-apple-border dark:border-[#2C2C2E]"><th class="py-4 px-6 text-[10px] uppercase font-semibold text-apple-secondary dark:text-gray-400">Directive</th><th class="py-4 px-6 text-[10px] uppercase font-semibold text-apple-secondary dark:text-gray-400">Target</th><th class="py-4 px-6 text-[10px] uppercase font-semibold text-apple-secondary dark:text-gray-400">Assignee</th><th class="py-4 px-6 text-[10px] uppercase font-semibold text-apple-secondary dark:text-gray-400">Status</th><th class="py-4 px-6 text-right"></th></tr></thead>
-                        <tbody id="taskTableBody"></tbody>
-                    </table>
-                </div>
-
-                <div id="view-board" class="hidden gap-6 overflow-x-auto pb-10 flex-1">
-                    <div class="w-80 shrink-0 flex flex-col bg-white/40 dark:bg-[#1C1C1E]/40 border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-4 transition-colors">
-                        <h3 class="text-[10px] uppercase font-bold text-apple-secondary dark:text-gray-400 mb-4 flex justify-between items-center">Radar <span id="board-count-radar" class="bg-white dark:bg-[#2C2C2E] px-2 py-0.5 rounded border border-apple-border dark:border-[#3A3A3C] text-apple-primary dark:text-white">0</span></h3>
-                        <div id="col-radar" class="flex-1 space-y-3"></div>
-                    </div>
-                    <div class="w-80 shrink-0 flex flex-col bg-white/40 dark:bg-[#1C1C1E]/40 border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-4 transition-colors">
-                        <h3 class="text-[10px] uppercase font-bold text-apple-secondary dark:text-gray-400 mb-4 flex justify-between items-center">Assigned <span id="board-count-assigned" class="bg-white dark:bg-[#2C2C2E] px-2 py-0.5 rounded border border-apple-border dark:border-[#3A3A3C] text-apple-primary dark:text-white">0</span></h3>
-                        <div id="col-assigned" class="flex-1 space-y-3"></div>
-                    </div>
-                    <div class="w-80 shrink-0 flex flex-col bg-apple-blue/5 dark:bg-apple-blue/10 border border-apple-blue/20 rounded-2xl p-4 transition-colors">
-                        <h3 class="text-[10px] uppercase font-bold text-apple-blue mb-4 flex justify-between items-center">In Progress <span id="board-count-progress" class="bg-white dark:bg-[#2C2C2E] px-2 py-0.5 rounded border border-apple-blue/20 text-apple-blue dark:text-white">0</span></h3>
-                        <div id="col-progress" class="flex-1 space-y-3"></div>
-                    </div>
-                    <div class="w-80 shrink-0 flex flex-col bg-white/40 dark:bg-[#1C1C1E]/40 border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-4 opacity-60 transition-colors">
-                        <h3 class="text-[10px] uppercase font-bold text-apple-secondary dark:text-gray-400 mb-4">Completed</h3>
-                        <div id="col-completed" class="flex-1 space-y-3"></div>
-                    </div>
-                </div>
-
-                <div id="view-team" class="hidden flex-col flex-1 admin-only">
-                    <div class="mb-8">
-                        <h1 class="text-2xl font-bold tracking-tight text-apple-primary dark:text-white">Floor Team</h1>
-                        <p class="text-sm text-apple-secondary dark:text-gray-400 mt-1">Authorized personnel and access control.</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6" id="teamGrid"></div>
-                </div>
-
-                <div id="view-log" class="hidden flex-col flex-1">
-                    <div class="mb-8">
-                        <h1 class="text-2xl font-bold tracking-tight text-apple-primary dark:text-white">Activity Log</h1>
-                        <p class="text-sm text-apple-secondary dark:text-gray-400 mt-1">Live audit trail of floor operations.</p>
-                    </div>
-                    <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-8 h-full overflow-y-auto scrollbar-hide space-y-4 shadow-sm transition-colors" id="logContainer"></div>
-                </div>
-
-                <div id="view-analytics" class="hidden flex-col flex-1">
-                    <div class="mb-8">
-                        <h1 class="text-2xl font-bold tracking-tight text-apple-primary dark:text-white">Floor Analytics</h1>
-                        <p class="text-sm text-apple-secondary dark:text-gray-400 mt-1">Performance velocity and priority breakdown.</p>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white dark:bg-[#1C1C1E] p-8 rounded-2xl shadow-sm border border-apple-border dark:border-[#2C2C2E] text-center transition-colors">
-                            <i class="fa-solid fa-triangle-exclamation text-3xl text-red-500 mb-4"></i>
-                            <h3 class="text-4xl font-bold mb-1 dark:text-white" id="stat-critical">0</h3>
-                            <p class="text-[10px] uppercase font-bold text-apple-secondary dark:text-gray-400 tracking-widest">Critical Tasks</p>
-                        </div>
-                        <div class="bg-white dark:bg-[#1C1C1E] p-8 rounded-2xl shadow-sm border border-apple-border dark:border-[#2C2C2E] text-center transition-colors">
-                            <i class="fa-solid fa-users-gear text-3xl text-apple-blue mb-4"></i>
-                            <h3 class="text-4xl font-bold mb-1 dark:text-white" id="stat-rate">0%</h3>
-                            <p class="text-[10px] uppercase font-bold text-apple-secondary dark:text-gray-400 tracking-widest">Assignment Rate</p>
-                        </div>
-                        <div class="bg-white dark:bg-[#1C1C1E] p-8 rounded-2xl shadow-sm border border-apple-border dark:border-[#2C2C2E] text-center transition-colors">
-                            <i class="fa-solid fa-circle-check text-3xl text-green-500 mb-4"></i>
-                            <h3 class="text-4xl font-bold mb-1 dark:text-white" id="stat-completed">0</h3>
-                            <p class="text-[10px] uppercase font-bold text-apple-secondary dark:text-gray-400 tracking-widest">Total Completed</p>
+                        <div class="bg-white dark:bg-[#1C1C1E] rounded-2xl p-4 border border-apple-border dark:border-[#2C2C2E] opacity-50">
+                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">Done</p>
+                            <span id="kpi-completed" class="text-2xl font-bold dark:text-white">0</span>
                         </div>
                     </div>
                 </div>
 
-                <div id="view-settings" class="hidden flex-col flex-1 max-w-2xl admin-only">
-                    <div class="mb-8">
-                        <h1 class="text-2xl font-bold tracking-tight text-apple-primary dark:text-white">Settings</h1>
-                        <p class="text-sm text-apple-secondary dark:text-gray-400 mt-1">Global controls and safety triggers.</p>
+                <div id="view-table" class="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-apple-border dark:border-[#2C2C2E] overflow-hidden shadow-sm">
+                    <div class="overflow-x-auto scrollbar-hide">
+                        <table class="w-full text-left border-collapse min-w-[600px]">
+                            <thead><tr class="bg-[#FBFBFD] dark:bg-[#242426] border-b border-apple-border dark:border-[#2C2C2E]"><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Directive</th><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Target</th><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Assignee</th><th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary dark:text-gray-400">Status</th><th class="py-3 px-4 text-right"></th></tr></thead>
+                            <tbody id="taskTableBody"></tbody>
+                        </table>
                     </div>
-                    <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl overflow-hidden shadow-sm transition-colors">
-                        <div onclick="openModal('purgeModal')" class="flex items-center justify-between p-6 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer group text-red-500">
-                            <div><p class="font-bold text-sm">Emergency Data Purge</p><p class="text-xs text-red-400 mt-1">Instantly wipe all operational tasks.</p></div>
+                </div>
+
+                <div id="view-board" class="hidden gap-4 overflow-x-auto pb-4">
+                    <div class="w-72 shrink-0 flex flex-col bg-white/40 dark:bg-[#1C1C1E]/40 border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-4 h-fit">
+                        <h3 class="text-[9px] uppercase font-black text-apple-secondary mb-4 flex justify-between">Radar <span id="board-count-radar" class="text-apple-primary dark:text-white">0</span></h3>
+                        <div id="col-radar" class="space-y-3"></div>
+                    </div>
+                    <div class="w-72 shrink-0 flex flex-col bg-white/40 dark:bg-[#1C1C1E]/40 border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-4 h-fit">
+                        <h3 class="text-[9px] uppercase font-black text-apple-secondary mb-4 flex justify-between">Assigned <span id="board-count-assigned" class="text-apple-primary dark:text-white">0</span></h3>
+                        <div id="col-assigned" class="space-y-3"></div>
+                    </div>
+                    <div class="w-72 shrink-0 flex flex-col bg-apple-blue/10 border border-apple-blue/30 rounded-2xl p-4 h-fit">
+                        <h3 class="text-[9px] uppercase font-black text-apple-blue mb-4 flex justify-between">In Progress <span id="board-count-progress">0</span></h3>
+                        <div id="col-progress" class="space-y-3"></div>
+                    </div>
+                    <div class="w-72 shrink-0 flex flex-col bg-white/40 dark:bg-[#1C1C1E]/40 border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-4 opacity-60 h-fit">
+                        <h3 class="text-[9px] uppercase font-black text-apple-secondary mb-4 flex justify-between">Completed <span id="board-count-done" class="text-apple-primary dark:text-white">0</span></h3>
+                        <div id="col-completed" class="space-y-3"></div>
+                    </div>
+                </div>
+
+                <div id="view-team" class="hidden flex-col admin-only">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="teamGrid"></div>
+                </div>
+
+                <div id="view-log" class="hidden flex-col">
+                    <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-6 h-[500px] overflow-y-auto scrollbar-hide space-y-4 shadow-sm" id="logContainer"></div>
+                </div>
+
+                <div id="view-analytics" class="hidden flex-col gap-4">
+                    <div class="bg-white dark:bg-[#1C1C1E] p-8 rounded-2xl border border-apple-border dark:border-[#2C2C2E] text-center shadow-sm">
+                        <i class="fa-solid fa-triangle-exclamation text-2xl text-red-500 mb-2"></i>
+                        <h3 class="text-3xl font-bold dark:text-white" id="stat-critical">0</h3>
+                        <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Critical</p>
+                    </div>
+                    <div class="bg-white dark:bg-[#1C1C1E] p-8 rounded-2xl border border-apple-border dark:border-[#2C2C2E] text-center shadow-sm">
+                        <i class="fa-solid fa-users-gear text-2xl text-apple-blue mb-2"></i>
+                        <h3 class="text-3xl font-bold dark:text-white" id="stat-rate">0%</h3>
+                        <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Rate</p>
+                    </div>
+                </div>
+
+                <div id="view-settings" class="hidden flex-col admin-only">
+                    <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl overflow-hidden shadow-sm">
+                        <div onclick="openModal('purgeModal')" class="p-6 hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer text-red-500 flex justify-between items-center transition-colors">
+                            <div><p class="font-bold text-sm">Emergency Purge</p><p class="text-[10px] opacity-70 uppercase font-bold tracking-tighter">Wipe all operational data</p></div>
                             <i class="fa-solid fa-trash-can"></i>
                         </div>
                     </div>
@@ -238,70 +226,70 @@
             </div>
         </main>
 
-        <button id="fab-add-task" onclick="openModal('newTaskModal')" class="fixed bottom-10 right-10 h-14 w-14 bg-apple-blue text-white rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all flex items-center justify-center text-xl z-40 border border-white/20"><i class="fa-solid fa-plus"></i></button>
+        <button id="fab-add-task" onclick="openModal('newTaskModal')" class="fixed bottom-20 md:bottom-10 right-6 md:right-10 h-14 w-14 bg-apple-blue text-white rounded-full shadow-lg active:scale-90 transition-all flex items-center justify-center text-xl z-30 border border-white/20"><i class="fa-solid fa-plus"></i></button>
 
-        <div id="slideDrawer" class="fixed top-16 right-0 bottom-0 w-full sm:w-[420px] bg-white dark:bg-[#1C1C1E] shadow-apple-drawer border-l border-apple-border dark:border-[#2C2C2E] z-30 translate-x-full flex flex-col transition-colors duration-300">
-            <div class="p-8 border-b border-apple-border dark:border-[#2C2C2E] flex justify-between items-start">
-                <div><p class="text-[10px] font-bold text-apple-secondary dark:text-gray-400 uppercase tracking-widest mb-1">Details</p><h2 id="drawerTitle" class="text-lg font-bold text-apple-primary dark:text-white leading-tight">Task Title</h2></div>
-                <button onclick="closeDrawer()" class="h-8 w-8 rounded-full bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary hover:text-apple-primary dark:text-gray-400 dark:hover:text-white transition-all flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+        <div id="slideDrawer" class="fixed top-0 bottom-0 right-0 w-full sm:w-[400px] bg-white dark:bg-[#1C1C1E] shadow-2xl border-l border-apple-border dark:border-[#2C2C2E] z-[120] translate-x-full flex flex-col transition-transform duration-300">
+            <div class="p-6 border-b border-apple-border dark:border-[#2C2C2E] flex justify-between items-center">
+                <h2 id="drawerTitle" class="font-bold dark:text-white">Edit Directive</h2>
+                <button onclick="closeDrawer()" class="h-8 w-8 rounded-full bg-apple-canvas dark:bg-[#2C2C2E] flex items-center justify-center dark:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="flex-1 p-8 space-y-6 overflow-y-auto">
+            <div class="flex-1 p-6 space-y-6 overflow-y-auto scrollbar-hide">
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] uppercase font-bold text-apple-secondary dark:text-gray-400 mb-2 block tracking-widest">Status</label><select id="drawerStatus" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 text-sm rounded-lg outline-none focus:border-apple-blue dark:text-white"><option value="Radar">Radar</option><option value="Assigned To">Assigned To</option><option value="In Progress">In Progress</option><option value="Completed">Completed</option></select></div>
-                    <div><label class="text-[10px] uppercase font-bold text-apple-secondary dark:text-gray-400 mb-2 block tracking-widest">Priority</label><select id="drawerPriority" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 text-sm rounded-lg outline-none focus:border-apple-blue dark:text-white"><option value="Standard">Standard</option><option value="High">High</option><option value="Critical">Critical</option></select></div>
+                    <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Status</label><select id="drawerStatus" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="Radar">Radar</option><option value="Assigned To">Assigned To</option><option value="In Progress">In Progress</option><option value="Completed">Completed</option></select></div>
+                    <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Priority</label><select id="drawerPriority" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="Standard">Standard</option><option value="High">High</option><option value="Critical">Critical</option></select></div>
                 </div>
-                <div><label class="text-[10px] uppercase font-bold text-apple-secondary dark:text-gray-400 mb-2 block tracking-widest">Personnel</label><select id="drawerAssignee" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 text-sm rounded-lg outline-none focus:border-apple-blue dark:text-white"></select></div>
-                <div class="flex-1"><label class="text-[10px] uppercase font-bold text-apple-secondary dark:text-gray-400 mb-2 block tracking-widest">Notes</label><textarea id="drawerNotes" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] rounded-lg p-4 text-sm h-40 outline-none focus:border-apple-blue resize-none dark:text-white"></textarea></div>
+                <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Assignee</label><select id="drawerAssignee" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"></select></div>
+                <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Notes</label><textarea id="drawerNotes" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] rounded-lg p-3 text-xs h-32 resize-none dark:text-white"></textarea></div>
             </div>
-            <div class="p-6 border-t border-apple-border dark:border-[#2C2C2E] bg-white dark:bg-[#1C1C1E] flex gap-3">
-                <button id="archiveBtn" class="admin-only px-5 text-red-500 bg-red-50 dark:bg-red-900/20 rounded-xl font-bold text-sm hover:bg-red-100 transition-colors"><i class="fa-solid fa-trash-can"></i></button>
-                <button onclick="saveAndClose()" id="saveDrawerBtn" class="flex-1 bg-apple-blue text-white h-12 rounded-xl font-bold text-sm shadow-sm hover:bg-apple-blueHover transition-colors">Save Changes</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="addMemberModal" class="fixed inset-0 z-[110] bg-apple-primary/40 dark:bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-8 rounded-2xl w-full max-w-sm shadow-2xl transition-colors">
-            <h3 class="text-lg font-bold mb-4 text-apple-primary dark:text-white">Add Floor Personnel</h3>
-            <p id="memberError" class="text-red-500 text-xs font-bold mb-4 hidden bg-red-50 dark:bg-red-900/20 p-2 rounded border border-red-100 dark:border-red-900/50"></p>
-            <div class="space-y-4 mb-8">
-                <input type="text" id="newMemberName" placeholder="Full Name" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg outline-none focus:border-apple-blue text-apple-primary dark:text-white font-medium">
-                <input type="text" id="newMemberPin" placeholder="4-Digit PIN" maxlength="4" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg outline-none focus:border-apple-blue text-apple-primary dark:text-white font-medium tracking-widest">
-            </div>
-            <div class="flex gap-3">
-                <button onclick="closeModal('addMemberModal')" class="flex-1 h-11 font-bold text-sm bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary dark:text-gray-300 rounded-xl hover:text-apple-primary dark:hover:text-white transition-colors">Cancel</button>
-                <button id="submitMemberBtn" class="flex-1 h-11 font-bold text-sm bg-apple-blue text-white rounded-xl shadow-sm hover:bg-apple-blueHover transition-colors">Save User</button>
+            <div class="p-4 border-t border-apple-border dark:border-[#2C2C2E] flex gap-2">
+                <button id="archiveBtn" class="admin-only h-12 px-4 text-red-500 bg-red-50 dark:bg-red-900/20 rounded-xl"><i class="fa-solid fa-trash-can"></i></button>
+                <button onclick="saveAndClose()" id="saveDrawerBtn" class="flex-1 bg-apple-blue text-white h-12 rounded-xl font-bold text-sm">Save Changes</button>
             </div>
         </div>
     </div>
 
-    <div id="newTaskModal" class="fixed inset-0 z-[110] bg-apple-primary/40 dark:bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-8 rounded-2xl w-full max-w-md shadow-2xl transition-colors">
-            <h3 class="text-lg font-bold mb-6 text-apple-primary dark:text-white">Create Directive</h3>
-            <div class="space-y-4 mb-8">
-                <input type="text" id="newTitle" placeholder="Task Title" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg outline-none focus:border-apple-blue font-medium text-apple-primary dark:text-white">
-                <input type="text" id="newTarget" placeholder="Target..." class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg outline-none focus:border-apple-blue font-medium text-apple-primary dark:text-white">
+    <div id="addMemberModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-6 rounded-2xl w-full max-w-sm shadow-2xl">
+            <h3 class="text-lg font-bold mb-4 dark:text-white">Add Member</h3>
+            <p id="memberError" class="text-red-500 text-[10px] font-bold mb-4 hidden bg-red-50 dark:bg-red-900/20 p-2 rounded border border-red-100"></p>
+            <div class="space-y-4 mb-6">
+                <input type="text" id="newMemberName" placeholder="Name" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
+                <input type="text" id="newMemberPin" placeholder="4-Digit PIN" maxlength="4" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white font-mono">
             </div>
-            <div class="flex gap-3">
-                <button onclick="closeModal('newTaskModal')" class="flex-1 h-11 font-bold text-sm bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary dark:text-gray-300 rounded-xl hover:text-apple-primary dark:hover:text-white transition-colors">Cancel</button>
-                <button id="createTaskBtn" class="flex-1 h-11 font-bold text-sm bg-apple-blue text-white rounded-xl shadow-sm hover:bg-apple-blueHover transition-colors">Create Task</button>
+            <div class="flex gap-2">
+                <button onclick="closeModal('addMemberModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
+                <button id="submitMemberBtn" class="flex-1 h-11 text-xs font-bold bg-apple-blue text-white rounded-xl shadow-sm">Save User</button>
             </div>
         </div>
     </div>
 
-    <div id="purgeModal" class="fixed inset-0 z-[110] bg-red-900/40 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white dark:bg-[#1C1C1E] border-2 border-red-100 dark:border-red-900/50 p-8 rounded-2xl w-full max-w-sm shadow-2xl text-center">
+    <div id="newTaskModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-6 rounded-2xl w-full max-w-md shadow-2xl">
+            <h3 class="text-lg font-bold mb-4 dark:text-white">Create Task</h3>
+            <div class="space-y-4 mb-6">
+                <input type="text" id="newTitle" placeholder="Directive Title" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
+                <input type="text" id="newTarget" placeholder="Target..." class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
+            </div>
+            <div class="flex gap-2">
+                <button onclick="closeModal('newTaskModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
+                <button id="createTaskBtn" class="flex-1 h-11 text-xs font-bold bg-apple-blue text-white rounded-xl shadow-sm">Create Task</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="purgeModal" class="fixed inset-0 z-[200] bg-red-900/40 backdrop-blur-sm hidden items-center justify-center p-4 text-center">
+        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-8 rounded-2xl w-full max-w-xs shadow-2xl">
             <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4"></i>
-            <h3 class="text-lg font-bold mb-2 text-apple-primary dark:text-white">Emergency Purge</h3>
-            <p class="text-sm text-apple-secondary dark:text-gray-400 mb-8">This will instantly delete all operational tasks. This action cannot be undone.</p>
-            <div class="flex gap-3">
-                <button onclick="closeModal('purgeModal')" class="flex-1 h-11 font-bold text-sm bg-apple-canvas dark:bg-[#2C2C2E] text-apple-primary dark:text-white rounded-xl transition-colors">Cancel</button>
-                <button onclick="executePurge()" class="flex-1 h-11 font-bold text-sm bg-red-500 text-white rounded-xl transition-colors hover:bg-red-600">Wipe Data</button>
+            <h3 class="text-lg font-bold mb-2 dark:text-white uppercase tracking-tighter">Wipe Data?</h3>
+            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-6">This deletes ALL active tasks.</p>
+            <div class="flex gap-2">
+                <button onclick="closeModal('purgeModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
+                <button onclick="executePurge()" class="flex-1 h-11 text-xs font-bold bg-red-500 text-white rounded-xl">Wipe</button>
             </div>
         </div>
     </div>
 
-    <div id="toastAlert" class="fixed bottom-6 left-1/2 -translate-x-1/2 translate-y-[150%] transition-transform bg-apple-primary dark:bg-apple-blue px-6 py-3 rounded-full shadow-lg z-[120] flex items-center gap-3">
+    <div id="toastAlert" class="fixed top-6 left-1/2 -translate-x-1/2 -translate-y-24 transition-transform bg-apple-primary dark:bg-apple-blue px-6 py-3 rounded-full shadow-lg z-[500] flex items-center gap-3">
         <i class="fa-solid fa-check-circle text-green-400 dark:text-white text-sm"></i><p id="toastMessage" class="text-sm font-medium text-white">Action Confirmed</p>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -328,16 +316,12 @@
                 icon.classList.replace('fa-sun', 'fa-moon');
             }
         }
-
-        if(document.documentElement.classList.contains('dark')) {
-            document.getElementById('themeIcon').classList.replace('fa-moon', 'fa-sun');
-        }
+        if(document.documentElement.classList.contains('dark')) document.getElementById('themeIcon')?.classList.replace('fa-moon', 'fa-sun');
 
         function resetIdleTimer() {
             clearTimeout(idleTimer);
             idleTimer = setTimeout(lockSystem, 60000);
         }
-
         function lockSystem() {
             if(!currentUser) return;
             currentUser = null;
@@ -345,13 +329,11 @@
             document.getElementById('lockScreen').style.opacity = '1';
             document.getElementById('lockScreen').style.display = 'flex';
             document.getElementById('activeUserName').innerText = 'LOCKED';
-            showToast('Locked due to inactivity.');
+            showToast('Auto-Locked.');
         }
-
         window.onload = resetIdleTimer;
         document.onmousemove = resetIdleTimer;
         document.onkeypress = resetIdleTimer;
-        document.ontouchstart = resetIdleTimer;
         document.onclick = resetIdleTimer;
 
         window.addEventListener('offline', () => { document.getElementById('offlineBanner').style.display = 'block'; });
@@ -366,10 +348,9 @@
             if(id === 'addMemberModal') { document.getElementById('newMemberName').value = ''; document.getElementById('newMemberPin').value = ''; }
             if(id === 'newTaskModal') { document.getElementById('newTitle').value = ''; document.getElementById('newTarget').value = ''; }
         }
-        
         function showToast(msg) {
             const t = document.getElementById('toastAlert'); document.getElementById('toastMessage').innerText = msg;
-            t.classList.remove('translate-y-[150%]'); setTimeout(() => t.classList.add('translate-y-[150%]'), 3000);
+            t.classList.replace('-translate-y-24', 'translate-y-0'); setTimeout(() => t.classList.replace('translate-y-0', '-translate-y-24'), 3000);
         }
 
         function switchView(viewName) {
@@ -378,24 +359,20 @@
                 const nav = document.getElementById('nav-' + v);
                 const ind = document.getElementById('indicator-' + v);
                 const viewEl = document.getElementById('view-' + v);
-                if(nav && ind && viewEl) {
+                if(nav && viewEl) {
                     const isActive = v === viewName;
-                    nav.className = isActive ? "text-apple-blue relative group w-full flex justify-center transition-colors" : "text-apple-secondary dark:text-gray-400 hover:text-apple-primary dark:hover:text-white relative group w-full flex justify-center transition-colors" + (v === 'team' ? ' mt-4' : '');
-                    ind.style.display = isActive ? 'block' : 'none';
-                    viewEl.style.display = isActive ? (v === 'table' ? 'block' : 'flex') : 'none';
+                    nav.classList.toggle('text-apple-blue', isActive);
+                    nav.classList.toggle('text-apple-secondary', !isActive);
+                    if(ind) ind.style.display = isActive ? 'block' : 'none';
+                    viewEl.style.display = isActive ? (v === 'board' ? 'flex' : 'flex') : 'none';
                 }
             });
-            const isOps = (viewName === 'table' || viewName === 'board');
-            document.getElementById('ops-header').style.display = isOps ? 'block' : 'none';
-            document.getElementById('fab-add-task').style.display = isOps ? 'flex' : 'none';
             if(viewName === 'log') fetchLogs();
         }
 
         function applyRolePermissions() {
             const isAdmin = currentUser && currentUser.role === 'Admin';
-            document.querySelectorAll('.admin-only').forEach(el => {
-                el.style.display = isAdmin ? '' : 'none';
-            });
+            document.querySelectorAll('.admin-only').forEach(el => el.style.display = isAdmin ? '' : 'none');
         }
 
         function resetPinUI() {
@@ -427,13 +404,7 @@
                     document.getElementById('lockScreen').style.opacity = '0';
                     setTimeout(() => document.getElementById('lockScreen').style.display = 'none', 500);
                     document.getElementById('activeUserName').innerText = data.name;
-                    
-                    applyRolePermissions();
-                    switchView('table');
-                    initTeam(); 
-                    loadData(); 
-                    logAction("Authenticated Session Start");
-                    resetIdleTimer();
+                    applyRolePermissions(); switchView('table'); initTeam(); loadData(); logAction("Session Start"); resetIdleTimer();
                 } else { throw new Error("Invalid"); }
             } catch (err) {
                 document.getElementById('pinError').style.opacity = '1';
@@ -453,11 +424,7 @@
             container.innerHTML = '';
             data.forEach(log => {
                 const time = new Date(log.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                container.insertAdjacentHTML('beforeend', `
-                    <div class="flex gap-4 items-start border-b border-apple-border dark:border-[#2C2C2E] pb-4 last:border-0">
-                        <div class="h-8 w-8 rounded-full bg-apple-canvas dark:bg-[#2C2C2E] flex items-center justify-center text-apple-secondary dark:text-gray-400 shrink-0"><i class="fa-solid fa-bolt text-xs"></i></div>
-                        <div><p class="text-sm font-medium text-apple-primary dark:text-white">${log.action_text}</p><p class="text-[10px] text-apple-secondary dark:text-gray-400 font-bold uppercase mt-1 tracking-widest">BY ${log.performed_by} • ${time}</p></div>
-                    </div>`);
+                container.insertAdjacentHTML('beforeend', `<div class="border-b border-apple-border dark:border-[#2C2C2E] pb-3 text-xs"><p class="font-bold dark:text-white uppercase tracking-tighter">${log.action_text}</p><p class="text-[9px] text-apple-secondary dark:text-gray-400 uppercase tracking-widest mt-1">By ${log.performed_by} • ${time}</p></div>`);
             });
         }
 
@@ -467,247 +434,129 @@
             const select = document.getElementById('drawerAssignee');
             const grid = document.getElementById('teamGrid');
             select.innerHTML = '<option value="None">Unassigned</option>';
-            grid.innerHTML = `<div onclick="openModal('addMemberModal')" class="bg-apple-canvas dark:bg-[#1C1C1E] border-2 border-dashed border-apple-border dark:border-[#3A3A3C] rounded-2xl p-6 flex flex-col items-center justify-center text-apple-secondary dark:text-gray-400 hover:text-apple-blue dark:hover:text-apple-blue transition-all cursor-pointer min-h-[160px]"><i class="fa-solid fa-plus text-2xl mb-2"></i><span class="text-sm font-semibold tracking-wide">Add Member</span></div>`;
-            
+            grid.innerHTML = `<div onclick="openModal('addMemberModal')" class="bg-apple-canvas dark:bg-[#2C2C2E] border-2 border-dashed border-apple-border dark:border-[#3A3A3C] rounded-2xl p-4 flex flex-col items-center justify-center text-apple-secondary dark:text-gray-400 cursor-pointer min-h-[120px] transition-all"><i class="fa-solid fa-plus text-xl mb-1"></i><span class="text-[10px] font-bold uppercase">Add</span></div>`;
             data.forEach(user => {
                 select.insertAdjacentHTML('beforeend', `<option value="${user.name}">${user.name}</option>`);
                 const init = user.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-                grid.insertAdjacentHTML('beforeend', `
-                    <div onclick="revokeUser('${user.name}')" class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-6 shadow-sm flex flex-col items-center text-center cursor-pointer group relative overflow-hidden transition-all hover:border-red-500 dark:hover:border-red-500">
-                        <div class="h-16 w-16 rounded-full bg-gradient-to-tr from-gray-50 to-gray-200 dark:from-[#2C2C2E] dark:to-[#3A3A3C] border border-apple-border dark:border-[#2C2C2E] flex items-center justify-center text-xl font-bold mb-4 text-apple-primary dark:text-white shadow-inner">${init}</div>
-                        <h3 class="text-sm font-bold text-apple-primary dark:text-white">${user.name}</h3><p class="text-[9px] text-apple-secondary dark:text-gray-400 font-bold uppercase mt-1 mb-4 tracking-widest">Auth: ${user.role || 'Active'}</p>
-                        <span class="inline-flex px-3 py-1 rounded-full text-[9px] font-black bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 uppercase border border-green-100 dark:border-green-900/50 tracking-widest">Floor Ready</span>
-                        <div class="absolute inset-0 bg-red-500/90 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
-                            <span class="font-bold tracking-wider text-sm"><i class="fa-solid fa-user-minus mr-2"></i>Revoke Access</span>
-                        </div>
-                    </div>`);
+                grid.insertAdjacentHTML('beforeend', `<div onclick="revokeUser('${user.name}')" class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-4 text-center cursor-pointer group relative overflow-hidden transition-all hover:border-red-500"><div class="h-12 w-12 mx-auto rounded-full bg-apple-canvas dark:bg-[#2C2C2E] flex items-center justify-center font-bold text-apple-primary dark:text-white mb-2">${init}</div><h3 class="text-xs font-bold dark:text-white uppercase tracking-tighter">${user.name}</h3><p class="text-[8px] text-apple-secondary uppercase mb-2 tracking-widest">${user.role || 'Leader'}</p><span class="text-[8px] font-black bg-green-50 dark:bg-green-900/20 text-green-600 px-2 py-0.5 rounded-full uppercase tracking-tighter">Ready</span><div class="absolute inset-0 bg-red-500/90 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-black text-[9px] uppercase tracking-widest">Revoke</span></div></div>`);
             });
         }
 
         async function revokeUser(name) {
-            if(confirm(`Are you sure you want to revoke floor access for ${name}?`)) {
+            if(confirm(`Revoke access for ${name}?`)) {
                 await supabaseClient.from('floor_users').delete().eq('name', name);
-                logAction(`Revoked access for: ${name}`);
-                showToast('Access revoked.');
-                initTeam();
+                logAction(`Revoked: ${name}`); initTeam();
             }
         }
 
         document.getElementById('submitMemberBtn').addEventListener('click', async () => {
-            const btn = document.getElementById('submitMemberBtn');
-            if(btn.disabled) return;
-            
+            const btn = document.getElementById('submitMemberBtn'); if(btn.disabled) return;
             const name = document.getElementById('newMemberName').value.trim();
             const pin = document.getElementById('newMemberPin').value.trim();
             const errEl = document.getElementById('memberError');
-            
-            if(!name || pin.length !== 4) { 
-                errEl.innerText = "Please provide a valid name and a 4-digit PIN."; errEl.style.display = 'block'; return; 
-            }
-            
-            errEl.style.display = 'none';
+            if(!name || pin.length !== 4) { errEl.innerText = "Check Name & 4-Digit PIN"; errEl.style.display = 'block'; return; }
             btn.disabled = true; btn.innerText = "Saving...";
-            
-            const { error } = await supabaseClient.from('floor_users').insert([{ name: name, pin: pin, status: 'Active', role: 'Leader' }]);
-            
-            if(error) {
-                errEl.innerText = "Database Error: " + error.message; errEl.style.display = 'block';
-                btn.disabled = false; btn.innerText = "Save User"; return;
-            }
-
-            logAction(`Commissioned new personnel: ${name}`);
-            btn.disabled = false; btn.innerText = "Save User";
-            closeModal('addMemberModal'); showToast('Personnel added.'); initTeam();
+            const { error } = await supabaseClient.from('floor_users').insert([{ name, pin, status: 'Active', role: 'Leader' }]);
+            if(error) { errEl.innerText = error.message; errEl.style.display = 'block'; btn.disabled = false; btn.innerText = "Save User"; return; }
+            logAction(`Added Member: ${name}`); btn.disabled = false; btn.innerText = "Save User"; closeModal('addMemberModal'); showToast('Success.'); initTeam();
         });
 
         async function executePurge() {
-            closeModal('purgeModal');
-            await supabaseClient.from('pulses').delete().neq('id', 0);
-            logAction("EMERGENCY DATA PURGE EXECUTED");
-            showToast('Operational data wiped.'); loadData();
+            closeModal('purgeModal'); await supabaseClient.from('pulses').delete().neq('id', 0);
+            logAction("EMERGENCY PURGE EXECUTED"); loadData();
         }
 
         function exportToCSV() {
-            if(globalTasks.length === 0) { showToast("No data to export."); return; }
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "ID,Directive,Target,Assignee,Priority,Status,Notes\n";
-            
-            globalTasks.forEach(t => {
-                let notes = t.notes ? t.notes.replace(/"/g, '""').replace(/\n/g, ' ') : '';
-                let title = t.title ? t.title.replace(/"/g, '""') : '';
-                let target = t.linked_entity ? t.linked_entity.replace(/"/g, '""') : '';
-                csvContent += `"${t.id}","${title}","${target}","${t.assigned_to}","${t.priority}","${t.status}","${notes}"\n`;
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `SYNC_Export_${new Date().toISOString().split('T')[0]}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            logAction("Exported database to CSV");
-            showToast("Exported to CSV");
+            if(!globalTasks.length) return;
+            let csv = "ID,Directive,Target,Assignee,Priority,Status\n";
+            globalTasks.forEach(t => csv += `"${t.id}","${t.title}","${t.linked_entity}","${t.assigned_to}","${t.priority}","${t.status}"\n`);
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.setAttribute('href', url); a.setAttribute('download', 'Sync_Report.csv'); a.click();
+            showToast("Exported.");
         }
 
         async function copyShiftReport() {
-            let active = 0, completed = 0, critical = 0;
-            let criticalList = [], completedList = [];
-            
-            globalTasks.forEach(t => {
-                if(t.status === 'Completed') {
-                    completed++;
-                    completedList.push(`- ${t.title} (${t.linked_entity || 'No Target'})`);
-                } else {
-                    active++;
-                    if(t.priority === 'Critical') {
-                        critical++;
-                        criticalList.push(`- ${t.title} [Assigned: ${t.assigned_to}]`);
-                    }
-                }
-            });
-
-            const dateStr = new Date().toLocaleString();
-            let report = `SYNC COMMAND CENTER | SHIFT REPORT\nGenerated: ${dateStr}\nOperator: ${currentUser ? currentUser.name : 'System'}\n\n`;
-            report += `📊 SUMMARY:\nTotal Active: ${active}\nCompleted Today: ${completed}\nCritical Action Items: ${critical}\n\n`;
-            
-            if(critical > 0) report += `🚨 CRITICAL PENDING:\n${criticalList.join('\n')}\n\n`;
-            if(completed > 0) report += `✅ RECENTLY COMPLETED:\n${completedList.slice(0, 5).join('\n')}${completed > 5 ? '\n...and more.' : ''}\n`;
-
-            try {
-                await navigator.clipboard.writeText(report);
-                logAction("Generated Shift Report to clipboard");
-                showToast("Shift Report copied!");
-            } catch (err) {
-                showToast("Failed to copy report.");
-            }
+            let active = globalTasks.filter(t => t.status !== 'Completed').length;
+            let done = globalTasks.filter(t => t.status === 'Completed').length;
+            let report = `SHIFT REPORT\nActive: ${active}\nDone: ${done}\nCritical: ${globalTasks.filter(t => t.priority === 'Critical').length}`;
+            await navigator.clipboard.writeText(report); showToast("Copied!");
         }
 
         async function loadData() {
             const { data } = await supabaseClient.from('pulses').select('*').order('id', { ascending: false });
             if(!data) return;
             globalTasks = data;
-
             const tbody = document.getElementById('taskTableBody'); tbody.innerHTML = '';
             const cols = { 'Radar': 'col-radar', 'Assigned To': 'col-assigned', 'In Progress': 'col-progress', 'Completed': 'col-completed' };
-            Object.values(cols).forEach(id => document.getElementById(id).innerHTML = '');
-            
+            Object.values(cols).forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = ''; });
             let c = { t: 0, r: 0, a: 0, p: 0, d: 0, crit: 0 };
             const next = { 'Radar': 'Assigned To', 'Assigned To': 'In Progress', 'In Progress': 'Completed' };
-
+            
             data.forEach(item => {
-                c.t++; 
-                if(item.status === 'Radar') c.r++; 
-                if(item.status === 'Assigned To') c.a++; 
-                if(item.status === 'In Progress') c.p++;
-                if(item.status === 'Completed') c.d++; 
-                if(item.priority === 'Critical') c.crit++;
-
-                let notesIco = item.notes?.trim() ? `<i class="fa-solid fa-note-sticky ml-2 text-apple-secondary/50 dark:text-gray-500 text-[10px]"></i>` : '';
-                
-                let badge = item.status === 'Completed' ? `<span class="bg-gray-100 dark:bg-[#2C2C2E] text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest">Done</span>` : 
-                    (item.status === 'Radar' ? `<span class="bg-gray-50 dark:bg-[#1C1C1E] text-gray-400 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest border border-gray-200 dark:border-[#3A3A3C]">Radar</span>` : 
-                    `<span class="bg-orange-50 dark:bg-orange-900/20 text-orange-500 dark:text-orange-400 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest">${item.status}</span>`);
-
-                tbody.insertAdjacentHTML('beforeend', `
-                    <tr class="border-b border-apple-border dark:border-[#2C2C2E] hover:bg-apple-canvas dark:hover:bg-[#1C1C1E] transition-colors cursor-pointer group" onclick="openDrawer('${item.id}')">
-                        <td class="py-4 px-6 text-sm font-semibold text-apple-primary dark:text-white">${item.title} ${notesIco}</td>
-                        <td class="py-4 px-6 text-[10px] font-mono text-apple-secondary dark:text-gray-400 uppercase">${item.linked_entity}</td>
-                        <td class="py-4 px-6 text-sm font-medium text-apple-primary dark:text-white">${item.assigned_to}</td>
-                        <td class="py-4 px-6">${badge}</td><td class="py-4 px-6 text-right"><i class="fa-solid fa-chevron-right text-apple-border dark:text-[#3A3A3C] text-[10px]"></i></td>
-                    </tr>`);
-
-                let arrow = next[item.status] ? `<button onclick="event.stopPropagation(); quickMove('${item.id}', '${next[item.status]}')" class="h-6 w-6 rounded-full bg-apple-canvas dark:bg-[#2C2C2E] hover:bg-apple-blue dark:hover:bg-apple-blue text-apple-secondary hover:text-white transition-all flex items-center justify-center shadow-sm"><i class="fa-solid fa-arrow-right text-[10px]"></i></button>` : '';
-                let border = item.priority === 'Critical' ? 'border-l-4 border-l-red-500' : (item.priority === 'High' ? 'border-l-4 border-l-orange-500' : 'border border-apple-border dark:border-[#2C2C2E]');
-
+                c.t++; if(item.status === 'Radar') c.r++; if(item.status === 'Assigned To') c.a++; if(item.status === 'In Progress') c.p++;
+                if(item.status === 'Completed') c.d++; if(item.priority === 'Critical') c.crit++;
+                let badge = `<span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter ${item.status === 'Completed' ? 'bg-gray-100 dark:bg-[#2C2C2E] text-gray-500 dark:text-gray-400' : 'bg-orange-50 dark:bg-orange-900/20 text-orange-500 dark:text-orange-400'}">${item.status}</span>`;
+                tbody.insertAdjacentHTML('beforeend', `<tr class="border-b border-apple-border dark:border-[#2C2C2E] hover:bg-apple-canvas dark:hover:bg-[#242426] transition-colors cursor-pointer" onclick="openDrawer('${item.id}')"><td class="py-3 px-4 text-xs font-bold dark:text-white">${item.title}</td><td class="py-3 px-4 text-[9px] font-mono opacity-50 uppercase dark:text-white">${item.linked_entity}</td><td class="py-3 px-4 text-xs dark:text-gray-300">${item.assigned_to}</td><td class="py-3 px-4">${badge}</td><td class="py-3 px-4 text-right"><i class="fa-solid fa-chevron-right text-[8px] opacity-20 dark:text-white"></i></td></tr>`);
                 if(cols[item.status]) {
-                    document.getElementById(cols[item.status]).insertAdjacentHTML('beforeend', `
-                        <div class="bg-white dark:bg-[#1C1C1E] ${border} rounded-xl p-4 shadow-sm hover:shadow-apple-soft transition-all cursor-pointer" onclick="openDrawer('${item.id}')">
-                            <div class="flex justify-between items-start mb-3"><span class="bg-gray-50 dark:bg-[#2C2C2E] text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest">${item.assigned_to}</span>${arrow}</div>
-                            <h4 class="text-sm font-semibold leading-tight text-apple-primary dark:text-white">${item.title} ${notesIco}</h4><p class="text-[10px] font-mono text-apple-secondary dark:text-gray-400 uppercase mt-2">${item.linked_entity}</p>
-                        </div>`);
+                    let border = item.priority === 'Critical' ? 'border-l-4 border-l-red-500' : (item.priority === 'High' ? 'border-l-4 border-l-orange-500' : 'border border-apple-border dark:border-[#2C2C2E]');
+                    document.getElementById(cols[item.status]).insertAdjacentHTML('beforeend', `<div class="bg-white dark:bg-[#1C1C1E] ${border} rounded-xl p-4 shadow-sm active:scale-95 transition-all cursor-pointer" onclick="openDrawer('${item.id}')"><div class="flex justify-between items-start mb-2"><span class="text-[8px] font-black uppercase opacity-40 dark:text-white">${item.assigned_to}</span><button onclick="event.stopPropagation(); quickMove('${item.id}', '${next[item.status]}')" class="h-5 w-5 rounded-full bg-apple-blue text-white text-[8px] flex items-center justify-center ${!next[item.status] ? 'hidden' : ''}"><i class="fa-solid fa-arrow-right"></i></button></div><h4 class="text-xs font-bold leading-tight dark:text-white">${item.title}</h4></div>`);
                 }
             });
-
-            document.getElementById('kpi-total').innerText = c.t; document.getElementById('kpi-radar').innerText = c.r;
-            document.getElementById('kpi-progress').innerText = c.p + c.a; document.getElementById('kpi-completed').innerText = c.d;
             
-            document.getElementById('board-count-radar').innerText = c.r; document.getElementById('board-count-assigned').innerText = c.a;
-            document.getElementById('board-count-progress').innerText = c.p;
-            
-            document.getElementById('stat-critical').innerText = c.crit; document.getElementById('stat-completed').innerText = c.d;
-            document.getElementById('stat-rate').innerText = c.t > 0 ? Math.round(((c.t - c.r) / c.t) * 100) + '%' : '0%';
+            document.getElementById('kpi-total').innerText = c.t; document.getElementById('kpi-radar').innerText = c.r; document.getElementById('kpi-progress').innerText = c.p + c.a; document.getElementById('kpi-completed').innerText = c.d;
+            document.getElementById('board-count-radar').innerText = c.r; document.getElementById('board-count-assigned').innerText = c.a; document.getElementById('board-count-progress').innerText = c.p; document.getElementById('board-count-done').innerText = c.d;
+            document.getElementById('stat-critical').innerText = c.crit; document.getElementById('stat-rate').innerText = c.t > 0 ? Math.round(((c.t - c.r) / c.t) * 100) + '%' : '0%';
         }
 
         async function quickMove(id, nextStat) {
+            if(!nextStat) return;
             const task = globalTasks.find(t => t.id == id);
             await supabaseClient.from('pulses').update({ status: nextStat }).eq('id', id);
-            logAction(`Deployed: "${task.title}" to ${nextStat}`);
-            loadData();
+            logAction(`Moved: ${task.title} to ${nextStat}`); loadData();
         }
 
         function openDrawer(id) {
             activeDrawerId = id; const t = globalTasks.find(x => x.id == id);
             if(t) {
-                document.getElementById('drawerTitle').innerText = t.title;
-                document.getElementById('drawerStatus').value = t.status;
-                document.getElementById('drawerPriority').value = t.priority;
-                document.getElementById('drawerAssignee').value = t.assigned_to;
-                document.getElementById('drawerNotes').value = t.notes || '';
-                document.getElementById('slideDrawer').classList.add('drawer-open');
+                document.getElementById('drawerTitle').innerText = t.title; document.getElementById('drawerStatus').value = t.status;
+                document.getElementById('drawerPriority').value = t.priority; document.getElementById('drawerAssignee').value = t.assigned_to;
+                document.getElementById('drawerNotes').value = t.notes || ''; document.getElementById('slideDrawer').classList.add('drawer-open');
             }
         }
-
         function closeDrawer() { activeDrawerId = null; document.getElementById('slideDrawer').classList.remove('drawer-open'); }
 
         async function saveAndClose() {
             if(!activeDrawerId) return;
-            const b = document.getElementById('saveDrawerBtn');
-            if(b.disabled) return;
-
+            const b = document.getElementById('saveDrawerBtn'); if(b.disabled) return;
             b.disabled = true; b.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            const t = globalTasks.find(x => x.id == activeDrawerId);
             const upd = { status: document.getElementById('drawerStatus').value, priority: document.getElementById('drawerPriority').value, assigned_to: document.getElementById('drawerAssignee').value, notes: document.getElementById('drawerNotes').value };
             await supabaseClient.from('pulses').update(upd).eq('id', activeDrawerId);
-            logAction(`Updated task parameters: "${t.title}"`);
-            
-            b.disabled = false; b.innerHTML = 'Save Changes'; 
-            showToast('Task updated.'); closeDrawer(); loadData();
+            b.disabled = false; b.innerHTML = 'Save Changes'; showToast('Updated.'); closeDrawer(); loadData();
         }
 
         document.getElementById('archiveBtn').addEventListener('click', async () => {
-            if(!activeDrawerId) return;
-            const t = globalTasks.find(x => x.id == activeDrawerId);
+            if(!activeDrawerId || !confirm("Delete task?")) return;
             await supabaseClient.from('pulses').delete().eq('id', activeDrawerId);
-            logAction(`Purged: "${t.title}"`);
-            showToast('Task removed.'); closeDrawer(); loadData();
+            showToast('Deleted.'); closeDrawer(); loadData();
         });
 
         document.getElementById('createTaskBtn').addEventListener('click', async () => {
-            const btn = document.getElementById('createTaskBtn');
-            if(btn.disabled) return;
-            
-            const tit = document.getElementById('newTitle').value;
-            const tar = document.getElementById('newTarget').value;
-            if(!tit) return;
-            
+            const btn = document.getElementById('createTaskBtn'); if(btn.disabled) return;
+            const title = document.getElementById('newTitle').value;
+            const linked_entity = document.getElementById('newTarget').value;
+            if(!title) return;
             btn.disabled = true; btn.innerText = "Creating...";
-            await supabaseClient.from('pulses').insert([{ title: tit, linked_entity: tar || 'N/A', assigned_to: 'None', priority: 'Standard', status: 'Radar' }]);
-            logAction(`Injected directive: "${tit}"`);
-            
-            btn.disabled = false; btn.innerText = "Create Task"; 
-            closeModal('newTaskModal'); showToast('Directive created.'); loadData();
+            await supabaseClient.from('pulses').insert([{ title, linked_entity: linked_entity || 'N/A', assigned_to: 'None', priority: 'Standard', status: 'Radar' }]);
+            btn.disabled = false; btn.innerText = "Create"; closeModal('newTaskModal'); showToast('Created.'); loadData();
         });
 
         document.addEventListener('keydown', (e) => {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                e.preventDefault(); const s = document.getElementById('cmdInput'); if(s) s.focus();
-            }
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); document.getElementById('cmdInput')?.focus(); }
         });
 
-        supabaseClient.channel('db-sync-logs').on('postgres_changes', { event: '*', schema: 'public', table: 'activity_logs' }, () => { fetchLogs(); }).subscribe();
-        supabaseClient.channel('db-sync-pulses').on('postgres_changes', { event: '*', schema: 'public', table: 'pulses' }, () => { if(currentUser) loadData(); }).subscribe();
+        supabaseClient.channel('db-sync-logs').on('postgres_changes', { event: '*', schema: 'public', table: 'activity_logs' }, () => fetchLogs()).subscribe();
+        supabaseClient.channel('db-sync-pulses').on('postgres_changes', { event: '*', schema: 'public', table: 'pulses' }, () => currentUser && loadData()).subscribe();
     </script>
 </body>
 </html>
