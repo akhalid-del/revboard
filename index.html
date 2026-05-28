@@ -427,22 +427,34 @@
             const errEl = document.getElementById('memberError');
             
             if(!name || pin.length !== 4) { 
-                errEl.innerText = "Please provide a valid name and a 4-digit PIN."; errEl.style.display = 'block'; return; 
+                errEl.innerText = "Please provide a valid name and a 4-digit PIN."; 
+                errEl.style.display = 'block'; 
+                return; 
             }
             
             errEl.style.display = 'none';
+            const btn = document.getElementById('submitMemberBtn');
             btn.disabled = true; btn.innerText = "Saving...";
             
-            const { error } = await supabaseClient.from('floor_users').insert([{ name: name, pin: pin, status: 'Active' }]);
+            // FIX IS HERE: Added role: 'Leader'
+            const { error } = await supabaseClient.from('floor_users').insert([
+                { name: name, pin: pin, status: 'Active', role: 'Leader' }
+            ]);
             
             if(error) {
-                errEl.innerText = "Database Error: " + error.message; errEl.style.display = 'block';
-                btn.disabled = false; btn.innerText = "Save User"; return;
+                errEl.innerText = "Database Error: " + error.message; 
+                errEl.style.display = 'block';
+                btn.disabled = false; btn.innerText = "Save User"; 
+                return;
             }
 
             logAction(`Commissioned new personnel: ${name}`);
+            document.getElementById('newMemberName').value = '';
+            document.getElementById('newMemberPin').value = '';
             btn.disabled = false; btn.innerText = "Save User";
-            closeModal('addMemberModal'); showToast('Personnel added.'); initTeam();
+            closeModal('addMemberModal'); 
+            showToast('Personnel added.'); 
+            initTeam();
         });
 
         async function executePurge() {
