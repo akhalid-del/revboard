@@ -820,7 +820,7 @@
             loadData();
         });
 
-        // NEW: THE BULK PASTE GENERATOR LOGIC
+       // NEW: THE BULK PASTE GENERATOR LOGIC
         document.getElementById('submitBulkPasteBtn').addEventListener('click', async () => {
             const btn = document.getElementById('submitBulkPasteBtn'); if(btn.disabled) return;
             const rawText = document.getElementById('bulkPasteInput').value;
@@ -834,28 +834,36 @@
             
             btn.disabled = true; btn.innerText = `Generating ${lines.length}...`;
             
-            // Build the array to insert instantly
-            const insertData = lines.map(id => ({
-                title: "Bulk Directive",
-                linked_entity: id,
-                zone: zone,
-                assigned_to: 'None',
-                priority: 'Standard',
-                status: 'Radar',
-                department: currentUser.department
-            }));
-            
-            const { error } = await supabaseClient.from('pulses').insert(insertData);
-            
-            btn.disabled = false; btn.innerText = "Generate Tasks";
-            
-            if(error) { showToast("Error: " + error.message); return; }
-            
-            closeModal('bulkPasteModal');
-            playSound('chime');
-            showToast(`Created ${lines.length} Tasks`);
-            logAction(`Bulk Imported ${lines.length} Tasks`);
-            loadData();
+            try {
+                // Build the array to insert instantly
+                const insertData = lines.map(id => ({
+                    title: "Bulk Directive",
+                    linked_entity: id,
+                    zone: zone,
+                    assigned_to: 'None',
+                    priority: 'Standard',
+                    status: 'Radar',
+                    department: currentUser.department || 'General' // Fallback in case department is null
+                }));
+                
+                const { error } = await supabaseClient.from('pulses').insert(insertData);
+                
+                if(error) throw error; // Force it to catch the error
+                
+                btn.disabled = false; btn.innerText = "Generate Tasks";
+                closeModal('bulkPasteModal');
+                playSound('chime');
+                showToast(`Created ${lines.length} Tasks`);
+                logAction(`Bulk Imported ${lines.length} Tasks`);
+                loadData();
+
+            } catch (err) {
+                // If anything fails, reset the button and show the exact error!
+                btn.disabled = false; 
+                btn.innerText = "Generate Tasks";
+                alert("Database Error: " + err.message);
+                console.error(err);
+            }
         });
 
         document.addEventListener('keydown', (e) => {
