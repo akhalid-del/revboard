@@ -39,6 +39,16 @@
             background-image: url("data:image/svg+xml;utf8,<svg fill='%2386868B' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
             background-repeat: no-repeat; background-position-x: calc(100% - 12px); background-position-y: 50%;
         }
+
+        /* WAR ROOM MODE OVERRIDES */
+        body.war-room aside, body.war-room header, body.war-room #ops-header, body.war-room #fab-add-task { display: none !important; }
+        body.war-room { background-color: #050505 !important; }
+        body.war-room main { padding: 0 !important; }
+        body.war-room #view-board { padding: 2rem; height: 100vh; gap: 2rem; align-items: stretch; justify-content: center; }
+        body.war-room .w-72 { width: 22vw !important; min-width: 300px; background: rgba(20, 20, 22, 0.9) !important; border-color: #333 !important; }
+        body.war-room .bg-white { background-color: #121212 !important; border-color: #2a2a2a !important; color: #fff !important; }
+        body.war-room .text-apple-primary { color: #fff !important; }
+        body.war-room * { text-shadow: 0 0 1px rgba(255,255,255,0.1); }
     </style>
 </head>
 <body class="h-screen w-screen overflow-hidden flex flex-col md:flex-row antialiased bg-apple-canvas text-apple-primary dark:bg-[#121212] dark:text-[#F5F5F7] transition-colors duration-300">
@@ -132,9 +142,15 @@
                 
                 <div id="ops-header" class="block">
                     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4">
-                        <div>
-                            <h1 class="text-2xl font-bold tracking-tight dark:text-white">Floor Operations</h1>
-                            <p class="text-xs text-apple-secondary dark:text-gray-400">Live call center telemetry & routing</p>
+                        <div class="flex items-center gap-6">
+                            <div>
+                                <h1 class="text-2xl font-bold tracking-tight dark:text-white">Floor Operations</h1>
+                                <p class="text-xs text-apple-secondary dark:text-gray-400">Live call center telemetry & routing</p>
+                            </div>
+                            <div class="hidden lg:block h-10 w-32 border-l border-apple-border dark:border-[#2C2C2E] pl-6 ml-2" title="8-Hour Execution Velocity">
+                                <p class="text-[8px] uppercase font-bold text-apple-secondary mb-1">Velocity</p>
+                                <div id="sparklineContainer" class="h-6 w-full flex items-end"></div>
+                            </div>
                         </div>
                         <div class="flex gap-2">
                             <button onclick="copyShiftReport()" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary hover:text-apple-primary dark:text-gray-400 dark:hover:text-white shadow-sm transition-all flex items-center justify-center gap-2">
@@ -343,6 +359,37 @@
         let globalLogs = [];
         let idleTimer = null;
         let activeFilter = 'All';
+        
+        // PREMIUM: Web Audio API (Zero-install sound engine)
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        function playSound(type) {
+            if(!audioCtx) return;
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            if(type === 'pop') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            } else if (type === 'chime') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.6);
+            }
+        }
 
         function toggleTheme() {
             const html = document.documentElement;
@@ -366,6 +413,7 @@
             if(!currentUser) return;
             currentUser = null;
             resetPinUI();
+            document.body.classList.remove('war-room');
             document.getElementById('lockScreen').style.opacity = '1';
             document.getElementById('lockScreen').style.display = 'flex';
             document.getElementById('activeUserName').innerText = 'LOCKED';
@@ -416,17 +464,14 @@
         }
 
         function applyRolePermissions() {
-            // INJECTED SILO LOGIC: Looking for the word "Manager" to grant God Mode
             const isAdmin = currentUser && (currentUser.role.includes('Manager') || currentUser.role === 'Admin');
             document.querySelectorAll('.admin-only').forEach(el => el.style.display = isAdmin ? '' : 'none');
             
-            // INJECTED SILO LOGIC: Force "Mine" view for Floor workers.
             if(isAdmin) {
                 setFilter('All');
                 document.getElementById('drawerAssignee').disabled = false;
             } else {
                 setFilter('Mine');
-                // Lock down the Assignee dropdown in the drawer for Floor workers
                 document.getElementById('drawerAssignee').disabled = true;
             }
         }
@@ -441,6 +486,9 @@
 
         document.querySelectorAll('.pin-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                // Ensure audio engine wakes up on first user interaction
+                if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                
                 if(currentPin.length < 4) {
                     currentPin += e.currentTarget.getAttribute('data-val');
                     const dot = document.getElementById(`dot-${currentPin.length}`);
@@ -459,9 +507,9 @@
                     currentUser = data;
                     document.getElementById('lockScreen').style.opacity = '0';
                     setTimeout(() => document.getElementById('lockScreen').style.display = 'none', 500);
-                    // INJECTED SILO LOGIC: Show department name to confirm the Silo
                     document.getElementById('activeUserName').innerText = data.name + ' (' + (data.department || 'SYS') + ')';
                     applyRolePermissions(); switchView('table'); initTeam(); loadData(); fetchLogs(); logAction("Session Start"); resetIdleTimer();
+                    playSound('pop');
                 } else { throw new Error("Invalid"); }
             } catch (err) {
                 document.getElementById('pinError').style.opacity = '1';
@@ -471,15 +519,41 @@
 
         async function logAction(text) {
             if(!currentUser) return;
-            // INJECTED SILO LOGIC: Append department to log insertion
             await supabaseClient.from('activity_logs').insert([{ action_text: text, performed_by: currentUser.name, department: currentUser.department }]);
         }
 
+        // PREMIUM: The Velocity Sparkline (Pure SVG Math)
+        function renderSparkline(logs) {
+            const container = document.getElementById('sparklineContainer');
+            if(!container) return;
+            
+            const hours = new Array(8).fill(0);
+            const now = new Date();
+            
+            logs.forEach(log => {
+                if(log.action_text.includes('to Completed') || log.action_text.includes('Created:')) {
+                    const diffHours = Math.floor((now - new Date(log.created_at)) / (1000 * 60 * 60));
+                    if(diffHours >= 0 && diffHours < 8) hours[7 - diffHours]++;
+                }
+            });
+            
+            const max = Math.max(...hours, 1);
+            const width = 120;
+            const height = 24;
+            const step = width / 7;
+            
+            const pts = hours.map((val, i) => `${i * step},${height - ((val / max) * height)}`).join(' ');
+            
+            container.innerHTML = `<svg width="${width}" height="${height}" viewBox="0 -5 ${width} ${height + 10}" fill="none" stroke="currentColor" stroke-width="2" class="text-apple-blue"><polyline points="${pts}" stroke-linejoin="round" stroke-linecap="round"/><path d="M0,${height} L${pts} L${width},${height} Z" fill="url(#sparkGradient)" stroke="none"/><defs><linearGradient id="sparkGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#007AFF" stop-opacity="0.3"/><stop offset="100%" stop-color="#007AFF" stop-opacity="0"/></linearGradient></defs></svg>`;
+        }
+
         async function fetchLogs() {
-            // INJECTED SILO LOGIC: Only pull logs for this department
-            const { data } = await supabaseClient.from('activity_logs').select('*').eq('department', currentUser.department).order('created_at', { ascending: false }).limit(100);
+            const { data } = await supabaseClient.from('activity_logs').select('*').eq('department', currentUser.department).order('created_at', { ascending: false }).limit(200);
             if(!data) return;
             globalLogs = data;
+            
+            renderSparkline(data); // Draw Sparkline
+            
             const container = document.getElementById('logContainer');
             if(container){
                 container.innerHTML = '';
@@ -491,7 +565,6 @@
         }
 
         async function initTeam() {
-            // INJECTED SILO LOGIC: Only pull users in this exact department
             const { data } = await supabaseClient.from('floor_users').select('*').eq('status', 'Active').eq('department', currentUser.department);
             if(!data) return;
             
@@ -505,7 +578,6 @@
             grid.innerHTML = `<div onclick="openModal('addMemberModal')" class="bg-apple-canvas dark:bg-[#2C2C2E] border-2 border-dashed border-apple-border dark:border-[#3A3A3C] rounded-2xl p-4 flex flex-col items-center justify-center text-apple-secondary dark:text-gray-400 cursor-pointer min-h-[120px] transition-all"><i class="fa-solid fa-plus text-xl mb-1"></i><span class="text-[10px] font-bold uppercase">Add</span></div>`;
             
             data.forEach(user => {
-                // Don't assign tasks to Managers
                 if (!user.role.includes('Manager')) {
                     select.insertAdjacentHTML('beforeend', `<option value="${user.name}">${user.name}</option>`);
                     if(newSelect) newSelect.insertAdjacentHTML('beforeend', `<option value="${user.name}">${user.name}</option>`);
@@ -530,14 +602,13 @@
             const errEl = document.getElementById('memberError');
             if(!name || pin.length !== 4) { errEl.innerText = "Check Name & 4-Digit PIN"; errEl.style.display = 'block'; return; }
             btn.disabled = true; btn.innerText = "Saving...";
-            // INJECTED SILO LOGIC: Force new users to inherit the Admin's department and default to 'Team Leader' role.
+            
             const { error } = await supabaseClient.from('floor_users').insert([{ name, pin, status: 'Active', role: 'Team Leader', department: currentUser.department }]);
             if(error) { errEl.innerText = error.message; errEl.style.display = 'block'; btn.disabled = false; btn.innerText = "Save User"; return; }
             logAction(`Added Member: ${name}`); btn.disabled = false; btn.innerText = "Save User"; closeModal('addMemberModal'); showToast('Success.'); initTeam();
         });
 
         async function executePurge() {
-            // INJECTED SILO LOGIC: Only delete tasks in the Admin's department
             closeModal('purgeModal'); await supabaseClient.from('pulses').delete().eq('department', currentUser.department);
             logAction("EMERGENCY PURGE EXECUTED FOR DEPARTMENT"); loadData();
         }
@@ -575,7 +646,6 @@
         }
 
         async function loadData() {
-            // INJECTED SILO LOGIC: Only pull tasks for this department
             const { data } = await supabaseClient.from('pulses').select('*').eq('department', currentUser.department).order('id', { ascending: false });
             if(!data) return;
             globalTasks = data;
@@ -623,6 +693,7 @@
             if(!nextStat) return;
             const task = globalTasks.find(t => t.id == id);
             await supabaseClient.from('pulses').update({ status: nextStat }).eq('id', id);
+            playSound('pop'); // Play Audio Feedabck
             logAction(`Moved: "${task.title}" to ${nextStat}`); loadData();
         }
 
@@ -693,6 +764,7 @@
             };
             const t = globalTasks.find(x => x.id == activeDrawerId);
             await supabaseClient.from('pulses').update(upd).eq('id', activeDrawerId);
+            playSound('pop'); // Play Audio Feedback
             b.disabled = false; b.innerHTML = 'Save Changes'; showToast('Updated.'); 
             
             logAction(`Updated: "${t.title}"`); closeDrawer(); loadData();
@@ -715,7 +787,6 @@
             if(!title) return;
             btn.disabled = true; btn.innerText = "Creating...";
             
-            // INJECTED SILO LOGIC: Append department to task insertion
             const { data, error } = await supabaseClient.from('pulses').insert([{ title, linked_entity: linked_entity || 'N/A', zone: zone, assigned_to: assigned_to, priority: 'Standard', status: 'Radar', department: currentUser.department }]).select();
             btn.disabled = false; btn.innerText = "Create"; closeModal('newTaskModal'); showToast('Created.'); 
             
@@ -725,12 +796,33 @@
             loadData();
         });
 
+        // PREMIUM: The War Room Keyboard Hook (Shift + W)
         document.addEventListener('keydown', (e) => {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); document.getElementById('cmdInput')?.focus(); }
+            // Secret War Room Mode Toggle
+            if (e.shiftKey && e.key.toLowerCase() === 'w') {
+                if(currentUser) { 
+                    document.body.classList.toggle('war-room');
+                    if(document.body.classList.contains('war-room')) {
+                        switchView('board');
+                        playSound('chime');
+                        showToast('WAR ROOM MODE ACTIVATED');
+                    } else {
+                        showToast('War Room Off');
+                    }
+                }
+            }
         });
 
+        // Realtime Subscription (Plays chime if someone else makes a Critical task)
         supabaseClient.channel('db-sync-logs').on('postgres_changes', { event: '*', schema: 'public', table: 'activity_logs' }, () => fetchLogs()).subscribe();
-        supabaseClient.channel('db-sync-pulses').on('postgres_changes', { event: '*', schema: 'public', table: 'pulses' }, () => currentUser && loadData()).subscribe();
+        supabaseClient.channel('db-sync-pulses').on('postgres_changes', { event: '*', schema: 'public', table: 'pulses' }, (payload) => {
+            if(currentUser) {
+                loadData();
+                if (payload.eventType === 'INSERT' && payload.new.priority === 'Critical') {
+                    playSound('chime');
+                }
+            }
+        }).subscribe();
     </script>
 </body>
 </html>
