@@ -153,6 +153,9 @@
                             </div>
                         </div>
                         <div class="flex gap-2">
+                            <button onclick="openModal('bulkPasteModal')" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-apple-blue text-white shadow-sm transition-all flex items-center justify-center gap-2 hover:opacity-80">
+                                <i class="fa-solid fa-paste"></i> BULK
+                            </button>
                             <button onclick="copyShiftReport()" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary hover:text-apple-primary dark:text-gray-400 dark:hover:text-white shadow-sm transition-all flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-copy"></i> REPORT
                             </button>
@@ -287,6 +290,28 @@
         </div>
     </div>
 
+    <div id="bulkPasteModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-6 rounded-2xl w-full max-w-md shadow-2xl">
+            <h3 class="text-lg font-bold mb-2 dark:text-white">Bulk Paste Tasks</h3>
+            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-4">Paste a column of Reference IDs from Excel. The app will generate tasks for all of them instantly.</p>
+            <div class="space-y-4 mb-6">
+                <textarea id="bulkPasteInput" placeholder="Paste IDs here...&#10;ID-9942&#10;ID-9943" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-32 p-4 rounded-lg text-sm dark:text-white font-mono resize-none"></textarea>
+                <select id="bulkPasteZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
+                    <option value="General">General Floor</option>
+                    <option value="Inbound">Tier 1 (Inbound)</option>
+                    <option value="Escalations">Escalations</option>
+                    <option value="QA">Quality Assurance</option>
+                    <option value="Outbound">Outbound</option>
+                    <option value="Training">Training</option>
+                </select>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="closeModal('bulkPasteModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
+                <button id="submitBulkPasteBtn" class="flex-1 h-11 text-xs font-bold bg-apple-blue text-white rounded-xl shadow-sm">Generate Tasks</button>
+            </div>
+        </div>
+    </div>
+
     <div id="addMemberModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
         <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-6 rounded-2xl w-full max-w-sm shadow-2xl">
             <h3 class="text-lg font-bold mb-4 dark:text-white">Add Member</h3>
@@ -360,7 +385,6 @@
         let idleTimer = null;
         let activeFilter = 'All';
         
-        // PREMIUM: Web Audio API (Zero-install sound engine)
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const audioCtx = new AudioContext();
 
@@ -440,6 +464,10 @@
                 document.getElementById('newZone').value = 'General';
                 document.getElementById('newAssignee').value = 'None';
             }
+            if(id === 'bulkPasteModal') {
+                document.getElementById('bulkPasteInput').value = ''; 
+                document.getElementById('bulkPasteZone').value = 'General';
+            }
         }
         function showToast(msg) {
             const t = document.getElementById('toastAlert'); document.getElementById('toastMessage').innerText = msg;
@@ -486,7 +514,6 @@
 
         document.querySelectorAll('.pin-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                // Ensure audio engine wakes up on first user interaction
                 if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
                 
                 if(currentPin.length < 4) {
@@ -522,7 +549,6 @@
             await supabaseClient.from('activity_logs').insert([{ action_text: text, performed_by: currentUser.name, department: currentUser.department }]);
         }
 
-        // PREMIUM: The Velocity Sparkline (Pure SVG Math)
         function renderSparkline(logs) {
             const container = document.getElementById('sparklineContainer');
             if(!container) return;
@@ -531,7 +557,7 @@
             const now = new Date();
             
             logs.forEach(log => {
-                if(log.action_text.includes('to Completed') || log.action_text.includes('Created:')) {
+                if(log.action_text.includes('to Completed') || log.action_text.includes('Created:') || log.action_text.includes('Bulk')) {
                     const diffHours = Math.floor((now - new Date(log.created_at)) / (1000 * 60 * 60));
                     if(diffHours >= 0 && diffHours < 8) hours[7 - diffHours]++;
                 }
@@ -552,7 +578,7 @@
             if(!data) return;
             globalLogs = data;
             
-            renderSparkline(data); // Draw Sparkline
+            renderSparkline(data);
             
             const container = document.getElementById('logContainer');
             if(container){
@@ -693,7 +719,7 @@
             if(!nextStat) return;
             const task = globalTasks.find(t => t.id == id);
             await supabaseClient.from('pulses').update({ status: nextStat }).eq('id', id);
-            playSound('pop'); // Play Audio Feedabck
+            playSound('pop'); 
             logAction(`Moved: "${task.title}" to ${nextStat}`); loadData();
         }
 
@@ -764,7 +790,7 @@
             };
             const t = globalTasks.find(x => x.id == activeDrawerId);
             await supabaseClient.from('pulses').update(upd).eq('id', activeDrawerId);
-            playSound('pop'); // Play Audio Feedback
+            playSound('pop');
             b.disabled = false; b.innerHTML = 'Save Changes'; showToast('Updated.'); 
             
             logAction(`Updated: "${t.title}"`); closeDrawer(); loadData();
@@ -790,15 +816,49 @@
             const { data, error } = await supabaseClient.from('pulses').insert([{ title, linked_entity: linked_entity || 'N/A', zone: zone, assigned_to: assigned_to, priority: 'Standard', status: 'Radar', department: currentUser.department }]).select();
             btn.disabled = false; btn.innerText = "Create"; closeModal('newTaskModal'); showToast('Created.'); 
             
-            if(data && data.length > 0) {
-                logAction(`Created: "${title}"`);
-            }
+            if(data && data.length > 0) logAction(`Created: "${title}"`);
             loadData();
         });
 
-        // PREMIUM: The War Room Keyboard Hook (Shift + W)
+        // NEW: THE BULK PASTE GENERATOR LOGIC
+        document.getElementById('submitBulkPasteBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('submitBulkPasteBtn'); if(btn.disabled) return;
+            const rawText = document.getElementById('bulkPasteInput').value;
+            const zone = document.getElementById('bulkPasteZone').value;
+            
+            // Slice the text by line breaks, trim spaces, and remove empty lines
+            const lines = rawText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            
+            if(lines.length === 0) return;
+            if(lines.length > 100) { alert("Please paste a maximum of 100 IDs at a time to keep it safe."); return; }
+            
+            btn.disabled = true; btn.innerText = `Generating ${lines.length}...`;
+            
+            // Build the array to insert instantly
+            const insertData = lines.map(id => ({
+                title: "Bulk Directive",
+                linked_entity: id,
+                zone: zone,
+                assigned_to: 'None',
+                priority: 'Standard',
+                status: 'Radar',
+                department: currentUser.department
+            }));
+            
+            const { error } = await supabaseClient.from('pulses').insert(insertData);
+            
+            btn.disabled = false; btn.innerText = "Generate Tasks";
+            
+            if(error) { showToast("Error: " + error.message); return; }
+            
+            closeModal('bulkPasteModal');
+            playSound('chime');
+            showToast(`Created ${lines.length} Tasks`);
+            logAction(`Bulk Imported ${lines.length} Tasks`);
+            loadData();
+        });
+
         document.addEventListener('keydown', (e) => {
-            // Secret War Room Mode Toggle
             if (e.shiftKey && e.key.toLowerCase() === 'w') {
                 if(currentUser) { 
                     document.body.classList.toggle('war-room');
@@ -813,7 +873,6 @@
             }
         });
 
-        // Realtime Subscription (Plays chime if someone else makes a Critical task)
         supabaseClient.channel('db-sync-logs').on('postgres_changes', { event: '*', schema: 'public', table: 'activity_logs' }, () => fetchLogs()).subscribe();
         supabaseClient.channel('db-sync-pulses').on('postgres_changes', { event: '*', schema: 'public', table: 'pulses' }, (payload) => {
             if(currentUser) {
