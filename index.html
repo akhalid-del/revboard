@@ -170,11 +170,11 @@
 
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
                         <div class="bg-white dark:bg-[#1C1C1E] rounded-2xl p-4 border border-apple-border dark:border-[#2C2C2E] shadow-sm">
-                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">Active</p>
+                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">Active Total</p>
                             <span id="kpi-total" class="text-2xl font-bold dark:text-white">0</span>
                         </div>
                         <div class="bg-white dark:bg-[#1C1C1E] rounded-2xl p-4 border border-apple-border dark:border-[#2C2C2E] shadow-sm">
-                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">Radar</p>
+                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">Radar & Assigned</p>
                             <span id="kpi-radar" class="text-2xl font-bold dark:text-white">0</span>
                         </div>
                         <div class="bg-white dark:bg-[#1C1C1E] rounded-2xl p-4 border border-apple-border dark:border-[#2C2C2E] shadow-sm">
@@ -182,7 +182,7 @@
                             <span id="kpi-progress" class="text-2xl font-bold dark:text-white">0</span>
                         </div>
                         <div class="bg-white dark:bg-[#1C1C1E] rounded-2xl p-4 border border-apple-border dark:border-[#2C2C2E] opacity-50">
-                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">Done</p>
+                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">Done Today</p>
                             <span id="kpi-completed" class="text-2xl font-bold dark:text-white">0</span>
                         </div>
                     </div>
@@ -210,6 +210,10 @@
                         <h3 class="text-[9px] uppercase font-black text-apple-blue mb-4 flex justify-between">In Progress <span id="board-count-progress">0</span></h3>
                         <div id="col-progress" class="space-y-3"></div>
                     </div>
+                    <div class="w-72 shrink-0 flex flex-col bg-orange-50/50 dark:bg-orange-900/10 border border-orange-500/30 rounded-2xl p-4 h-fit">
+                        <h3 class="text-[9px] uppercase font-black text-orange-600 dark:text-orange-400 mb-4 flex justify-between">Pending PM Review <span id="board-count-review">0</span></h3>
+                        <div id="col-review" class="space-y-3"></div>
+                    </div>
                     <div class="w-72 shrink-0 flex flex-col bg-white/40 dark:bg-[#1C1C1E]/40 border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-4 opacity-60 h-fit">
                         <h3 class="text-[9px] uppercase font-black text-apple-secondary mb-4 flex justify-between">Completed <span id="board-count-done" class="text-apple-primary dark:text-white">0</span></h3>
                         <div id="col-completed" class="space-y-3"></div>
@@ -225,15 +229,29 @@
                 </div>
 
                 <div id="view-analytics" class="hidden flex-col gap-4">
-                    <div class="bg-white dark:bg-[#1C1C1E] p-8 rounded-2xl border border-apple-border dark:border-[#2C2C2E] text-center shadow-sm">
-                        <i class="fa-solid fa-triangle-exclamation text-2xl text-red-500 mb-2"></i>
-                        <h3 class="text-3xl font-bold dark:text-white" id="stat-critical">0</h3>
-                        <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Critical</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-apple-border dark:border-[#2C2C2E] text-center shadow-sm">
+                            <i class="fa-solid fa-triangle-exclamation text-2xl text-red-500 mb-2"></i>
+                            <h3 class="text-3xl font-bold dark:text-white" id="stat-critical">0</h3>
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">System Criticals</p>
+                        </div>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-apple-border dark:border-[#2C2C2E] text-center shadow-sm">
+                            <i class="fa-solid fa-users-gear text-2xl text-apple-blue mb-2"></i>
+                            <h3 class="text-3xl font-bold dark:text-white" id="stat-rate">0%</h3>
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Resolution Rate</p>
+                        </div>
                     </div>
-                    <div class="bg-white dark:bg-[#1C1C1E] p-8 rounded-2xl border border-apple-border dark:border-[#2C2C2E] text-center shadow-sm">
-                        <i class="fa-solid fa-users-gear text-2xl text-apple-blue mb-2"></i>
-                        <h3 class="text-3xl font-bold dark:text-white" id="stat-rate">0%</h3>
-                        <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Rate</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-apple-border dark:border-[#2C2C2E] text-center shadow-sm border-t-4 border-t-purple-500">
+                            <i class="fa-solid fa-chalkboard-user text-2xl text-purple-500 mb-2"></i>
+                            <h3 class="text-3xl font-bold dark:text-white" id="stat-coaching">0</h3>
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Active Coaching Sessions</p>
+                        </div>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-apple-border dark:border-[#2C2C2E] text-center shadow-sm border-t-4 border-t-teal-500">
+                            <i class="fa-solid fa-file-contract text-2xl text-teal-500 mb-2"></i>
+                            <h3 class="text-3xl font-bold dark:text-white" id="stat-reports">0</h3>
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Active Reports</p>
+                        </div>
                     </div>
                 </div>
 
@@ -255,7 +273,7 @@
 
             <div id="drawer-details" class="flex-1 p-6 space-y-5 overflow-y-auto scrollbar-hide block">
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Status</label><select id="drawerStatus" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="Radar">Radar</option><option value="Assigned To">Assigned To</option><option value="In Progress">In Progress</option><option value="Completed">Completed</option></select></div>
+                    <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Status</label><select id="drawerStatus" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="Radar">Radar</option><option value="Assigned To">Assigned To</option><option value="In Progress">In Progress</option><option value="Pending PM Review">Pending PM Review</option><option value="Completed">Completed</option></select></div>
                     <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Priority</label><select id="drawerPriority" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="Standard">Standard</option><option value="High">High</option><option value="Critical">Critical</option></select></div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -651,10 +669,14 @@
 
         function renderData() {
             const tbody = document.getElementById('taskTableBody'); tbody.innerHTML = '';
-            const cols = { 'Radar': 'col-radar', 'Assigned To': 'col-assigned', 'In Progress': 'col-progress', 'Completed': 'col-completed' };
+            // ADDED PENDING PM REVIEW COLUMN MAPPING
+            const cols = { 'Radar': 'col-radar', 'Assigned To': 'col-assigned', 'In Progress': 'col-progress', 'Pending PM Review': 'col-review', 'Completed': 'col-completed' };
             Object.values(cols).forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = ''; });
-            let c = { t: 0, r: 0, a: 0, p: 0, d: 0, crit: 0 };
-            const next = { 'Radar': 'Assigned To', 'Assigned To': 'In Progress', 'In Progress': 'Completed' };
+            
+            let c = { t: 0, r: 0, a: 0, p: 0, rev: 0, d: 0, crit: 0, coach: 0, rep: 0 };
+            
+            // NEW TWO-STEP QA WORKFLOW PATH
+            const next = { 'Radar': 'Assigned To', 'Assigned To': 'In Progress', 'In Progress': 'Pending PM Review', 'Pending PM Review': 'Completed' };
             
             let displayData = globalTasks;
             if(activeFilter === 'Mine' && currentUser) displayData = globalTasks.filter(t => t.assigned_to === currentUser.name);
@@ -669,9 +691,20 @@
                 });
             }
 
+            const isAdmin = currentUser && (currentUser.role.includes('Manager') || currentUser.role === 'Admin');
+
             displayData.forEach(item => {
-                c.t++; if(item.status === 'Radar') c.r++; if(item.status === 'Assigned To') c.a++; if(item.status === 'In Progress') c.p++;
-                if(item.status === 'Completed') c.d++; if(item.priority === 'Critical') c.crit++;
+                c.t++; 
+                if(item.status === 'Radar') c.r++; 
+                if(item.status === 'Assigned To') c.a++; 
+                if(item.status === 'In Progress') c.p++;
+                if(item.status === 'Pending PM Review') c.rev++;
+                if(item.status === 'Completed') c.d++; 
+                if(item.priority === 'Critical') c.crit++;
+                
+                // COACHING MATRIX ANALYTICS LOGIC
+                if(item.zone === 'Coaching' && item.status !== 'Completed') c.coach++;
+                if(item.zone === 'Reports' && item.status !== 'Completed') c.rep++;
                 
                 let isBlocked = false;
                 if(item.blocked_by) {
@@ -679,20 +712,46 @@
                     if(blocker && blocker.status !== 'Completed') isBlocked = true;
                 }
 
-                let badge = `<span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter ${item.status === 'Completed' ? 'bg-gray-100 dark:bg-[#2C2C2E] text-gray-500 dark:text-gray-400' : 'bg-orange-50 dark:bg-orange-900/20 text-orange-500 dark:text-orange-400'}">${item.status}</span>`;
+                let badgeColor = 'bg-orange-50 text-orange-500 dark:bg-orange-900/20 dark:text-orange-400';
+                if(item.status === 'Completed') badgeColor = 'bg-gray-100 text-gray-500 dark:bg-[#2C2C2E] dark:text-gray-400';
+                if(item.status === 'Pending PM Review') badgeColor = 'bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400';
+
+                let badge = `<span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter ${badgeColor}">${item.status}</span>`;
                 let blockIco = isBlocked ? `<i class="fa-solid fa-lock text-red-500 ml-2" title="Blocked"></i>` : '';
 
                 tbody.insertAdjacentHTML('beforeend', `<tr class="border-b border-apple-border dark:border-[#2C2C2E] hover:bg-apple-canvas dark:hover:bg-[#242426] transition-colors cursor-pointer" onclick="openDrawer('${item.id}')"><td class="py-3 px-4 text-xs font-bold dark:text-white">${item.title} ${blockIco}</td><td class="py-3 px-4 text-[9px] font-mono opacity-50 uppercase dark:text-white">${item.linked_entity}</td><td class="py-3 px-4 text-[9px] font-bold uppercase dark:text-gray-400">${item.zone || 'General'}</td><td class="py-3 px-4 text-xs dark:text-gray-300">${item.assigned_to}</td><td class="py-3 px-4">${badge}</td><td class="py-3 px-4 text-right"><i class="fa-solid fa-chevron-right text-[8px] opacity-20 dark:text-white"></i></td></tr>`);
+                
                 if(cols[item.status]) {
                     let border = item.priority === 'Critical' ? 'border-l-4 border-l-red-500' : (item.priority === 'High' ? 'border-l-4 border-l-orange-500' : 'border border-apple-border dark:border-[#2C2C2E]');
-                    let moveBtn = (!next[item.status] || isBlocked) ? '' : `<button onclick="event.stopPropagation(); quickMove('${item.id}', '${next[item.status]}')" class="h-5 w-5 rounded-full bg-apple-blue text-white text-[8px] flex items-center justify-center"><i class="fa-solid fa-arrow-right"></i></button>`;
+                    
+                    let nextState = next[item.status];
+                    let canMove = true;
+                    if(isBlocked) canMove = false;
+                    
+                    // THE EXECUTIVE SHIELD: NON-MANAGERS CANNOT MOVE TO COMPLETED
+                    if(nextState === 'Completed' && !isAdmin) canMove = false; 
+
+                    let moveBtn = (!nextState || !canMove) ? '' : `<button onclick="event.stopPropagation(); quickMove('${item.id}', '${nextState}')" class="h-5 w-5 rounded-full bg-apple-blue text-white text-[8px] flex items-center justify-center hover:scale-110 transition-transform"><i class="fa-solid ${nextState === 'Completed' ? 'fa-check' : 'fa-arrow-right'}"></i></button>`;
+                    
                     document.getElementById(cols[item.status]).insertAdjacentHTML('beforeend', `<div class="bg-white dark:bg-[#1C1C1E] ${border} rounded-xl p-4 shadow-sm active:scale-95 transition-all cursor-pointer" onclick="openDrawer('${item.id}')"><div class="flex justify-between items-start mb-2"><span class="text-[8px] font-black uppercase opacity-40 dark:text-white">${item.zone || 'General'} • ${item.assigned_to}</span>${moveBtn}</div><h4 class="text-xs font-bold leading-tight dark:text-white">${item.title} ${blockIco}</h4></div>`);
                 }
             });
             
-            document.getElementById('kpi-total').innerText = c.t; document.getElementById('kpi-radar').innerText = c.r; document.getElementById('kpi-progress').innerText = c.p + c.a; document.getElementById('kpi-completed').innerText = c.d;
-            document.getElementById('board-count-radar').innerText = c.r; document.getElementById('board-count-assigned').innerText = c.a; document.getElementById('board-count-progress').innerText = c.p; document.getElementById('board-count-done').innerText = c.d;
-            document.getElementById('stat-critical').innerText = c.crit; document.getElementById('stat-rate').innerText = c.t > 0 ? Math.round(((c.t - c.r) / c.t) * 100) + '%' : '0%';
+            document.getElementById('kpi-total').innerText = c.t; 
+            document.getElementById('kpi-radar').innerText = c.r + c.a; 
+            document.getElementById('kpi-progress').innerText = c.p + c.rev; 
+            document.getElementById('kpi-completed').innerText = c.d;
+            
+            document.getElementById('board-count-radar').innerText = c.r; 
+            document.getElementById('board-count-assigned').innerText = c.a; 
+            document.getElementById('board-count-progress').innerText = c.p; 
+            document.getElementById('board-count-review').innerText = c.rev; 
+            document.getElementById('board-count-done').innerText = c.d;
+            
+            document.getElementById('stat-critical').innerText = c.crit; 
+            document.getElementById('stat-rate').innerText = c.t > 0 ? Math.round(((c.t - (c.r + c.a + c.p + c.rev)) / c.t) * 100) + '%' : '0%';
+            document.getElementById('stat-coaching').innerText = c.coach;
+            document.getElementById('stat-reports').innerText = c.rep;
         }
 
         async function quickMove(id, nextStat) {
