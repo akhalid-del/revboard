@@ -120,6 +120,12 @@
                 <i class="fa-solid fa-layer-group text-apple-blue text-xl md:hidden"></i>
                 <span class="font-bold text-sm tracking-tight md:hidden dark:text-white">SYNC</span>
             </div>
+            
+            <div id="searchContainer" class="hidden flex-1 max-w-md mx-6 relative">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-[11px] text-apple-secondary"></i>
+                <input type="text" id="omniSearchInput" oninput="handleSearch(this.value)" placeholder="Omni-Search directives, references, assignees..." class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-9 pl-9 pr-4 rounded-lg text-xs dark:text-white outline-none focus:border-apple-blue transition-colors">
+            </div>
+
             <div class="flex items-center gap-3 ml-auto">
                 <p id="activeUserName" class="text-[10px] font-bold text-apple-secondary dark:text-gray-400 uppercase tracking-widest">LOCKED</p>
                 <div class="h-7 w-7 rounded-full bg-apple-blue flex items-center justify-center text-white text-[10px] font-black">
@@ -136,7 +142,7 @@
                         <div class="flex items-center gap-6">
                             <div>
                                 <h1 class="text-2xl font-bold tracking-tight dark:text-white">Command Operations</h1>
-                                <p class="text-xs text-apple-secondary dark:text-gray-400">Live task telemetry & routing</p>
+                                <p class="text-xs text-apple-secondary dark:text-gray-400">See everything. Solve anything.</p>
                             </div>
                             <div class="hidden lg:block h-10 w-32 border-l border-apple-border dark:border-[#2C2C2E] pl-6 ml-2" title="8-Hour Execution Velocity">
                                 <p class="text-[8px] uppercase font-bold text-apple-secondary mb-1">Velocity</p>
@@ -253,7 +259,7 @@
                     <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Priority</label><select id="drawerPriority" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="Standard">Standard</option><option value="High">High</option><option value="Critical">Critical</option></select></div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Department</label><select id="drawerZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="General">General Floor</option><option value="Inbound">Tier 1 (Inbound)</option><option value="Escalations">Escalations</option><option value="QA">Quality Assurance</option><option value="Outbound">Outbound</option><option value="Training">Training</option></select></div>
+                    <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Department</label><select id="drawerZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="General">General Floor</option><option value="Inbound">Tier 1 (Inbound)</option><option value="Escalations">Escalations</option><option value="QA">Quality Assurance</option><option value="Outbound">Outbound</option><option value="Training">Training</option><option value="Coaching">Coaching Session</option><option value="Reports">Reports & Analytics</option></select></div>
                     <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Assignee</label><select id="drawerAssignee" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"></select></div>
                 </div>
                 <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase"><i class="fa-solid fa-lock mr-1"></i> Blocked By</label><select id="drawerBlocker" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="">None (Unblocked)</option></select></div>
@@ -274,22 +280,15 @@
 
     <div id="bulkPasteModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
         <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-6 rounded-2xl w-full max-w-md shadow-2xl">
-            <h3 class="text-lg font-bold mb-2 dark:text-white">Bulk Paste Tasks</h3>
-            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-4">Paste a column of Reference IDs from Excel. The app will generate tasks for all of them instantly.</p>
+            <h3 class="text-lg font-bold mb-2 dark:text-white">Omni-Channel Bulk Paste</h3>
+            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-4">Pasted rows will automatically distribute across online Team Leaders/SMEs based on their real-time workload balance.</p>
             <div class="space-y-4 mb-6">
                 <textarea id="bulkPasteInput" placeholder="Paste IDs here...&#10;ID-9942&#10;ID-9943" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-32 p-4 rounded-lg text-sm dark:text-white font-mono resize-none"></textarea>
-                <select id="bulkPasteZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
-                    <option value="General">General Floor</option>
-                    <option value="Inbound">Tier 1 (Inbound)</option>
-                    <option value="Escalations">Escalations</option>
-                    <option value="QA">Quality Assurance</option>
-                    <option value="Outbound">Outbound</option>
-                    <option value="Training">Training</option>
-                </select>
+                <select id="bulkPasteZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white"><option value="General">General Floor</option><option value="Inbound">Tier 1 (Inbound)</option><option value="Escalations">Escalations</option><option value="QA">Quality Assurance</option><option value="Outbound">Outbound</option><option value="Training">Training</option><option value="Coaching">Coaching Session</option><option value="Reports">Reports & Analytics</option></select>
             </div>
             <div class="flex gap-2">
                 <button onclick="closeModal('bulkPasteModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
-                <button id="submitBulkPasteBtn" class="flex-1 h-11 text-xs font-bold bg-apple-blue text-white rounded-xl shadow-sm">Generate Tasks</button>
+                <button id="submitBulkPasteBtn" class="flex-1 h-11 text-xs font-bold bg-apple-blue text-white rounded-xl shadow-sm">Auto-Route Tasks</button>
             </div>
         </div>
     </div>
@@ -316,14 +315,7 @@
                 <input type="text" id="newTitle" placeholder="Directive Title" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
                 <div class="grid grid-cols-2 gap-4">
                     <input type="text" id="newTarget" placeholder="Reference (Call ID)..." class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
-                    <select id="newZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
-                        <option value="General">General Floor</option>
-                        <option value="Inbound">Tier 1 (Inbound)</option>
-                        <option value="Escalations">Escalations</option>
-                        <option value="QA">Quality Assurance</option>
-                        <option value="Outbound">Outbound</option>
-                        <option value="Training">Training</option>
-                    </select>
+                    <select id="newZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white"><option value="General">General Floor</option><option value="Inbound">Tier 1 (Inbound)</option><option value="Escalations">Escalations</option><option value="QA">Quality Assurance</option><option value="Outbound">Outbound</option><option value="Training">Training</option><option value="Coaching">Coaching Session</option><option value="Reports">Reports & Analytics</option></select>
                 </div>
                 <div>
                     <select id="newAssignee" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
@@ -352,8 +344,10 @@
         let activeDrawerId = null;
         let globalTasks = [];
         let globalLogs = [];
+        let globalUsers = []; 
         let idleTimer = null;
         let activeFilter = 'All';
+        let currentSearchQuery = ''; 
         
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const audioCtx = new AudioContext();
@@ -409,6 +403,7 @@
             document.getElementById('loginUsername').value = '';
             document.getElementById('loginPassword').value = '';
             document.body.classList.remove('war-room');
+            document.getElementById('searchContainer').classList.add('hidden'); 
             document.getElementById('lockScreen').style.opacity = '1';
             document.getElementById('lockScreen').style.display = 'flex';
             document.getElementById('activeUserName').innerText = 'LOCKED';
@@ -475,7 +470,11 @@
             }
         }
 
-        // NEW USERNAME & PASSWORD LOGIN LOGIC
+        function handleSearch(val) {
+            currentSearchQuery = val.trim().toLowerCase();
+            renderData();
+        }
+
         async function verifyLogin() {
             if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
             
@@ -492,7 +491,6 @@
             btn.innerText = "Verifying..."; btn.disabled = true;
 
             try {
-                // Check Database (Case Insensitive for Username)
                 const { data, error } = await supabaseClient.from('floor_users')
                     .select('*')
                     .ilike('name', userVal)
@@ -504,6 +502,7 @@
                     document.getElementById('lockScreen').style.opacity = '0';
                     setTimeout(() => document.getElementById('lockScreen').style.display = 'none', 500);
                     document.getElementById('activeUserName').innerText = data.name + ' (' + (data.department || 'SYS') + ')';
+                    document.getElementById('searchContainer').classList.remove('hidden'); 
                     
                     document.getElementById('loginUsername').value = '';
                     document.getElementById('loginPassword').value = '';
@@ -569,6 +568,8 @@
             const { data } = await supabaseClient.from('floor_users').select('*').eq('status', 'Active').eq('department', currentUser.department);
             if(!data) return;
             
+            globalUsers = data; 
+
             const select = document.getElementById('drawerAssignee');
             const newSelect = document.getElementById('newAssignee');
             const grid = document.getElementById('teamGrid');
@@ -579,7 +580,6 @@
             grid.innerHTML = `<div onclick="openModal('addMemberModal')" class="bg-apple-canvas dark:bg-[#2C2C2E] border-2 border-dashed border-apple-border dark:border-[#3A3A3C] rounded-2xl p-4 flex flex-col items-center justify-center text-apple-secondary dark:text-gray-400 cursor-pointer min-h-[120px] transition-all"><i class="fa-solid fa-plus text-xl mb-1"></i><span class="text-[10px] font-bold uppercase">Add</span></div>`;
             
             data.forEach(user => {
-                // EVERYONE IS ADDED TO DROPDOWNS NOW
                 select.insertAdjacentHTML('beforeend', `<option value="${user.name}">${user.name}</option>`);
                 if(newSelect) newSelect.insertAdjacentHTML('beforeend', `<option value="${user.name}">${user.name}</option>`);
                 
@@ -659,6 +659,15 @@
             let displayData = globalTasks;
             if(activeFilter === 'Mine' && currentUser) displayData = globalTasks.filter(t => t.assigned_to === currentUser.name);
             if(activeFilter === 'Critical') displayData = globalTasks.filter(t => t.priority === 'Critical');
+
+            if(currentSearchQuery !== '') {
+                displayData = displayData.filter(t => {
+                    return (t.title || '').toLowerCase().includes(currentSearchQuery) ||
+                           (t.linked_entity || '').toLowerCase().includes(currentSearchQuery) ||
+                           (t.assigned_to || '').toLowerCase().includes(currentSearchQuery) ||
+                           (t.zone || '').toLowerCase().includes(currentSearchQuery);
+                });
+            }
 
             displayData.forEach(item => {
                 c.t++; if(item.status === 'Radar') c.r++; if(item.status === 'Assigned To') c.a++; if(item.status === 'In Progress') c.p++;
@@ -800,28 +809,58 @@
             if(lines.length === 0) return;
             if(lines.length > 100) { alert("Please paste a maximum of 100 IDs at a time to keep it safe."); return; }
             
-            btn.disabled = true; btn.innerText = `Generating ${lines.length}...`;
+            btn.disabled = true; btn.innerText = `Auto-Routing ${lines.length}...`;
             
             try {
-                const insertData = lines.map(id => ({
-                    title: "Bulk Directive",
-                    linked_entity: id,
-                    zone: zone,
-                    assigned_to: 'None',
-                    priority: 'Standard',
-                    status: 'Radar',
-                    department: currentUser.department || 'General' 
-                }));
+                let liveWorkloads = {};
+                let assignableUsers = globalUsers.filter(u => !u.role.includes('Manager'));
+                
+                if (assignableUsers.length === 0) {
+                    assignableUsers = globalUsers;
+                }
+
+                assignableUsers.forEach(u => {
+                    liveWorkloads[u.name] = globalTasks.filter(t => t.assigned_to === u.name && t.status !== 'Completed').length;
+                });
+
+                const insertData = lines.map(id => {
+                    let calibratedAssignee = 'None';
+                    
+                    if(assignableUsers.length > 0) {
+                        let lowestWorker = assignableUsers[0].name;
+                        let minLoad = Infinity;
+                        
+                        assignableUsers.forEach(u => {
+                            if(liveWorkloads[u.name] < minLoad) {
+                                minLoad = liveWorkloads[u.name];
+                                lowestWorker = u.name;
+                            }
+                        });
+                        
+                        calibratedAssignee = lowestWorker;
+                        liveWorkloads[lowestWorker]++; 
+                    }
+
+                    return {
+                        title: "Bulk Assignment",
+                        linked_entity: id,
+                        zone: zone,
+                        assigned_to: calibratedAssignee,
+                        priority: 'Standard',
+                        status: calibratedAssignee === 'None' ? 'Radar' : 'Assigned To',
+                        department: currentUser.department || 'General' 
+                    };
+                });
                 
                 const { error } = await supabaseClient.from('pulses').insert(insertData);
                 if(error) throw error; 
                 
-                btn.disabled = false; btn.innerText = "Generate Tasks";
-                closeModal('bulkPasteModal'); playSound('chime'); showToast(`Created ${lines.length} Tasks`);
-                logAction(`Bulk Imported ${lines.length} Tasks`); loadData();
+                btn.disabled = false; btn.innerText = "Auto-Route Tasks";
+                closeModal('bulkPasteModal'); playSound('chime'); showToast(`Auto-Routed ${lines.length} Tasks Successfully`);
+                logAction(`Bulk Batch Load Balanced ${lines.length} Tasks`); loadData();
             } catch (err) {
-                btn.disabled = false; btn.innerText = "Generate Tasks";
-                alert("Database Error: " + err.message); console.error(err);
+                btn.disabled = false; btn.innerText = "Auto-Route Tasks";
+                alert("Omni-Channel Routing Error: " + err.message); console.error(err);
             }
         });
 
@@ -838,7 +877,6 @@
 
         supabaseClient.channel('db-sync-logs').on('postgres_changes', { event: '*', schema: 'public', table: 'activity_logs' }, () => fetchLogs()).subscribe();
         
-        // TARGET LOCK REAL-TIME NOTIFICATIONS
         supabaseClient.channel('db-sync-pulses').on('postgres_changes', { event: '*', schema: 'public', table: 'pulses' }, (payload) => {
             if(currentUser) {
                 loadData();
