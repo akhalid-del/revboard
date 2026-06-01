@@ -58,28 +58,22 @@
     </div>
 
     <div id="lockScreen" class="fixed inset-0 z-[100] bg-[#F5F5F7]/95 dark:bg-[#121212]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 transition-opacity duration-500 select-none">
-        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-8 md:p-10 rounded-[24px] w-full max-w-[320px] shadow-apple-soft text-center transition-colors">
-            <h1 class="text-xl font-bold tracking-tight dark:text-white mb-2">Command Access</h1>
-            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-8">Enter PIN</p>
-            <div class="flex justify-center gap-4 mb-8" id="pinDots">
-                <div class="h-3 w-3 rounded-full border-2 border-apple-border dark:border-[#3A3A3C] transition-colors" id="dot-1"></div>
-                <div class="h-3 w-3 rounded-full border-2 border-apple-border dark:border-[#3A3A3C] transition-colors" id="dot-2"></div>
-                <div class="h-3 w-3 rounded-full border-2 border-apple-border dark:border-[#3A3A3C] transition-colors" id="dot-3"></div>
-                <div class="h-3 w-3 rounded-full border-2 border-apple-border dark:border-[#3A3A3C] transition-colors" id="dot-4"></div>
+        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-8 md:p-10 rounded-[24px] w-full max-w-[360px] shadow-apple-soft text-center transition-colors">
+            <h1 class="text-2xl font-bold tracking-tight dark:text-white mb-2">SYNC Access</h1>
+            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-8">Enter your credentials to continue</p>
+            
+            <div class="space-y-4 mb-6 w-full text-left">
+                <div>
+                    <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Username</label>
+                    <input type="text" id="loginUsername" placeholder="e.g. Abdelrahman Hany" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-12 px-4 rounded-xl text-sm dark:text-white transition-colors focus:border-apple-blue outline-none" onkeypress="if(event.key === 'Enter') document.getElementById('loginPassword').focus()">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-12 px-4 rounded-xl text-sm dark:text-white transition-colors focus:border-apple-blue outline-none" onkeypress="if(event.key === 'Enter') verifyLogin()">
+                </div>
             </div>
-            <div class="grid grid-cols-3 gap-3" id="numpad">
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="1">1</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="2">2</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="3">3</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="4">4</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="5">5</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="6">6</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="7">7</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="8">8</button>
-                <button class="pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="9">9</button>
-                <button class="col-start-2 pin-btn h-14 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl text-lg font-medium active:scale-95 transition-all" data-val="0">0</button>
-                <button class="pin-clear h-14 text-[10px] font-bold text-apple-secondary dark:text-gray-400 uppercase tracking-widest">CLR</button>
-            </div>
+
+            <button onclick="verifyLogin()" id="loginBtn" class="w-full h-12 bg-apple-blue text-white rounded-xl font-bold text-sm shadow-sm active:scale-95 transition-all">Access Command Center</button>
             <p id="pinError" class="text-red-500 text-[10px] font-semibold tracking-wider uppercase text-center mt-6 h-4 opacity-0 transition-opacity">Denied</p>
         </div>
     </div>
@@ -114,15 +108,12 @@
             <button onclick="toggleTheme()" class="text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors">
                 <i id="themeIcon" class="fa-solid fa-moon text-xl"></i>
             </button>
-            <button onclick="switchView('settings')" id="nav-settings" class="admin-only text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors">
-                <i class="fa-solid fa-gear text-xl"></i>
-                <div id="indicator-settings" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
-            </button>
             <button onclick="lockSystem()" class="text-apple-secondary dark:text-gray-400 hover:text-red-500 transition-colors p-2 md:w-full flex justify-center">
                 <i class="fa-solid fa-power-off text-xl"></i>
             </button>
         </div>
     </aside>
+
     <div class="flex-1 flex flex-col h-full relative overflow-hidden pb-16 md:pb-0">
         <header class="h-16 border-b border-apple-border dark:border-[#2C2C2E] bg-white/70 dark:bg-[#1C1C1E]/80 backdrop-blur-xl z-10 flex items-center justify-between px-6 transition-colors">
             <div class="flex items-center gap-3">
@@ -144,8 +135,8 @@
                     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4">
                         <div class="flex items-center gap-6">
                             <div>
-                                <h1 class="text-2xl font-bold tracking-tight dark:text-white">Floor Operations</h1>
-                                <p class="text-xs text-apple-secondary dark:text-gray-400">Live call center telemetry & routing</p>
+                                <h1 class="text-2xl font-bold tracking-tight dark:text-white">Command Operations</h1>
+                                <p class="text-xs text-apple-secondary dark:text-gray-400">Live task telemetry & routing</p>
                             </div>
                             <div class="hidden lg:block h-10 w-32 border-l border-apple-border dark:border-[#2C2C2E] pl-6 ml-2" title="8-Hour Execution Velocity">
                                 <p class="text-[8px] uppercase font-bold text-apple-secondary mb-1">Velocity</p>
@@ -240,15 +231,6 @@
                     </div>
                 </div>
 
-                <div id="view-settings" class="hidden flex-col admin-only">
-                    <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl overflow-hidden shadow-sm">
-                        <div onclick="openModal('purgeModal')" class="p-6 hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer text-red-500 flex justify-between items-center transition-colors">
-                            <div><p class="font-bold text-sm">Emergency Purge</p><p class="text-[10px] opacity-70 uppercase font-bold tracking-tighter">Wipe all operational data</p></div>
-                            <i class="fa-solid fa-trash-can"></i>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </main>
 
@@ -272,7 +254,7 @@
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Department</label><select id="drawerZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="General">General Floor</option><option value="Inbound">Tier 1 (Inbound)</option><option value="Escalations">Escalations</option><option value="QA">Quality Assurance</option><option value="Outbound">Outbound</option><option value="Training">Training</option></select></div>
-                    <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Assignee</label><select id="drawerAssignee" class="admin-only w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"></select></div>
+                    <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Assignee</label><select id="drawerAssignee" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"></select></div>
                 </div>
                 <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase"><i class="fa-solid fa-lock mr-1"></i> Blocked By</label><select id="drawerBlocker" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="">None (Unblocked)</option></select></div>
                 <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Notes</label><textarea id="drawerNotes" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] rounded-lg p-3 text-xs h-24 resize-none dark:text-white"></textarea></div>
@@ -317,8 +299,8 @@
             <h3 class="text-lg font-bold mb-4 dark:text-white">Add Member</h3>
             <p id="memberError" class="text-red-500 text-[10px] font-bold mb-4 hidden bg-red-50 dark:bg-red-900/20 p-2 rounded border border-red-100"></p>
             <div class="space-y-4 mb-6">
-                <input type="text" id="newMemberName" placeholder="Name" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
-                <input type="text" id="newMemberPin" placeholder="4-Digit PIN" maxlength="4" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white font-mono">
+                <input type="text" id="newMemberName" placeholder="Full Name" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
+                <input type="text" id="newMemberPassword" placeholder="Initial Password" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white font-mono">
             </div>
             <div class="flex gap-2">
                 <button onclick="closeModal('addMemberModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
@@ -356,21 +338,10 @@
         </div>
     </div>
 
-    <div id="purgeModal" class="fixed inset-0 z-[200] bg-red-900/40 backdrop-blur-sm hidden items-center justify-center p-4 text-center">
-        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-8 rounded-2xl w-full max-w-xs shadow-2xl">
-            <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4"></i>
-            <h3 class="text-lg font-bold mb-2 dark:text-white uppercase tracking-tighter">Wipe Data?</h3>
-            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-6">This deletes ALL active tasks.</p>
-            <div class="flex gap-2">
-                <button onclick="closeModal('purgeModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
-                <button onclick="executePurge()" class="flex-1 h-11 text-xs font-bold bg-red-500 text-white rounded-xl">Wipe</button>
-            </div>
-        </div>
+    <div id="toastAlert" class="fixed top-6 left-1/2 -translate-x-1/2 -translate-y-24 transition-transform bg-apple-primary dark:bg-apple-blue px-6 py-3 rounded-full shadow-lg z-[500] flex items-center gap-3">
+        <i class="fa-solid fa-bell text-green-400 dark:text-white text-sm"></i><p id="toastMessage" class="text-sm font-medium text-white">Action Confirmed</p>
     </div>
 
-    <div id="toastAlert" class="fixed top-6 left-1/2 -translate-x-1/2 -translate-y-24 transition-transform bg-apple-primary dark:bg-apple-blue px-6 py-3 rounded-full shadow-lg z-[500] flex items-center gap-3">
-        <i class="fa-solid fa-check-circle text-green-400 dark:text-white text-sm"></i><p id="toastMessage" class="text-sm font-medium text-white">Action Confirmed</p>
-    </div>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const supabaseUrl = 'https://pmhmuzctbstrhtmwxlay.supabase.co';
@@ -378,7 +349,6 @@
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
         let currentUser = null;
-        let currentPin = '';
         let activeDrawerId = null;
         let globalTasks = [];
         let globalLogs = [];
@@ -436,7 +406,8 @@
         function lockSystem() {
             if(!currentUser) return;
             currentUser = null;
-            resetPinUI();
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
             document.body.classList.remove('war-room');
             document.getElementById('lockScreen').style.opacity = '1';
             document.getElementById('lockScreen').style.display = 'flex';
@@ -457,7 +428,7 @@
         }
         function closeModal(id) { 
             document.getElementById(id).style.display = 'none'; 
-            if(id === 'addMemberModal') { document.getElementById('newMemberName').value = ''; document.getElementById('newMemberPin').value = ''; }
+            if(id === 'addMemberModal') { document.getElementById('newMemberName').value = ''; document.getElementById('newMemberPassword').value = ''; }
             if(id === 'newTaskModal') { 
                 document.getElementById('newTitle').value = ''; 
                 document.getElementById('newTarget').value = ''; 
@@ -475,7 +446,7 @@
         }
 
         function switchView(viewName) {
-            const views = ['table', 'board', 'team', 'log', 'analytics', 'settings'];
+            const views = ['table', 'board', 'team', 'log', 'analytics'];
             views.forEach(v => {
                 const nav = document.getElementById('nav-' + v);
                 const ind = document.getElementById('indicator-' + v);
@@ -504,44 +475,48 @@
             }
         }
 
-        function resetPinUI() {
-            currentPin = ''; 
-            for(let i=1; i<=4; i++) {
-                const dot = document.getElementById(`dot-${i}`);
-                if(dot) { dot.classList.remove('bg-apple-primary'); dot.classList.add('border-apple-border', 'dark:border-[#3A3A3C]'); }
+        // NEW USERNAME & PASSWORD LOGIN LOGIC
+        async function verifyLogin() {
+            if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const userVal = document.getElementById('loginUsername').value.trim();
+            const passVal = document.getElementById('loginPassword').value.trim();
+            const btn = document.getElementById('loginBtn');
+            const errEl = document.getElementById('pinError');
+            
+            if(!userVal || !passVal) {
+                errEl.innerText = "Enter Username and Password";
+                errEl.style.opacity = '1'; setTimeout(() => errEl.style.opacity = '0', 2000); return;
             }
-        }
+            
+            btn.innerText = "Verifying..."; btn.disabled = true;
 
-        document.querySelectorAll('.pin-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-                
-                if(currentPin.length < 4) {
-                    currentPin += e.currentTarget.getAttribute('data-val');
-                    const dot = document.getElementById(`dot-${currentPin.length}`);
-                    if(dot) { dot.classList.remove('border-apple-border', 'dark:border-[#3A3A3C]'); dot.classList.add('bg-apple-primary'); }
-                    if(currentPin.length === 4) verifyPin();
-                }
-            });
-        });
-
-        document.querySelector('.pin-clear').addEventListener('click', resetPinUI);
-
-        async function verifyPin() {
             try {
-                const { data, error } = await supabaseClient.from('floor_users').select('*').eq('pin', currentPin).single();
+                // Check Database (Case Insensitive for Username)
+                const { data, error } = await supabaseClient.from('floor_users')
+                    .select('*')
+                    .ilike('name', userVal)
+                    .eq('password', passVal)
+                    .single();
+
                 if (data && !error) {
                     currentUser = data;
                     document.getElementById('lockScreen').style.opacity = '0';
                     setTimeout(() => document.getElementById('lockScreen').style.display = 'none', 500);
                     document.getElementById('activeUserName').innerText = data.name + ' (' + (data.department || 'SYS') + ')';
+                    
+                    document.getElementById('loginUsername').value = '';
+                    document.getElementById('loginPassword').value = '';
+                    
                     applyRolePermissions(); switchView('table'); initTeam(); loadData(); fetchLogs(); logAction("Session Start"); resetIdleTimer();
                     playSound('pop');
                 } else { throw new Error("Invalid"); }
             } catch (err) {
-                document.getElementById('pinError').style.opacity = '1';
-                setTimeout(() => { resetPinUI(); document.getElementById('pinError').style.opacity = '0'; }, 1000);
+                errEl.innerText = "Access Denied";
+                errEl.style.opacity = '1';
+                setTimeout(() => errEl.style.opacity = '0', 2000);
             }
+            btn.innerText = "Access Command Center"; btn.disabled = false;
         }
 
         async function logAction(text) {
@@ -604,10 +579,9 @@
             grid.innerHTML = `<div onclick="openModal('addMemberModal')" class="bg-apple-canvas dark:bg-[#2C2C2E] border-2 border-dashed border-apple-border dark:border-[#3A3A3C] rounded-2xl p-4 flex flex-col items-center justify-center text-apple-secondary dark:text-gray-400 cursor-pointer min-h-[120px] transition-all"><i class="fa-solid fa-plus text-xl mb-1"></i><span class="text-[10px] font-bold uppercase">Add</span></div>`;
             
             data.forEach(user => {
-                if (!user.role.includes('Manager')) {
-                    select.insertAdjacentHTML('beforeend', `<option value="${user.name}">${user.name}</option>`);
-                    if(newSelect) newSelect.insertAdjacentHTML('beforeend', `<option value="${user.name}">${user.name}</option>`);
-                }
+                // EVERYONE IS ADDED TO DROPDOWNS NOW
+                select.insertAdjacentHTML('beforeend', `<option value="${user.name}">${user.name}</option>`);
+                if(newSelect) newSelect.insertAdjacentHTML('beforeend', `<option value="${user.name}">${user.name}</option>`);
                 
                 const init = user.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
                 grid.insertAdjacentHTML('beforeend', `<div onclick="revokeUser('${user.name}')" class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-4 text-center cursor-pointer group relative overflow-hidden transition-all hover:border-red-500"><div class="h-12 w-12 mx-auto rounded-full bg-apple-canvas dark:bg-[#2C2C2E] flex items-center justify-center font-bold text-apple-primary dark:text-white mb-2">${init}</div><h3 class="text-xs font-bold dark:text-white uppercase tracking-tighter">${user.name}</h3><p class="text-[8px] text-apple-secondary uppercase mb-2 tracking-widest">${user.role}</p><span class="text-[8px] font-black bg-green-50 dark:bg-green-900/20 text-green-600 px-2 py-0.5 rounded-full uppercase tracking-tighter">Ready</span><div class="absolute inset-0 bg-red-500/90 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-black text-[9px] uppercase tracking-widest">Revoke</span></div></div>`);
@@ -624,20 +598,17 @@
         document.getElementById('submitMemberBtn').addEventListener('click', async () => {
             const btn = document.getElementById('submitMemberBtn'); if(btn.disabled) return;
             const name = document.getElementById('newMemberName').value.trim();
-            const pin = document.getElementById('newMemberPin').value.trim();
+            const password = document.getElementById('newMemberPassword').value.trim();
             const errEl = document.getElementById('memberError');
-            if(!name || pin.length !== 4) { errEl.innerText = "Check Name & 4-Digit PIN"; errEl.style.display = 'block'; return; }
+            
+            if(!name || !password) { errEl.innerText = "Check Name & Password"; errEl.style.display = 'block'; return; }
             btn.disabled = true; btn.innerText = "Saving...";
             
-            const { error } = await supabaseClient.from('floor_users').insert([{ name, pin, status: 'Active', role: 'Team Leader', department: currentUser.department }]);
+            const { error } = await supabaseClient.from('floor_users').insert([{ name, password: password, status: 'Active', role: 'Team Leader', department: currentUser.department }]);
             if(error) { errEl.innerText = error.message; errEl.style.display = 'block'; btn.disabled = false; btn.innerText = "Save User"; return; }
+            
             logAction(`Added Member: ${name}`); btn.disabled = false; btn.innerText = "Save User"; closeModal('addMemberModal'); showToast('Success.'); initTeam();
         });
-
-        async function executePurge() {
-            closeModal('purgeModal'); await supabaseClient.from('pulses').delete().eq('department', currentUser.department);
-            logAction("EMERGENCY PURGE EXECUTED FOR DEPARTMENT"); loadData();
-        }
 
         function exportToCSV() {
             if(!globalTasks.length) return;
@@ -820,22 +791,18 @@
             loadData();
         });
 
-       // NEW: THE BULK PASTE GENERATOR LOGIC
         document.getElementById('submitBulkPasteBtn').addEventListener('click', async () => {
             const btn = document.getElementById('submitBulkPasteBtn'); if(btn.disabled) return;
             const rawText = document.getElementById('bulkPasteInput').value;
             const zone = document.getElementById('bulkPasteZone').value;
             
-            // Slice the text by line breaks, trim spaces, and remove empty lines
             const lines = rawText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-            
             if(lines.length === 0) return;
             if(lines.length > 100) { alert("Please paste a maximum of 100 IDs at a time to keep it safe."); return; }
             
             btn.disabled = true; btn.innerText = `Generating ${lines.length}...`;
             
             try {
-                // Build the array to insert instantly
                 const insertData = lines.map(id => ({
                     title: "Bulk Directive",
                     linked_entity: id,
@@ -843,26 +810,18 @@
                     assigned_to: 'None',
                     priority: 'Standard',
                     status: 'Radar',
-                    department: currentUser.department || 'General' // Fallback in case department is null
+                    department: currentUser.department || 'General' 
                 }));
                 
                 const { error } = await supabaseClient.from('pulses').insert(insertData);
-                
-                if(error) throw error; // Force it to catch the error
+                if(error) throw error; 
                 
                 btn.disabled = false; btn.innerText = "Generate Tasks";
-                closeModal('bulkPasteModal');
-                playSound('chime');
-                showToast(`Created ${lines.length} Tasks`);
-                logAction(`Bulk Imported ${lines.length} Tasks`);
-                loadData();
-
+                closeModal('bulkPasteModal'); playSound('chime'); showToast(`Created ${lines.length} Tasks`);
+                logAction(`Bulk Imported ${lines.length} Tasks`); loadData();
             } catch (err) {
-                // If anything fails, reset the button and show the exact error!
-                btn.disabled = false; 
-                btn.innerText = "Generate Tasks";
-                alert("Database Error: " + err.message);
-                console.error(err);
+                btn.disabled = false; btn.innerText = "Generate Tasks";
+                alert("Database Error: " + err.message); console.error(err);
             }
         });
 
@@ -871,21 +830,26 @@
                 if(currentUser) { 
                     document.body.classList.toggle('war-room');
                     if(document.body.classList.contains('war-room')) {
-                        switchView('board');
-                        playSound('chime');
-                        showToast('WAR ROOM MODE ACTIVATED');
-                    } else {
-                        showToast('War Room Off');
-                    }
+                        switchView('board'); playSound('chime'); showToast('WAR ROOM MODE ACTIVATED');
+                    } else { showToast('War Room Off'); }
                 }
             }
         });
 
         supabaseClient.channel('db-sync-logs').on('postgres_changes', { event: '*', schema: 'public', table: 'activity_logs' }, () => fetchLogs()).subscribe();
+        
+        // TARGET LOCK REAL-TIME NOTIFICATIONS
         supabaseClient.channel('db-sync-pulses').on('postgres_changes', { event: '*', schema: 'public', table: 'pulses' }, (payload) => {
             if(currentUser) {
                 loadData();
-                if (payload.eventType === 'INSERT' && payload.new.priority === 'Critical') {
+                
+                if ((payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') && payload.new.assigned_to === currentUser.name) {
+                    let wasAlreadyAssigned = payload.old && payload.old.assigned_to === currentUser.name;
+                    if (!wasAlreadyAssigned) {
+                        playSound('chime');
+                        showToast(`⚠️ Task Assigned to You!`);
+                    }
+                } else if (payload.eventType === 'INSERT' && payload.new.priority === 'Critical') {
                     playSound('chime');
                 }
             }
