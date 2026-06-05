@@ -343,11 +343,15 @@
                                 <option value="">All Issues</option>
                                 <option>#Fatal</option><option>#Feedback</option><option>#Sticking</option>
                                 <option>#SystemFocus</option><option>#Interaction</option><option>#CallFocus</option><option>#Brand</option>
+                                <option>#Clarity</option><option>#Other</option>
                             </select>
                             <select id="qaFilterStatus" onchange="renderQACases()" class="bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-9 px-3 rounded-lg text-xs dark:text-white">
                                 <option value="">All Statuses</option>
-                                <option>Verbal</option><option>1st Documentation</option><option>2nd Documentation</option>
-                                <option>3rd Documentation</option><option>Fatal Documentation</option><option>Final Documentation</option>
+                                <option>No Action</option><option>Verbal</option><option>Feedback Session</option>
+                                <option>1st Documentation</option><option>2nd Documentation</option><option>3rd Documentation</option>
+                                <option>Action Plan</option><option>Fatal Documentation</option><option>Final Documentation</option>
+                                <option>1st Warning</option><option>2nd Warning</option><option>3rd Warning</option>
+                                <option>Hold</option><option>System Tampering</option><option>Termination</option>
                             </select>
                             <button onclick="exportQAToCSV()" class="h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-green-600 dark:text-green-400 flex items-center gap-1 hover:opacity-80">
                                 <i class="fa-solid fa-file-csv"></i> Export
