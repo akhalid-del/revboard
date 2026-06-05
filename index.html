@@ -525,6 +525,7 @@
                         <select id="qa-issue-type" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
                             <option>#Fatal</option><option>#Feedback</option><option>#Sticking</option>
                             <option>#SystemFocus</option><option>#Interaction</option><option>#CallFocus</option><option>#Brand</option>
+                            <option>#Clarity</option><option>#Other</option>
                         </select>
                     </div>
                     <div>
@@ -536,8 +537,11 @@
                     <div>
                         <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Coaching Status</label>
                         <select id="qa-coaching-status" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
-                            <option>Verbal</option><option>1st Documentation</option><option>2nd Documentation</option>
-                            <option>3rd Documentation</option><option>Fatal Documentation</option><option>Final Documentation</option>
+                            <option>No Action</option><option>Verbal</option><option>Feedback Session</option>
+                            <option>1st Documentation</option><option>2nd Documentation</option><option>3rd Documentation</option>
+                            <option>Action Plan</option><option>Fatal Documentation</option><option>Final Documentation</option>
+                            <option>1st Warning</option><option>2nd Warning</option><option>3rd Warning</option>
+                            <option>Hold</option><option>System Tampering</option><option>Termination</option>
                         </select>
                     </div>
                     <div>
@@ -572,12 +576,12 @@
     <div id="bulkQAModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
         <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-6 rounded-2xl w-full max-w-2xl shadow-2xl">
             <h3 class="text-lg font-bold mb-2 dark:text-white">Bulk Paste QA Cases</h3>
-            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-3">Copy rows directly from Excel and paste below. Each row becomes a case. Use this exact column order (tab-separated — Excel does this automatically):</p>
+            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-3">Select your sheet rows (columns A→O), copy, and paste below. The importer reads your sheet's exact column order (tab-separated — Excel/Sheets does this automatically):</p>
             <div class="bg-apple-canvas dark:bg-[#2C2C2E] rounded-lg p-3 mb-3 text-[10px] font-mono text-apple-secondary dark:text-gray-400 overflow-x-auto">
-                Agent Name &nbsp;|&nbsp; Date (e.g. 5/28/2026) &nbsp;|&nbsp; Issue (#Fatal) &nbsp;|&nbsp; Comment &nbsp;|&nbsp; Team &nbsp;|&nbsp; Coaching Status
+                Agent &nbsp;|&nbsp; Date &nbsp;|&nbsp; #Issue &nbsp;|&nbsp; Comment &nbsp;|&nbsp; Wrong Dispo &nbsp;|&nbsp; Repetitive &nbsp;|&nbsp; Need Coaching &nbsp;|&nbsp; <b>Team</b> &nbsp;|&nbsp; Coaching Notes (status) &nbsp;|&nbsp; Coaching Status (outcome) &nbsp;|&nbsp; Coaching Date &nbsp;|&nbsp; Warning Email &nbsp;|&nbsp; Deductions &nbsp;|&nbsp; Alinai &nbsp;|&nbsp; Feedback Comments
             </div>
             <textarea id="bulkQAInput" placeholder="Vera Istrefi&#9;5/28/2026&#9;#Fatal&#9;Did not transfer to an agent&#9;David&#9;Verbal&#10;Beatrice Culaj&#9;5/28/2026&#9;#Fatal&#9;Did not transfer&#9;David&#9;1st Documentation" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-40 p-3 rounded-lg text-xs dark:text-white font-mono resize-none mb-1"></textarea>
-            <p class="text-[10px] text-apple-secondary mb-5">Only <b>Agent Name</b> is required. Missing columns are left blank. Unknown issue types default to #Feedback; unknown statuses default to Verbal.</p>
+            <p class="text-[10px] text-apple-secondary mb-5">Only <b>Agent Name</b> is required — just paste whole rows from your sheet and the columns line up automatically. <b>Team</b> is read from the Team column (supervisor name), and the coaching progression comes from the <b>Coaching Notes</b> column. The <b>Coaching Status</b> (Yes/No/Not Fail…) and Feedback comments are saved into the case's notes. Unknown issue types default to #Feedback; unknown statuses default to Verbal.</p>
             <div class="flex gap-2">
                 <button onclick="closeModal('bulkQAModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
                 <button id="submitBulkQABtn" class="flex-1 h-11 text-xs font-bold bg-purple-600 text-white rounded-xl shadow-sm">Import Cases</button>
@@ -606,6 +610,7 @@
                         <select id="edit-qa-issue-type" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
                             <option>#Fatal</option><option>#Feedback</option><option>#Sticking</option>
                             <option>#SystemFocus</option><option>#Interaction</option><option>#CallFocus</option><option>#Brand</option>
+                            <option>#Clarity</option><option>#Other</option>
                         </select>
                     </div>
                     <div>
@@ -617,8 +622,11 @@
                     <div>
                         <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Coaching Status</label>
                         <select id="edit-qa-coaching-status" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
-                            <option>Verbal</option><option>1st Documentation</option><option>2nd Documentation</option>
-                            <option>3rd Documentation</option><option>Fatal Documentation</option><option>Final Documentation</option>
+                            <option>No Action</option><option>Verbal</option><option>Feedback Session</option>
+                            <option>1st Documentation</option><option>2nd Documentation</option><option>3rd Documentation</option>
+                            <option>Action Plan</option><option>Fatal Documentation</option><option>Final Documentation</option>
+                            <option>1st Warning</option><option>2nd Warning</option><option>3rd Warning</option>
+                            <option>Hold</option><option>System Tampering</option><option>Termination</option>
                         </select>
                     </div>
                     <div>
@@ -1412,9 +1420,10 @@
         let globalQACases = [];
         let activeQACaseId = null;
 
-        const QA_COACHING_STATUSES = ['Verbal','1st Documentation','2nd Documentation','3rd Documentation','Fatal Documentation','Final Documentation'];
-        const QA_ISSUE_COLORS = { '#Fatal':'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', '#Feedback':'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', '#Sticking':'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', '#SystemFocus':'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', '#Interaction':'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400', '#CallFocus':'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400', '#Brand':'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400' };
-        const STATUS_COLORS = { 'Verbal':'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300', '1st Documentation':'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', '2nd Documentation':'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400', '3rd Documentation':'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', 'Fatal Documentation':'bg-red-200 text-red-800 dark:bg-red-900/50 dark:text-red-300', 'Final Documentation':'bg-black/10 text-black dark:bg-white/10 dark:text-white' };
+        // Ordered least → most severe (matches the sheet's "Coaching Notes" dropdown). Index drives the progress bar & "top status".
+        const QA_COACHING_STATUSES = ['No Action','Verbal','Feedback Session','1st Documentation','2nd Documentation','3rd Documentation','Action Plan','Fatal Documentation','Final Documentation','1st Warning','2nd Warning','3rd Warning','Hold','System Tampering','Termination'];
+        const QA_ISSUE_COLORS = { '#Fatal':'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', '#Feedback':'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', '#Sticking':'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', '#SystemFocus':'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', '#Interaction':'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400', '#CallFocus':'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400', '#Brand':'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400', '#Clarity':'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400', '#Other':'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300' };
+        const STATUS_COLORS = { 'No Action':'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400', 'Verbal':'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300', 'Feedback Session':'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', '1st Documentation':'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', '2nd Documentation':'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400', '3rd Documentation':'bg-orange-200 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300', 'Action Plan':'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400', 'Fatal Documentation':'bg-red-200 text-red-800 dark:bg-red-900/50 dark:text-red-300', 'Final Documentation':'bg-red-300 text-red-900 dark:bg-red-900/60 dark:text-red-200', '1st Warning':'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400', '2nd Warning':'bg-amber-200 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300', '3rd Warning':'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', 'Hold':'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', 'System Tampering':'bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/30 dark:text-fuchsia-400', 'Termination':'bg-black/80 text-white dark:bg-white/10 dark:text-white' };
 
         function isQAUser() {
             if(!currentUser) return false;
@@ -1515,7 +1524,7 @@
                 const latest = data.cases.reduce((a, b) => QA_COACHING_STATUSES.indexOf(b.coaching_status) > QA_COACHING_STATUSES.indexOf(a.coaching_status) ? b : a, data.cases[0]);
                 const statusIdx = QA_COACHING_STATUSES.indexOf(latest.coaching_status);
                 const progressPct = Math.round(((statusIdx + 1) / QA_COACHING_STATUSES.length) * 100);
-                const isCritical = latest.coaching_status === 'Fatal Documentation' || latest.coaching_status === 'Final Documentation';
+                const isCritical = ['Fatal Documentation','Final Documentation','3rd Warning','Hold','System Tampering','Termination'].includes(latest.coaching_status);
                 const init = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
                 return `<div class="bg-white dark:bg-[#1C1C1E] border ${isCritical ? 'border-red-500' : 'border-apple-border dark:border-[#2C2C2E]'} rounded-2xl p-5 shadow-sm">
                     <div class="flex items-center gap-3 mb-4">
@@ -1699,23 +1708,37 @@
             if(!lines.length) return;
             if(lines.length > 200) { alert('Please paste 200 rows or fewer at a time.'); return; }
 
-            const validIssues = ['#Fatal','#Feedback','#Sticking','#SystemFocus','#Interaction','#CallFocus','#Brand'];
+            const validIssues = ['#Fatal','#Feedback','#Sticking','#SystemFocus','#Interaction','#CallFocus','#Brand','#Clarity','#Other'];
             btn.disabled = true; btn.innerText = `Importing ${lines.length}...`;
 
             const rows = lines.map(line => {
                 const cols = line.split('\t').map(c => c.trim());
                 // tab-separated preferred; fall back to comma if no tabs present
                 const parts = cols.length > 1 ? cols : line.split(',').map(c => c.trim());
-                const [agent, date, issue, comment, team, status] = parts;
+                // Excel column order (left → right):
+                // A Agent | B Date | C Issue | D Comment | E WrongDispo | F Repetitive | G NeedCoaching |
+                // H Team | I CoachingNotes(=progression) | J CoachingStatus(=review outcome) |
+                // K CoachingDate/Comment | L WarningEmail | M DeductionsSheet | N Alinai | O FeedbackComments
+                const [agent, date, issue, comment, wrongDispoRaw, , , team, progressionRaw, outcomeRaw, coachingDateRaw, warningSentRaw, deductionRaw, , feedbackRaw] = parts;
                 let issueType = validIssues.find(v => v.toLowerCase() === (issue||'').toLowerCase()) || '#Feedback';
-                let coachingStatus = QA_COACHING_STATUSES.find(s => s.toLowerCase() === (status||'').toLowerCase()) || 'Verbal';
+                let coachingStatus = QA_COACHING_STATUSES.find(s => s.toLowerCase() === (progressionRaw||'').toLowerCase()) || 'Verbal';
+                // Preserve the col-J review outcome and any feedback-session comments inside the comment field.
+                let fullComment = comment || '';
+                const extras = [];
+                if((outcomeRaw||'').trim()) extras.push('Review: ' + outcomeRaw.trim());
+                if((feedbackRaw||'').trim()) extras.push('Feedback: ' + feedbackRaw.trim());
+                if(extras.length) fullComment += (fullComment ? ' | ' : '') + extras.join(' | ');
                 return {
                     agent_name: agent || 'Unknown',
                     call_date: parseQADate(date),
                     issue_type: issueType,
-                    comment: comment || '',
+                    comment: fullComment,
                     team: team || '',
                     coaching_status: coachingStatus,
+                    wrong_dispo: (wrongDispoRaw||'').toLowerCase() === 'yes',
+                    warning_sent: (warningSentRaw||'').toLowerCase() === 'yes',
+                    deduction_sheet: (deductionRaw||'').toLowerCase() === 'yes',
+                    coaching_date: parseQADate(coachingDateRaw),
                     department: currentUser.department,
                     logged_by: currentUser.name
                 };
