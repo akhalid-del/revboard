@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SYNC | Command Center</title>
+    <title>LogiSync | Floor Operations</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -59,8 +59,11 @@
 
     <div id="lockScreen" class="fixed inset-0 z-[100] bg-[#F5F5F7]/95 dark:bg-[#121212]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 transition-opacity duration-500 select-none">
         <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-8 md:p-10 rounded-[24px] w-full max-w-[360px] shadow-apple-soft text-center transition-colors">
-            <h1 class="text-2xl font-bold tracking-tight dark:text-white mb-2">SYNC Access</h1>
-            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-8">Enter your credentials to continue</p>
+            <div class="h-14 w-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-apple-blue to-indigo-500 flex items-center justify-center text-white shadow-lg">
+                <i class="fa-solid fa-layer-group text-2xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight dark:text-white mb-1">LogiSync</h1>
+            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-8">Floor Operations &bull; sign in to continue</p>
             
             <div class="space-y-4 mb-6 w-full text-left">
                 <div>
@@ -73,14 +76,14 @@
                 </div>
             </div>
 
-            <button onclick="verifyLogin()" id="loginBtn" class="w-full h-12 bg-apple-blue text-white rounded-xl font-bold text-sm shadow-sm active:scale-95 transition-all">Access Command Center</button>
+            <button onclick="verifyLogin()" id="loginBtn" class="w-full h-12 bg-gradient-to-r from-apple-blue to-indigo-500 text-white rounded-xl font-bold text-sm shadow-md active:scale-95 transition-all hover:opacity-95">Sign In</button>
             <p id="pinError" class="text-red-500 text-[10px] font-semibold tracking-wider uppercase text-center mt-6 h-4 opacity-0 transition-opacity">Denied</p>
         </div>
     </div>
 
     <aside class="fixed bottom-0 left-0 right-0 h-16 md:relative md:h-full md:w-[210px] bg-apple-surface dark:bg-[#1C1C1E] border-t md:border-t-0 md:border-r border-apple-border dark:border-[#2C2C2E] flex flex-row md:flex-col items-center md:items-stretch justify-around md:justify-start md:py-6 md:px-3 z-40">
         <div class="hidden md:flex items-center gap-2 px-2 mb-8">
-            <div class="h-9 w-9 bg-apple-primary dark:bg-apple-blue rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
+            <div class="h-9 w-9 bg-gradient-to-br from-apple-blue to-indigo-500 rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
                 <i class="fa-solid fa-layer-group text-base"></i>
             </div>
             <span class="font-bold text-sm tracking-tight dark:text-white">LogiSync</span>
@@ -101,6 +104,11 @@
                 <span class="hidden md:inline text-xs font-semibold">Team Totals</span>
                 <div id="indicator-rankings" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
+            <button onclick="switchView('coaching')" id="nav-coaching" class="text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
+                <i class="fa-solid fa-comments text-xl md:text-base w-5 text-center"></i>
+                <span class="hidden md:inline text-xs font-semibold">Coaching</span>
+                <div id="indicator-coaching" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
+            </button>
             <button onclick="switchView('team')" id="nav-team" class="admin-only text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
                 <i class="fa-solid fa-users text-xl md:text-base w-5 text-center"></i>
                 <span class="hidden md:inline text-xs font-semibold">People</span>
@@ -115,11 +123,6 @@
                 <i class="fa-solid fa-chart-line text-xl md:text-base w-5 text-center"></i>
                 <span class="hidden md:inline text-xs font-semibold">Performance</span>
                 <div id="indicator-analytics" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
-            </button>
-            <button onclick="switchView('qa')" id="nav-qa" class="qa-only text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors relative">
-                <i class="fa-solid fa-magnifying-glass-chart text-xl md:text-base w-5 text-center"></i>
-                <span class="hidden md:inline text-xs font-semibold">Quality</span>
-                <div id="indicator-qa" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-purple-500 rounded-r-md"></div>
             </button>
         </nav>
 
@@ -151,7 +154,7 @@
         <header class="h-16 border-b border-apple-border dark:border-[#2C2C2E] bg-white/70 dark:bg-[#1C1C1E]/80 backdrop-blur-xl z-10 flex items-center justify-between px-6 transition-colors">
             <div class="flex items-center gap-3">
                 <i class="fa-solid fa-layer-group text-apple-blue text-xl md:hidden"></i>
-                <span class="font-bold text-sm tracking-tight md:hidden dark:text-white">SYNC</span>
+                <span class="font-bold text-sm tracking-tight md:hidden dark:text-white">LogiSync</span>
             </div>
             
             <div id="searchContainer" class="hidden flex-1 max-w-md mx-6 relative">
@@ -175,23 +178,29 @@
                     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4">
                         <div class="flex items-center gap-6">
                             <div>
-                                <h1 class="text-2xl font-bold tracking-tight dark:text-white">Command Operations</h1>
-                                <p class="text-xs text-apple-secondary dark:text-gray-400">See everything. Solve anything.</p>
+                                <h1 class="text-2xl font-bold tracking-tight dark:text-white">Floor Operations</h1>
+                                <p class="text-xs text-apple-secondary dark:text-gray-400">Run the floor. Track every move.</p>
                             </div>
                             <div class="hidden lg:block h-10 w-32 border-l border-apple-border dark:border-[#2C2C2E] pl-6 ml-2" title="8-Hour Execution Velocity">
                                 <p class="text-[8px] uppercase font-bold text-apple-secondary mb-1">Velocity</p>
                                 <div id="sparklineContainer" class="h-6 w-full flex items-end"></div>
                             </div>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="openModal('bulkPasteModal')" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-apple-blue text-white shadow-sm transition-all flex items-center justify-center gap-2 hover:opacity-80">
-                                <i class="fa-solid fa-paste"></i> BULK
+                        <div class="flex gap-2 flex-wrap">
+                            <button onclick="openModal('templatesModal')" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-apple-blue text-white shadow-sm transition-all flex items-center justify-center gap-2 hover:opacity-90">
+                                <i class="fa-solid fa-bolt"></i> TEMPLATES
+                            </button>
+                            <button onclick="openModal('bulkPasteModal')" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary hover:text-apple-primary dark:text-gray-400 dark:hover:text-white shadow-sm transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paste"></i> IMPORT TASKS
                             </button>
                             <button onclick="copyShiftReport()" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary hover:text-apple-primary dark:text-gray-400 dark:hover:text-white shadow-sm transition-all flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-copy"></i> REPORT
                             </button>
                             <button onclick="exportToCSV()" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-green-600 hover:text-green-700 dark:text-green-500 dark:hover:text-green-400 shadow-sm transition-all flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-file-csv"></i> EXPORT
+                            </button>
+                            <button onclick="backupAllData()" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 shadow-sm transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-shield-halved"></i> BACKUP
                             </button>
                         </div>
                     </div>
@@ -255,35 +264,110 @@
                 </div>
 
                 <div id="view-rankings" class="hidden flex-col gap-6">
-                    <div class="flex items-center justify-between mb-1">
-                        <div>
-                            <h2 class="text-lg font-bold dark:text-white">Team Totals</h2>
-                            <p class="text-[10px] text-apple-secondary uppercase tracking-widest">Zone rankings by floor numbers &bull; <span id="rank-dept">your floor</span></p>
+                    <div class="flex items-center justify-between gap-3 flex-wrap">
+                        <div class="flex items-center gap-3">
+                            <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-apple-blue to-indigo-500 flex items-center justify-center text-white shadow-sm"><i class="fa-solid fa-ranking-star"></i></div>
+                            <div>
+                                <h2 class="text-xl font-bold dark:text-white">Team Totals</h2>
+                                <p class="text-[10px] text-apple-secondary uppercase tracking-widest">Team ranking by floor numbers &bull; <span id="rank-dept">your floor</span></p>
+                            </div>
                         </div>
+                        <button onclick="copyRankingReport()" class="h-9 px-4 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary hover:text-apple-primary dark:text-gray-400 dark:hover:text-white shadow-sm flex items-center gap-2 transition-all">
+                            <i class="fa-solid fa-clipboard"></i> COPY REPORT
+                        </button>
                     </div>
 
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
-                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Total Directives</p>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm border-t-4 border-t-apple-blue">
+                            <i class="fa-solid fa-list-check text-lg text-apple-blue mb-2"></i>
                             <h3 class="text-3xl font-bold dark:text-white" id="rank-total">0</h3>
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Total Directives</p>
                         </div>
-                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
-                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Completed</p>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm border-t-4 border-t-green-500">
+                            <i class="fa-solid fa-circle-check text-lg text-green-500 mb-2"></i>
                             <h3 class="text-3xl font-bold text-green-500" id="rank-completed">0</h3>
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Completed</p>
                         </div>
-                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
-                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Completion Rate</p>
-                            <h3 class="text-3xl font-bold text-apple-blue" id="rank-rate">0%</h3>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm border-t-4 border-t-indigo-500">
+                            <i class="fa-solid fa-gauge-high text-lg text-indigo-500 mb-2"></i>
+                            <h3 class="text-3xl font-bold text-indigo-500" id="rank-rate">0%</h3>
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Completion Rate</p>
                         </div>
-                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
-                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Active Zones</p>
-                            <h3 class="text-3xl font-bold dark:text-white" id="rank-zones">0</h3>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm border-t-4 border-t-purple-500">
+                            <i class="fa-solid fa-people-group text-lg text-purple-500 mb-2"></i>
+                            <h3 class="text-3xl font-bold dark:text-white" id="rank-teams">0</h3>
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Teams Ranked</p>
                         </div>
                     </div>
 
                     <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-6 shadow-sm">
-                        <h3 class="text-[10px] uppercase font-black text-apple-secondary tracking-widest mb-4">Leaderboard &mdash; Zones by Completed Directives</h3>
-                        <div id="rankingsBoard" class="space-y-3"></div>
+                        <h3 class="text-[10px] uppercase font-black text-apple-secondary tracking-widest mb-5">Leaderboard &mdash; Teams by Completed Directives</h3>
+                        <div id="rankingsBoard" class="space-y-4"></div>
+                    </div>
+
+                    <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl overflow-hidden shadow-sm">
+                        <div class="px-6 pt-5 pb-2"><h3 class="text-[10px] uppercase font-black text-apple-secondary tracking-widest">Numbers by Team</h3></div>
+                        <div class="overflow-x-auto scrollbar-hide">
+                            <table class="w-full text-left border-collapse min-w-[560px]">
+                                <thead><tr class="border-b border-apple-border dark:border-[#2C2C2E]">
+                                    <th class="py-3 px-6 text-[9px] uppercase font-bold text-apple-secondary">Rank</th>
+                                    <th class="py-3 px-6 text-[9px] uppercase font-bold text-apple-secondary">Team</th>
+                                    <th class="py-3 px-6 text-[9px] uppercase font-bold text-apple-secondary text-center">Members</th>
+                                    <th class="py-3 px-6 text-[9px] uppercase font-bold text-apple-secondary text-center">Total</th>
+                                    <th class="py-3 px-6 text-[9px] uppercase font-bold text-apple-secondary text-center">Done</th>
+                                    <th class="py-3 px-6 text-[9px] uppercase font-bold text-apple-secondary text-center">Rate</th>
+                                </tr></thead>
+                                <tbody id="rankTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-coaching" class="hidden flex-col gap-6">
+                    <div class="flex items-center justify-between gap-3 flex-wrap">
+                        <div>
+                            <h2 class="text-lg font-bold dark:text-white">Coaching Log</h2>
+                            <p class="text-[10px] text-apple-secondary uppercase tracking-widest">Sessions recorded across the floor</p>
+                        </div>
+                        <button onclick="openModal('newCoachingModal')" class="h-9 px-4 rounded-lg text-[11px] font-bold bg-apple-blue text-white shadow-sm flex items-center gap-2 hover:opacity-90 transition-all">
+                            <i class="fa-solid fa-plus"></i> LOG SESSION
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Total Sessions</p>
+                            <h3 class="text-3xl font-bold dark:text-white" id="coach-total">0</h3>
+                        </div>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">This Week</p>
+                            <h3 class="text-3xl font-bold text-apple-blue" id="coach-week">0</h3>
+                        </div>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Agents Coached</p>
+                            <h3 class="text-3xl font-bold dark:text-white" id="coach-agents">0</h3>
+                        </div>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Coaches Active</p>
+                            <h3 class="text-3xl font-bold dark:text-white" id="coach-coaches">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl overflow-hidden shadow-sm">
+                        <div class="overflow-x-auto scrollbar-hide">
+                            <table class="w-full text-left border-collapse min-w-[680px]">
+                                <thead><tr class="bg-[#FBFBFD] dark:bg-[#242426] border-b border-apple-border dark:border-[#2C2C2E]">
+                                    <th class="py-3 px-5 text-[9px] uppercase font-bold text-apple-secondary">Date</th>
+                                    <th class="py-3 px-5 text-[9px] uppercase font-bold text-apple-secondary">Agent</th>
+                                    <th class="py-3 px-5 text-[9px] uppercase font-bold text-apple-secondary">Topic</th>
+                                    <th class="py-3 px-5 text-[9px] uppercase font-bold text-apple-secondary">Notes</th>
+                                    <th class="py-3 px-5 text-[9px] uppercase font-bold text-apple-secondary">Coach</th>
+                                    <th class="py-3 px-5"></th>
+                                </tr></thead>
+                                <tbody id="coachingTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div id="coachingEmpty" class="hidden text-xs text-apple-secondary italic text-center py-10">No coaching sessions logged yet.</div>
                     </div>
                 </div>
 
@@ -356,131 +440,11 @@
                     </div>
                 </div>
 
-                <!-- QA MODULE -->
-                <div id="view-qa" class="hidden flex-col gap-4">
-
-                    <!-- QA Header -->
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div>
-                            <h2 class="text-xl font-bold dark:text-white">QA Case Tracker</h2>
-                            <p class="text-[10px] text-apple-secondary uppercase tracking-widest">Log · Coach · Document</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="switchQATab('cases')" id="qa-tab-cases" class="h-9 px-4 rounded-lg text-[11px] font-bold bg-purple-600 text-white shadow-sm transition-all">Case Log</button>
-                            <button onclick="switchQATab('coaching')" id="qa-tab-coaching" class="h-9 px-4 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary dark:text-gray-400 transition-all">Coaching Board</button>
-                            <button onclick="switchQATab('qaanalytics')" id="qa-tab-qaanalytics" class="h-9 px-4 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary dark:text-gray-400 transition-all">Analytics</button>
-                            <button onclick="openModal('bulkQAModal')" class="h-9 px-4 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-purple-300 dark:border-purple-800 text-purple-600 dark:text-purple-400 shadow-sm flex items-center gap-2 hover:opacity-80 transition-all">
-                                <i class="fa-solid fa-paste"></i> Bulk Paste
-                            </button>
-                            <button onclick="openModal('newQACaseModal')" class="h-9 px-4 rounded-lg text-[11px] font-bold bg-purple-600 text-white shadow-sm flex items-center gap-2 hover:opacity-80 transition-all">
-                                <i class="fa-solid fa-plus"></i> New Case
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- KPI bar -->
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                        <div class="bg-white dark:bg-[#1C1C1E] rounded-2xl p-4 border border-apple-border dark:border-[#2C2C2E] shadow-sm border-t-4 border-t-red-500">
-                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">Total Cases</p>
-                            <span id="qa-kpi-total" class="text-2xl font-bold dark:text-white">0</span>
-                        </div>
-                        <div class="bg-white dark:bg-[#1C1C1E] rounded-2xl p-4 border border-apple-border dark:border-[#2C2C2E] shadow-sm border-t-4 border-t-orange-500">
-                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">Fatal Cases</p>
-                            <span id="qa-kpi-fatal" class="text-2xl font-bold dark:text-white">0</span>
-                        </div>
-                        <div class="bg-white dark:bg-[#1C1C1E] rounded-2xl p-4 border border-apple-border dark:border-[#2C2C2E] shadow-sm border-t-4 border-t-yellow-500">
-                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">Pending Coaching</p>
-                            <span id="qa-kpi-coaching" class="text-2xl font-bold dark:text-white">0</span>
-                        </div>
-                        <div class="bg-white dark:bg-[#1C1C1E] rounded-2xl p-4 border border-apple-border dark:border-[#2C2C2E] shadow-sm border-t-4 border-t-purple-500">
-                            <p class="text-[9px] uppercase font-bold text-apple-secondary mb-1">Warnings Issued</p>
-                            <span id="qa-kpi-warnings" class="text-2xl font-bold dark:text-white">0</span>
-                        </div>
-                    </div>
-
-                    <!-- Case Log Tab -->
-                    <div id="qa-view-cases" class="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-apple-border dark:border-[#2C2C2E] overflow-hidden shadow-sm">
-                        <div class="flex items-center gap-3 p-4 border-b border-apple-border dark:border-[#2C2C2E]">
-                            <input type="text" id="qaSearchInput" oninput="renderQACases()" placeholder="Search agent, issue, team..." class="flex-1 bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-9 px-4 rounded-lg text-xs dark:text-white outline-none focus:border-purple-500">
-                            <select id="qaFilterIssue" onchange="renderQACases()" class="bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-9 px-3 rounded-lg text-xs dark:text-white">
-                                <option value="">All Issues</option>
-                                <option>#Fatal</option><option>#Feedback</option><option>#Sticking</option>
-                                <option>#SystemFocus</option><option>#Interaction</option><option>#CallFocus</option><option>#Brand</option>
-                                <option>#Clarity</option><option>#Other</option>
-                            </select>
-                            <select id="qaFilterStatus" onchange="renderQACases()" class="bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-9 px-3 rounded-lg text-xs dark:text-white">
-                                <option value="">All Statuses</option>
-                                <option>No Action</option><option>Verbal</option><option>Feedback Session</option>
-                                <option>1st Documentation</option><option>2nd Documentation</option><option>3rd Documentation</option>
-                                <option>Action Plan</option><option>Fatal Documentation</option><option>Final Documentation</option>
-                                <option>1st Warning</option><option>2nd Warning</option><option>3rd Warning</option>
-                                <option>Hold</option><option>System Tampering</option><option>Termination</option>
-                            </select>
-                            <button onclick="exportQAToCSV()" class="h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-green-600 dark:text-green-400 flex items-center gap-1 hover:opacity-80">
-                                <i class="fa-solid fa-file-csv"></i> Export
-                            </button>
-                        </div>
-                        <div class="overflow-x-auto scrollbar-hide">
-                            <table class="w-full text-left border-collapse min-w-[900px]">
-                                <thead><tr class="bg-[#FBFBFD] dark:bg-[#242426] border-b border-apple-border dark:border-[#2C2C2E]">
-                                    <th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary">Agent</th>
-                                    <th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary">Date</th>
-                                    <th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary">Issue</th>
-                                    <th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary">Comment</th>
-                                    <th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary">Team</th>
-                                    <th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary">Coaching Status</th>
-                                    <th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary">Warning Sent</th>
-                                    <th class="py-3 px-4 text-[9px] uppercase font-bold text-apple-secondary">Coaching Date</th>
-                                    <th class="py-3 px-4 text-right"></th>
-                                </tr></thead>
-                                <tbody id="qaCaseTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Coaching Board Tab -->
-                    <div id="qa-view-coaching" class="hidden">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="qaCoachingGrid"></div>
-                    </div>
-
-                    <!-- QA Analytics Tab -->
-                    <div id="qa-view-qaanalytics" class="hidden flex-col gap-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
-                                <p class="text-[10px] uppercase font-black text-apple-secondary tracking-widest mb-4">Issues by Type</p>
-                                <div id="qa-chart-issues" class="flex items-end justify-between gap-2 h-32"></div>
-                            </div>
-                            <div class="bg-white dark:bg-[#1C1C1E] p-6 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
-                                <p class="text-[10px] uppercase font-black text-apple-secondary tracking-widest mb-4">Issues by Team</p>
-                                <div id="qa-chart-teams" class="space-y-2"></div>
-                            </div>
-                        </div>
-                        <div class="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm overflow-hidden">
-                            <div class="p-5 border-b border-apple-border dark:border-[#2C2C2E]">
-                                <p class="text-[10px] uppercase font-black text-apple-secondary tracking-widest">Most Flagged Agents</p>
-                            </div>
-                            <div class="overflow-x-auto scrollbar-hide">
-                                <table class="w-full text-left border-collapse min-w-[400px]">
-                                    <thead><tr class="bg-[#FBFBFD] dark:bg-[#242426] border-b border-apple-border dark:border-[#2C2C2E]">
-                                        <th class="py-3 px-5 text-[9px] uppercase font-bold text-apple-secondary">#</th>
-                                        <th class="py-3 px-5 text-[9px] uppercase font-bold text-apple-secondary">Agent</th>
-                                        <th class="py-3 px-5 text-[9px] uppercase font-bold text-apple-secondary text-center">Cases</th>
-                                        <th class="py-3 px-5 text-[9px] uppercase font-bold text-apple-secondary text-center">Fatals</th>
-                                        <th class="py-3 px-5 text-[9px] uppercase font-bold text-apple-secondary">Highest Status</th>
-                                    </tr></thead>
-                                    <tbody id="qaAgentLeaderboard"></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <!-- END QA MODULE -->
 
             </div>
         </main>
 
-        <button id="fab-add-task" onclick="openModal('newTaskModal')" class="admin-only fixed bottom-20 md:bottom-10 right-6 md:right-10 h-14 w-14 bg-apple-blue text-white rounded-full shadow-lg active:scale-90 transition-all flex items-center justify-center text-xl z-30 border border-white/20"><i class="fa-solid fa-plus"></i></button>
+        <button id="fab-add-task" onclick="openModal('newTaskModal')" class="admin-only fixed bottom-20 md:bottom-10 right-6 md:right-10 h-14 w-14 bg-gradient-to-br from-apple-blue to-indigo-500 text-white rounded-full shadow-xl active:scale-90 hover:scale-105 transition-all flex items-center justify-center text-xl z-30 border border-white/20"><i class="fa-solid fa-plus"></i></button>
 
         <div id="slideDrawer" class="fixed top-0 bottom-0 right-0 w-full sm:w-[420px] bg-white dark:bg-[#1C1C1E] shadow-2xl border-l border-apple-border dark:border-[#2C2C2E] z-[120] translate-x-full flex flex-col transition-transform duration-300">
             <div class="p-6 border-b border-apple-border dark:border-[#2C2C2E] flex justify-between items-center">
@@ -571,153 +535,53 @@
         </div>
     </div>
 
-    <!-- New QA Case Modal -->
-    <div id="newQACaseModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <!-- Log Coaching Session Modal -->
+    <div id="newCoachingModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
         <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-6 rounded-2xl w-full max-w-lg shadow-2xl">
-            <h3 class="text-lg font-bold mb-4 dark:text-white">Log QA Case</h3>
-            <div class="space-y-3 mb-6">
+            <h2 class="text-lg font-bold dark:text-white mb-1">Log Coaching Session</h2>
+            <p class="text-[10px] text-apple-secondary uppercase tracking-widest mb-5">Record a coaching conversation</p>
+            <div class="space-y-3">
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Agent Name</label>
-                        <input type="text" id="qa-agent-name" placeholder="Full name" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
+                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Agent</label>
+                        <select id="coach-agent" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white"></select>
                     </div>
                     <div>
-                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Date of Call</label>
-                        <input type="date" id="qa-call-date" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Issue Type</label>
-                        <select id="qa-issue-type" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
-                            <option>#Fatal</option><option>#Feedback</option><option>#Sticking</option>
-                            <option>#SystemFocus</option><option>#Interaction</option><option>#CallFocus</option><option>#Brand</option>
-                            <option>#Clarity</option><option>#Other</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Team / Supervisor</label>
-                        <input type="text" id="qa-team" placeholder="e.g. David" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Coaching Status</label>
-                        <select id="qa-coaching-status" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
-                            <option>No Action</option><option>Verbal</option><option>Feedback Session</option>
-                            <option>1st Documentation</option><option>2nd Documentation</option><option>3rd Documentation</option>
-                            <option>Action Plan</option><option>Fatal Documentation</option><option>Final Documentation</option>
-                            <option>1st Warning</option><option>2nd Warning</option><option>3rd Warning</option>
-                            <option>Hold</option><option>System Tampering</option><option>Termination</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Coaching Date</label>
-                        <input type="date" id="qa-coaching-date" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
+                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Date</label>
+                        <input type="date" id="coach-date" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
                     </div>
                 </div>
                 <div>
-                    <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Comment / Notes</label>
-                    <textarea id="qa-comment" placeholder="What went wrong on the call?" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] rounded-lg p-3 text-sm h-20 resize-none dark:text-white"></textarea>
+                    <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Topic</label>
+                    <select id="coach-topic" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
+                        <option>Performance</option><option>Attendance</option><option>Quality</option>
+                        <option>Behavior / Conduct</option><option>Product Knowledge</option><option>Recognition</option>
+                        <option>Goal Setting</option><option>Other</option>
+                    </select>
                 </div>
-                <div class="flex gap-6">
-                    <label class="flex items-center gap-2 text-xs dark:text-white cursor-pointer">
-                        <input type="checkbox" id="qa-wrong-dispo" class="rounded"> Wrong Disposition
-                    </label>
-                    <label class="flex items-center gap-2 text-xs dark:text-white cursor-pointer">
-                        <input type="checkbox" id="qa-warning-sent" class="rounded"> Warning Email Sent
-                    </label>
-                    <label class="flex items-center gap-2 text-xs dark:text-white cursor-pointer">
-                        <input type="checkbox" id="qa-deduction" class="rounded"> Deduction Sheet
-                    </label>
+                <div>
+                    <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Notes</label>
+                    <textarea id="coach-notes" placeholder="What was discussed, action items, follow-up..." class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] rounded-lg p-3 text-sm h-24 resize-none dark:text-white"></textarea>
                 </div>
             </div>
-            <div class="flex gap-2">
-                <button onclick="closeModal('newQACaseModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
-                <button id="submitQACaseBtn" class="flex-1 h-11 text-xs font-bold bg-purple-600 text-white rounded-xl shadow-sm">Log Case</button>
+            <p id="coachError" class="text-red-500 text-[10px] font-semibold mt-3 hidden"></p>
+            <div class="flex gap-2 mt-5">
+                <button onclick="closeModal('newCoachingModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
+                <button id="saveCoachingBtn" class="flex-1 h-11 text-xs font-bold bg-apple-blue text-white rounded-xl shadow-sm">Save Session</button>
             </div>
         </div>
     </div>
 
-    <!-- Bulk QA Paste Modal -->
-    <div id="bulkQAModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-6 rounded-2xl w-full max-w-2xl shadow-2xl">
-            <h3 class="text-lg font-bold mb-2 dark:text-white">Bulk Paste QA Cases</h3>
-            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-3">Select your sheet rows (columns A→O), copy, and paste below. The importer reads your sheet's exact column order (tab-separated — Excel/Sheets does this automatically):</p>
-            <div class="bg-apple-canvas dark:bg-[#2C2C2E] rounded-lg p-3 mb-3 text-[10px] font-mono text-apple-secondary dark:text-gray-400 overflow-x-auto">
-                Agent &nbsp;|&nbsp; Date &nbsp;|&nbsp; #Issue &nbsp;|&nbsp; Comment &nbsp;|&nbsp; Wrong Dispo &nbsp;|&nbsp; Repetitive &nbsp;|&nbsp; Need Coaching &nbsp;|&nbsp; <b>Team</b> &nbsp;|&nbsp; Coaching Notes (status) &nbsp;|&nbsp; Coaching Status (outcome) &nbsp;|&nbsp; Coaching Date &nbsp;|&nbsp; Warning Email &nbsp;|&nbsp; Deductions &nbsp;|&nbsp; Alinai &nbsp;|&nbsp; Feedback Comments
-            </div>
-            <textarea id="bulkQAInput" placeholder="Vera Istrefi&#9;5/28/2026&#9;#Fatal&#9;Did not transfer to an agent&#9;David&#9;Verbal&#10;Beatrice Culaj&#9;5/28/2026&#9;#Fatal&#9;Did not transfer&#9;David&#9;1st Documentation" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-40 p-3 rounded-lg text-xs dark:text-white font-mono resize-none mb-1"></textarea>
-            <p class="text-[10px] text-apple-secondary mb-5">Only <b>Agent Name</b> is required — just paste whole rows from your sheet and the columns line up automatically. <b>Team</b> is read from the Team column (supervisor name), and the coaching progression comes from the <b>Coaching Notes</b> column. The <b>Coaching Status</b> (Yes/No/Not Fail…) and Feedback comments are saved into the case's notes. Unknown issue types default to #Feedback; unknown statuses default to Verbal.</p>
-            <div class="flex gap-2">
-                <button onclick="closeModal('bulkQAModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
-                <button id="submitBulkQABtn" class="flex-1 h-11 text-xs font-bold bg-purple-600 text-white rounded-xl shadow-sm">Import Cases</button>
-            </div>
+    <!-- Task Templates Modal -->
+    <div id="templatesModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-6 rounded-2xl w-full max-w-lg shadow-2xl">
+            <h2 class="text-lg font-bold dark:text-white mb-1">Task Templates</h2>
+            <p class="text-[10px] text-apple-secondary uppercase tracking-widest mb-5">One tap to create a recurring floor task</p>
+            <div id="templatesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[55vh] overflow-y-auto scrollbar-hide"></div>
+            <button onclick="closeModal('templatesModal')" class="w-full h-11 mt-5 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Close</button>
         </div>
     </div>
 
-    <!-- Edit QA Case Modal -->
-    <div id="editQACaseModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-6 rounded-2xl w-full max-w-lg shadow-2xl">
-            <h3 class="text-lg font-bold mb-4 dark:text-white">Edit QA Case</h3>
-            <div class="space-y-3 mb-6">
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Agent Name</label>
-                        <input type="text" id="edit-qa-agent-name" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Date of Call</label>
-                        <input type="date" id="edit-qa-call-date" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Issue Type</label>
-                        <select id="edit-qa-issue-type" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
-                            <option>#Fatal</option><option>#Feedback</option><option>#Sticking</option>
-                            <option>#SystemFocus</option><option>#Interaction</option><option>#CallFocus</option><option>#Brand</option>
-                            <option>#Clarity</option><option>#Other</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Team / Supervisor</label>
-                        <input type="text" id="edit-qa-team" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Coaching Status</label>
-                        <select id="edit-qa-coaching-status" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
-                            <option>No Action</option><option>Verbal</option><option>Feedback Session</option>
-                            <option>1st Documentation</option><option>2nd Documentation</option><option>3rd Documentation</option>
-                            <option>Action Plan</option><option>Fatal Documentation</option><option>Final Documentation</option>
-                            <option>1st Warning</option><option>2nd Warning</option><option>3rd Warning</option>
-                            <option>Hold</option><option>System Tampering</option><option>Termination</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Coaching Date</label>
-                        <input type="date" id="edit-qa-coaching-date" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 rounded-lg text-sm dark:text-white">
-                    </div>
-                </div>
-                <div>
-                    <label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Comment / Notes</label>
-                    <textarea id="edit-qa-comment" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] rounded-lg p-3 text-sm h-20 resize-none dark:text-white"></textarea>
-                </div>
-                <div class="flex gap-6">
-                    <label class="flex items-center gap-2 text-xs dark:text-white cursor-pointer"><input type="checkbox" id="edit-qa-wrong-dispo" class="rounded"> Wrong Disposition</label>
-                    <label class="flex items-center gap-2 text-xs dark:text-white cursor-pointer"><input type="checkbox" id="edit-qa-warning-sent" class="rounded"> Warning Email Sent</label>
-                    <label class="flex items-center gap-2 text-xs dark:text-white cursor-pointer"><input type="checkbox" id="edit-qa-deduction" class="rounded"> Deduction Sheet</label>
-                </div>
-            </div>
-            <div class="flex gap-2">
-                <button id="deleteQACaseBtn" class="h-11 px-4 text-red-500 bg-red-50 dark:bg-red-900/20 rounded-xl"><i class="fa-solid fa-trash-can"></i></button>
-                <button onclick="closeModal('editQACaseModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
-                <button id="updateQACaseBtn" class="flex-1 h-11 text-xs font-bold bg-purple-600 text-white rounded-xl shadow-sm">Save Changes</button>
-            </div>
-        </div>
-    </div>
 
     <div id="toastAlert" class="fixed top-6 left-1/2 -translate-x-1/2 -translate-y-24 transition-transform bg-apple-primary dark:bg-apple-blue px-6 py-3 rounded-full shadow-lg z-[500] flex items-center gap-3">
         <i class="fa-solid fa-bell text-green-400 dark:text-white text-sm"></i><p id="toastMessage" class="text-sm font-medium text-white">Action Confirmed</p>
@@ -807,9 +671,17 @@
         window.addEventListener('offline', () => { document.getElementById('offlineBanner').style.display = 'block'; });
         window.addEventListener('online', () => { document.getElementById('offlineBanner').style.display = 'none'; });
 
-        function openModal(id) { 
-            document.getElementById(id).style.display = 'flex'; 
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
             if(id === 'addMemberModal') document.getElementById('memberError').style.display = 'none';
+            if(id === 'newCoachingModal') {
+                const sel = document.getElementById('coach-agent');
+                sel.innerHTML = globalUsers.map(u => `<option value="${u.name}">${u.name}</option>`).join('') || '<option value="">No team members</option>';
+                document.getElementById('coach-date').value = new Date().toISOString().slice(0, 10);
+                document.getElementById('coach-notes').value = '';
+                document.getElementById('coachError').classList.add('hidden');
+            }
+            if(id === 'templatesModal') renderTemplates();
         }
         function closeModal(id) { 
             document.getElementById(id).style.display = 'none'; 
@@ -817,14 +689,13 @@
             if(id === 'newTaskModal') { 
                 document.getElementById('newTitle').value = ''; 
                 document.getElementById('newTarget').value = ''; 
-                document.getElementById('newZone').value = 'General';
+                document.getElementById('newZone').value = 'Escalations';
                 document.getElementById('newAssignee').value = 'None';
             }
             if(id === 'bulkPasteModal') {
                 document.getElementById('bulkPasteInput').value = '';
-                document.getElementById('bulkPasteZone').value = 'General';
+                document.getElementById('bulkPasteZone').value = 'Escalations';
             }
-            if(id === 'bulkQAModal') document.getElementById('bulkQAInput').value = '';
         }
         function showToast(msg) {
             const t = document.getElementById('toastAlert'); document.getElementById('toastMessage').innerText = msg;
@@ -832,7 +703,7 @@
         }
 
         function switchView(viewName) {
-            const views = ['table', 'board', 'rankings', 'team', 'log', 'analytics', 'qa'];
+            const views = ['table', 'board', 'rankings', 'coaching', 'team', 'log', 'analytics'];
             views.forEach(v => {
                 const nav = document.getElementById('nav-' + v);
                 const ind = document.getElementById('indicator-' + v);
@@ -852,14 +723,13 @@
             if(viewName === 'log') fetchLogs();
             if(viewName === 'analytics') { fetchLogs(); renderAnalytics(); }
             if(viewName === 'rankings') renderRankings();
-            if(viewName === 'qa') { loadQACases(); switchQATab('cases'); }
+            if(viewName === 'coaching') loadCoachingSessions();
         }
 
         function applyRolePermissions() {
             const isAdmin = currentUser && (currentUser.role.includes('Manager') || currentUser.role === 'Admin');
             document.querySelectorAll('.admin-only').forEach(el => el.style.display = isAdmin ? '' : 'none');
-            applyQAPermissions();
-            
+
             if(isAdmin) {
                 setFilter('All');
                 document.getElementById('drawerAssignee').disabled = false;
@@ -937,7 +807,7 @@
                 errEl.style.opacity = '1';
                 setTimeout(() => errEl.style.opacity = '0', 2000);
             }
-            btn.innerText = "Access Command Center"; btn.disabled = false;
+            btn.innerText = "Sign In"; btn.disabled = false;
         }
 
         async function logAction(text) {
@@ -1017,9 +887,19 @@
                     <div class="h-12 w-12 mx-auto rounded-full bg-apple-canvas dark:bg-[#2C2C2E] flex items-center justify-center font-bold text-apple-primary dark:text-white mb-2 mt-3">${init}</div>
                     <h3 class="text-xs font-bold dark:text-white uppercase tracking-tighter">${user.name}</h3>
                     <p class="text-[8px] text-apple-secondary uppercase mb-2 tracking-widest">${user.role}</p>
+                    <button onclick="setTeam('${safeName}', '${(user.team||'').replace(/'/g, "\\'")}')" class="text-[9px] font-bold mb-2 px-2 py-0.5 rounded-full bg-apple-blue/10 text-apple-blue hover:bg-apple-blue/20 transition-colors flex items-center gap-1 mx-auto"><i class="fa-solid fa-people-group text-[8px]"></i> ${user.team ? user.team : 'Set team'}</button>
                     <div class="flex justify-center">${probaBadge}</div>
                 </div>`);
             });
+        }
+
+        async function setTeam(name, current) {
+            const team = prompt(`Team / supervisor for ${name}:`, current || '');
+            if(team === null) return;
+            const { error } = await supabaseClient.from('floor_users')
+                .update({ team: team.trim() }).eq('name', name).eq('department', currentUser.department);
+            if(error) { alert('Could not update: ' + error.message); return; }
+            logAction(`Set team for ${name}: ${team.trim() || '(none)'}`); initTeam();
         }
 
         async function revokeUser(name) {
@@ -1242,51 +1122,97 @@
             return (avg / 60).toFixed(1) + 'h';
         }
 
+        // Build a map of member name -> team (falls back to the person's own name
+        // when no team is assigned, so everyone still shows up somewhere).
+        function buildTeamMap() {
+            const map = {};
+            (globalUsers || []).forEach(u => { map[u.name] = (u.team && u.team.trim()) ? u.team.trim() : u.name; });
+            return map;
+        }
+
+        let rankEntriesCache = [];
+
         function renderRankings() {
             const deptEl = document.getElementById('rank-dept');
             if(deptEl && currentUser) deptEl.innerText = currentUser.department || 'your floor';
 
             const setTxt = (id, v) => { const el = document.getElementById(id); if(el) el.innerText = v; };
             const board = document.getElementById('rankingsBoard');
+            const tbody = document.getElementById('rankTableBody');
+            const teamOf = buildTeamMap();
 
-            // Aggregate the department's directives by zone.
-            const zones = {};
+            // Aggregate the department's directives by the assignee's team.
+            const teams = {};
             let total = 0, completed = 0;
             globalTasks.forEach(t => {
-                const z = t.zone || 'Unzoned';
-                if(!zones[z]) zones[z] = { total: 0, done: 0 };
-                zones[z].total++; total++;
-                if(t.status === 'Completed') { zones[z].done++; completed++; }
+                const team = teamOf[t.assigned_to] || t.assigned_to || 'Unassigned';
+                if(!teams[team]) teams[team] = { total: 0, done: 0, members: new Set() };
+                teams[team].total++; total++;
+                if(t.assigned_to) teams[team].members.add(t.assigned_to);
+                if(t.status === 'Completed') { teams[team].done++; completed++; }
             });
 
             setTxt('rank-total', total);
             setTxt('rank-completed', completed);
             setTxt('rank-rate', total > 0 ? Math.round((completed / total) * 100) + '%' : '0%');
-            setTxt('rank-zones', Object.keys(zones).length);
+            setTxt('rank-teams', Object.keys(teams).length);
 
-            if(!board) return;
-            const entries = Object.entries(zones).sort((a, b) => b[1].done - a[1].done || b[1].total - a[1].total);
-            if(!entries.length) { board.innerHTML = `<p class="text-xs text-apple-secondary italic text-center py-8">No directives logged yet.</p>`; return; }
+            const entries = Object.entries(teams).sort((a, b) => b[1].done - a[1].done || b[1].total - a[1].total);
+            rankEntriesCache = entries;
 
-            const maxDone = Math.max(...entries.map(e => e[1].done), 1);
-            const medals = ['text-yellow-500', 'text-gray-400', 'text-amber-700'];
-            board.innerHTML = entries.map(([zone, s], i) => {
-                const pct = Math.round((s.done / maxDone) * 100);
+            if(board) {
+                if(!entries.length) { board.innerHTML = `<p class="text-xs text-apple-secondary italic text-center py-8">No directives assigned yet.</p>`; }
+                else {
+                    const maxDone = Math.max(...entries.map(e => e[1].done), 1);
+                    const medals = ['text-yellow-500', 'text-gray-400', 'text-amber-700'];
+                    board.innerHTML = entries.map(([team, s], i) => {
+                        const pct = Math.round((s.done / maxDone) * 100);
+                        const rate = s.total > 0 ? Math.round((s.done / s.total) * 100) : 0;
+                        const rankIco = i < 3 ? `<i class="fa-solid fa-medal ${medals[i]} text-base"></i>` : `<span class="text-apple-secondary text-xs font-black">${i + 1}</span>`;
+                        const init = team.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                        return `<div class="flex items-center gap-3">
+                            <div class="w-6 text-center">${rankIco}</div>
+                            <div class="h-8 w-8 rounded-full bg-apple-canvas dark:bg-[#2C2C2E] flex items-center justify-center text-[10px] font-black dark:text-white shrink-0">${init}</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-xs font-bold dark:text-white truncate">${team}</span>
+                                    <span class="text-[10px] text-apple-secondary shrink-0 ml-2">${s.done}/${s.total} &bull; ${rate}%</span>
+                                </div>
+                                <div class="h-2.5 w-full bg-apple-canvas dark:bg-[#2C2C2E] rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-apple-blue to-indigo-500 rounded-full transition-all" style="width:${pct}%"></div>
+                                </div>
+                            </div>
+                        </div>`;
+                    }).join('');
+                }
+            }
+
+            if(tbody) {
+                const medals = ['🥇', '🥈', '🥉'];
+                tbody.innerHTML = entries.map(([team, s], i) => {
+                    const rate = s.total > 0 ? Math.round((s.done / s.total) * 100) : 0;
+                    return `<tr class="border-b border-apple-border dark:border-[#2C2C2E] hover:bg-apple-canvas dark:hover:bg-[#242426] transition-colors">
+                        <td class="py-3 px-6 text-xs font-black dark:text-white">${medals[i] || (i + 1)}</td>
+                        <td class="py-3 px-6 text-xs font-bold dark:text-white">${team}</td>
+                        <td class="py-3 px-6 text-xs text-center dark:text-gray-300">${s.members.size}</td>
+                        <td class="py-3 px-6 text-xs text-center dark:text-gray-300">${s.total}</td>
+                        <td class="py-3 px-6 text-xs text-center font-bold text-green-600 dark:text-green-400">${s.done}</td>
+                        <td class="py-3 px-6 text-xs text-center font-bold text-indigo-500">${rate}%</td>
+                    </tr>`;
+                }).join('');
+            }
+        }
+
+        function copyRankingReport() {
+            if(!rankEntriesCache.length) { showToast('Nothing to copy yet.'); return; }
+            const dept = (currentUser && currentUser.department) || 'Floor';
+            let txt = `📊 TEAM TOTALS — ${dept}\n${new Date().toLocaleDateString()}\n\n`;
+            rankEntriesCache.forEach(([team, s], i) => {
                 const rate = s.total > 0 ? Math.round((s.done / s.total) * 100) : 0;
-                const rankIco = i < 3 ? `<i class="fa-solid fa-medal ${medals[i]}"></i>` : `<span class="text-apple-secondary">${i + 1}</span>`;
-                return `<div class="flex items-center gap-3">
-                    <div class="w-6 text-center text-xs font-black">${rankIco}</div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-xs font-bold dark:text-white truncate">${zone}</span>
-                            <span class="text-[10px] text-apple-secondary shrink-0 ml-2">${s.done}/${s.total} done &bull; ${rate}%</span>
-                        </div>
-                        <div class="h-2 w-full bg-apple-canvas dark:bg-[#2C2C2E] rounded-full overflow-hidden">
-                            <div class="h-full bg-apple-blue rounded-full transition-all" style="width:${pct}%"></div>
-                        </div>
-                    </div>
-                </div>`;
-            }).join('');
+                const medal = ['🥇','🥈','🥉'][i] || `${i + 1}.`;
+                txt += `${medal} ${team} — ${s.done}/${s.total} done (${rate}%)\n`;
+            });
+            navigator.clipboard.writeText(txt).then(() => showToast('Report copied!')).catch(() => showToast('Copy failed.'));
         }
 
         function renderAnalytics() {
@@ -1479,6 +1405,66 @@
             logAction(`Deleted: "${t.title}"`); showToast('Deleted.'); closeDrawer(); loadData();
         });
 
+        // ── TASK TEMPLATES ────────────────────────────────────────────
+        const TASK_TEMPLATES = [
+            { label: 'Hourly Report', zone: 'Hourly Report', priority: 'Standard', icon: 'fa-clock', color: 'text-blue-500' },
+            { label: 'Daily Report', zone: 'Daily Report', priority: 'High', icon: 'fa-calendar-day', color: 'text-indigo-500' },
+            { label: 'Walk the Floor', zone: 'Walking the Floor', priority: 'Standard', icon: 'fa-person-walking', color: 'text-teal-500' },
+            { label: 'Team Meeting', zone: 'Meetings', priority: 'Standard', icon: 'fa-users', color: 'text-purple-500' },
+            { label: 'Handle Escalation', zone: 'Escalations', priority: 'Critical', icon: 'fa-triangle-exclamation', color: 'text-red-500' },
+            { label: 'Coaching Session', zone: 'Coaching Session', priority: 'High', icon: 'fa-comments', color: 'text-orange-500' },
+            { label: 'Training Session', zone: 'Training', priority: 'Standard', icon: 'fa-chalkboard-user', color: 'text-green-500' },
+            { label: 'Run Spiffs', zone: 'Spiffs', priority: 'Standard', icon: 'fa-gift', color: 'text-pink-500' }
+        ];
+
+        function renderTemplates() {
+            const grid = document.getElementById('templatesGrid');
+            if(!grid) return;
+            grid.innerHTML = TASK_TEMPLATES.map((t, i) => `
+                <button onclick="createFromTemplate(${i})" class="flex items-center gap-3 p-3 rounded-xl border border-apple-border dark:border-[#2C2C2E] bg-apple-canvas dark:bg-[#2C2C2E] hover:border-apple-blue dark:hover:border-apple-blue text-left transition-all active:scale-95">
+                    <i class="fa-solid ${t.icon} ${t.color} text-lg w-6 text-center"></i>
+                    <div class="min-w-0">
+                        <p class="text-xs font-bold dark:text-white truncate">${t.label}</p>
+                        <p class="text-[8px] uppercase tracking-widest text-apple-secondary">${t.zone} &bull; ${t.priority}</p>
+                    </div>
+                </button>`).join('');
+        }
+
+        async function createFromTemplate(i) {
+            const t = TASK_TEMPLATES[i]; if(!t) return;
+            const { data, error } = await supabaseClient.from('pulses').insert([{
+                title: t.label, linked_entity: 'N/A', zone: t.zone, assigned_to: 'None',
+                priority: t.priority, status: 'Radar', department: currentUser.department
+            }]).select();
+            if(error) { alert('Could not create: ' + error.message); return; }
+            if(data && data.length) logAction(`Created from template: "${t.label}"`);
+            closeModal('templatesModal'); playSound('pop'); showToast(`Added "${t.label}".`); loadData();
+        }
+
+        async function backupAllData() {
+            try {
+                const dept = currentUser.department;
+                const [pulses, users, coaching, logs] = await Promise.all([
+                    supabaseClient.from('pulses').select('*').eq('department', dept),
+                    supabaseClient.from('floor_users').select('name,role,status,department,team,probation_passed').eq('department', dept),
+                    supabaseClient.from('coaching_sessions').select('*').eq('department', dept),
+                    supabaseClient.from('activity_logs').select('*').eq('department', dept)
+                ]);
+                const backup = {
+                    exported_at: new Date().toISOString(), department: dept,
+                    tasks: pulses.data || [], team: users.data || [],
+                    coaching_sessions: coaching.data || [], activity_logs: logs.data || []
+                };
+                const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `LogiSync-Backup-${dept}-${new Date().toISOString().slice(0,10)}.json`;
+                a.click();
+                showToast('Backup downloaded.');
+            } catch(e) { alert('Backup failed: ' + e.message); }
+        }
+        // ── END TASK TEMPLATES ────────────────────────────────────────
+
         document.getElementById('createTaskBtn').addEventListener('click', async () => {
             const btn = document.getElementById('createTaskBtn'); if(btn.disabled) return;
             const title = document.getElementById('newTitle').value;
@@ -1570,354 +1556,79 @@
             }
         });
 
-        // ── QA MODULE ────────────────────────────────────────────────
 
-        let globalQACases = [];
-        let activeQACaseId = null;
+        // ── COACHING LOG ──────────────────────────────────────────────
+        let globalCoaching = [];
 
-        // Ordered least → most severe (matches the sheet's "Coaching Notes" dropdown). Index drives the progress bar & "top status".
-        const QA_COACHING_STATUSES = ['No Action','Verbal','Feedback Session','1st Documentation','2nd Documentation','3rd Documentation','Action Plan','Fatal Documentation','Final Documentation','1st Warning','2nd Warning','3rd Warning','Hold','System Tampering','Termination'];
-        const QA_ISSUE_COLORS = { '#Fatal':'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', '#Feedback':'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', '#Sticking':'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', '#SystemFocus':'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', '#Interaction':'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400', '#CallFocus':'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400', '#Brand':'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400', '#Clarity':'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400', '#Other':'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300' };
-        const STATUS_COLORS = { 'No Action':'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400', 'Verbal':'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300', 'Feedback Session':'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', '1st Documentation':'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', '2nd Documentation':'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400', '3rd Documentation':'bg-orange-200 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300', 'Action Plan':'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400', 'Fatal Documentation':'bg-red-200 text-red-800 dark:bg-red-900/50 dark:text-red-300', 'Final Documentation':'bg-red-300 text-red-900 dark:bg-red-900/60 dark:text-red-200', '1st Warning':'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400', '2nd Warning':'bg-amber-200 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300', '3rd Warning':'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', 'Hold':'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', 'System Tampering':'bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/30 dark:text-fuchsia-400', 'Termination':'bg-black/80 text-white dark:bg-white/10 dark:text-white' };
-
-        function isQAUser() {
-            if(!currentUser) return false;
-            const r = currentUser.role || '';
-            return r.includes('Manager') || r === 'Admin' || r.toLowerCase().includes('quality') || r.toLowerCase().includes('qa');
+        async function loadCoachingSessions() {
+            const { data, error } = await supabaseClient.from('coaching_sessions')
+                .select('*').eq('department', currentUser.department).order('session_date', { ascending: false });
+            if(error) { console.warn('coaching load', error.message); }
+            globalCoaching = data || [];
+            renderCoachingSessions();
         }
 
-        function applyQAPermissions() {
-            document.querySelectorAll('.qa-only').forEach(el => {
-                el.style.display = isQAUser() ? '' : 'none';
-            });
-        }
+        function renderCoachingSessions() {
+            const body = document.getElementById('coachingTableBody');
+            const empty = document.getElementById('coachingEmpty');
+            if(!body) return;
+            const setTxt = (id, v) => { const el = document.getElementById(id); if(el) el.innerText = v; };
 
-        function switchQATab(tab) {
-            ['cases','coaching','qaanalytics'].forEach(t => {
-                const view = document.getElementById('qa-view-' + t);
-                const btn = document.getElementById('qa-tab-' + t);
-                if(view && btn) {
-                    const isActive = t === tab;
-                    view.style.display = isActive ? (t === 'qaanalytics' ? 'flex' : 'block') : 'none';
-                    btn.className = isActive
-                        ? 'h-9 px-4 rounded-lg text-[11px] font-bold bg-purple-600 text-white shadow-sm transition-all'
-                        : 'h-9 px-4 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary dark:text-gray-400 transition-all';
-                }
-            });
-            if(tab === 'coaching') renderQACoachingBoard();
-            if(tab === 'qaanalytics') renderQAAnalytics();
-        }
+            // KPIs
+            const now = new Date();
+            const weekAgo = new Date(now); weekAgo.setDate(now.getDate() - 7);
+            const thisWeek = globalCoaching.filter(s => s.session_date && new Date(s.session_date) >= weekAgo).length;
+            setTxt('coach-total', globalCoaching.length);
+            setTxt('coach-week', thisWeek);
+            setTxt('coach-agents', new Set(globalCoaching.map(s => s.agent_name)).size);
+            setTxt('coach-coaches', new Set(globalCoaching.map(s => s.coached_by)).size);
 
-        async function loadQACases() {
-            const { data } = await supabaseClient.from('qa_cases').select('*').eq('department', currentUser.department).order('call_date', { ascending: false });
-            if(!data) return;
-            globalQACases = data;
-            renderQACases();
-            renderQAKPIs();
-        }
-
-        function renderQAKPIs() {
-            const total = globalQACases.length;
-            const fatals = globalQACases.filter(c => c.issue_type === '#Fatal').length;
-            const pendingCoaching = globalQACases.filter(c => !c.coaching_date).length;
-            const warnings = globalQACases.filter(c => c.warning_sent).length;
-            const s = (id, v) => { const el = document.getElementById(id); if(el) el.innerText = v; };
-            s('qa-kpi-total', total); s('qa-kpi-fatal', fatals); s('qa-kpi-coaching', pendingCoaching); s('qa-kpi-warnings', warnings);
-        }
-
-        function renderQACases() {
-            const tbody = document.getElementById('qaCaseTableBody');
-            if(!tbody) return;
-            const search = (document.getElementById('qaSearchInput')?.value || '').toLowerCase();
-            const filterIssue = document.getElementById('qaFilterIssue')?.value || '';
-            const filterStatus = document.getElementById('qaFilterStatus')?.value || '';
-
-            let cases = globalQACases.filter(c => {
-                const matchSearch = !search || (c.agent_name||'').toLowerCase().includes(search) || (c.issue_type||'').toLowerCase().includes(search) || (c.team||'').toLowerCase().includes(search) || (c.comment||'').toLowerCase().includes(search);
-                const matchIssue = !filterIssue || c.issue_type === filterIssue;
-                const matchStatus = !filterStatus || c.coaching_status === filterStatus;
-                return matchSearch && matchIssue && matchStatus;
-            });
-
-            tbody.innerHTML = '';
-            if(!cases.length) {
-                tbody.innerHTML = `<tr><td colspan="9" class="py-10 text-center text-xs text-apple-secondary italic">No cases found.</td></tr>`;
-                return;
-            }
-            cases.forEach(c => {
-                const issueBadge = `<span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter ${QA_ISSUE_COLORS[c.issue_type] || ''}">${c.issue_type}</span>`;
-                const statusBadge = `<span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter ${STATUS_COLORS[c.coaching_status] || ''}">${c.coaching_status}</span>`;
-                const warnIcon = c.warning_sent ? `<i class="fa-solid fa-envelope-circle-check text-orange-500" title="Warning sent"></i>` : `<i class="fa-regular fa-envelope text-apple-secondary opacity-30"></i>`;
-                const callDate = c.call_date ? new Date(c.call_date).toLocaleDateString([], {month:'short', day:'numeric'}) : '—';
-                const coachDate = c.coaching_date ? new Date(c.coaching_date).toLocaleDateString([], {month:'short', day:'numeric'}) : '—';
-                tbody.insertAdjacentHTML('beforeend', `<tr class="border-b border-apple-border dark:border-[#2C2C2E] hover:bg-apple-canvas dark:hover:bg-[#242426] cursor-pointer transition-colors" onclick="openEditQACase('${c.id}')">
-                    <td class="py-3 px-4 text-xs font-bold dark:text-white">${c.agent_name}</td>
-                    <td class="py-3 px-4 text-xs dark:text-gray-300">${callDate}</td>
-                    <td class="py-3 px-4">${issueBadge}</td>
-                    <td class="py-3 px-4 text-xs dark:text-gray-300 max-w-[200px] truncate">${c.comment || '—'}</td>
-                    <td class="py-3 px-4 text-xs font-bold dark:text-gray-300">${c.team || '—'}</td>
-                    <td class="py-3 px-4">${statusBadge}</td>
-                    <td class="py-3 px-4 text-center">${warnIcon}</td>
-                    <td class="py-3 px-4 text-xs dark:text-gray-300">${coachDate}</td>
-                    <td class="py-3 px-4 text-right"><i class="fa-solid fa-chevron-right text-[8px] opacity-20 dark:text-white"></i></td>
-                </tr>`);
-            });
-        }
-
-        function renderQACoachingBoard() {
-            const grid = document.getElementById('qaCoachingGrid');
-            if(!grid) return;
-            const agents = {};
-            globalQACases.forEach(c => {
-                if(!agents[c.agent_name]) agents[c.agent_name] = { cases: [], team: c.team };
-                agents[c.agent_name].cases.push(c);
-            });
-            const entries = Object.entries(agents).sort((a, b) => b[1].cases.length - a[1].cases.length);
-            if(!entries.length) { grid.innerHTML = `<p class="text-xs text-apple-secondary italic col-span-3 text-center py-8">No cases logged yet.</p>`; return; }
-            grid.innerHTML = entries.map(([name, data]) => {
-                const fatals = data.cases.filter(c => c.issue_type === '#Fatal').length;
-                const latest = data.cases.reduce((a, b) => QA_COACHING_STATUSES.indexOf(b.coaching_status) > QA_COACHING_STATUSES.indexOf(a.coaching_status) ? b : a, data.cases[0]);
-                const statusIdx = QA_COACHING_STATUSES.indexOf(latest.coaching_status);
-                const progressPct = Math.round(((statusIdx + 1) / QA_COACHING_STATUSES.length) * 100);
-                const isCritical = ['Fatal Documentation','Final Documentation','3rd Warning','Hold','System Tampering','Termination'].includes(latest.coaching_status);
-                const init = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-                return `<div class="bg-white dark:bg-[#1C1C1E] border ${isCritical ? 'border-red-500' : 'border-apple-border dark:border-[#2C2C2E]'} rounded-2xl p-5 shadow-sm">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="h-10 w-10 rounded-full ${isCritical ? 'bg-red-100 dark:bg-red-900/30' : 'bg-apple-canvas dark:bg-[#2C2C2E]'} flex items-center justify-center font-bold text-xs ${isCritical ? 'text-red-600' : 'dark:text-white'}">${init}</div>
-                        <div>
-                            <h4 class="text-sm font-bold dark:text-white">${name}</h4>
-                            <p class="text-[9px] uppercase text-apple-secondary">Team: ${data.team || '—'}</p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2 mb-4 text-center">
-                        <div><p class="text-lg font-bold dark:text-white">${data.cases.length}</p><p class="text-[8px] uppercase text-apple-secondary">Cases</p></div>
-                        <div><p class="text-lg font-bold text-red-500">${fatals}</p><p class="text-[8px] uppercase text-apple-secondary">Fatals</p></div>
-                        <div><p class="text-lg font-bold text-orange-500">${data.cases.filter(c => c.warning_sent).length}</p><p class="text-[8px] uppercase text-apple-secondary">Warnings</p></div>
-                    </div>
-                    <div class="mb-2">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-[9px] uppercase font-bold text-apple-secondary">Status</span>
-                            <span class="text-[9px] font-bold ${isCritical ? 'text-red-500' : 'text-apple-secondary dark:text-gray-300'}">${latest.coaching_status}</span>
-                        </div>
-                        <div class="h-1.5 bg-apple-canvas dark:bg-[#2C2C2E] rounded-full overflow-hidden">
-                            <div class="h-full ${isCritical ? 'bg-red-500' : 'bg-purple-500'} rounded-full" style="width:${progressPct}%"></div>
-                        </div>
-                    </div>
-                </div>`;
+            if(!globalCoaching.length) { body.innerHTML = ''; empty.classList.remove('hidden'); return; }
+            empty.classList.add('hidden');
+            const isAdmin = currentUser && (currentUser.role.includes('Manager') || currentUser.role === 'Admin');
+            const topicColor = { 'Performance':'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', 'Attendance':'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400', 'Quality':'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', 'Behavior / Conduct':'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', 'Recognition':'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' };
+            body.innerHTML = globalCoaching.map(s => {
+                const badge = `<span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter ${topicColor[s.topic] || 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'}">${s.topic || '—'}</span>`;
+                const del = isAdmin ? `<button onclick="deleteCoaching(${s.id})" class="text-apple-secondary hover:text-red-500 transition-colors"><i class="fa-solid fa-trash text-[10px]"></i></button>` : '';
+                return `<tr class="border-b border-apple-border dark:border-[#2C2C2E] hover:bg-apple-canvas dark:hover:bg-[#242426] transition-colors">
+                    <td class="py-3 px-5 text-[10px] font-mono text-apple-secondary whitespace-nowrap">${s.session_date || ''}</td>
+                    <td class="py-3 px-5 text-xs font-bold dark:text-white">${s.agent_name}</td>
+                    <td class="py-3 px-5">${badge}</td>
+                    <td class="py-3 px-5 text-xs text-apple-secondary dark:text-gray-300 max-w-[280px] truncate" title="${(s.notes||'').replace(/"/g,'&quot;')}">${s.notes || ''}</td>
+                    <td class="py-3 px-5 text-[10px] text-apple-secondary uppercase">${s.coached_by || ''}</td>
+                    <td class="py-3 px-5 text-right">${del}</td>
+                </tr>`;
             }).join('');
         }
 
-        function renderQAAnalytics() {
-            const issueTypes = ['#Fatal','#Feedback','#Sticking','#SystemFocus','#Interaction','#CallFocus','#Brand'];
-            const issueCounts = {};
-            issueTypes.forEach(t => issueCounts[t] = 0);
-            const teamCounts = {};
-            globalQACases.forEach(c => {
-                if(c.issue_type) issueCounts[c.issue_type] = (issueCounts[c.issue_type] || 0) + 1;
-                if(c.team) teamCounts[c.team] = (teamCounts[c.team] || 0) + 1;
-            });
-
-            // Issues bar chart
-            const chartEl = document.getElementById('qa-chart-issues');
-            if(chartEl) {
-                const maxI = Math.max(...Object.values(issueCounts), 1);
-                chartEl.innerHTML = issueTypes.map(t => {
-                    const v = issueCounts[t] || 0;
-                    const h = Math.max((v / maxI) * 100, 4);
-                    return `<div class="flex-1 flex flex-col items-center justify-end h-full gap-1">
-                        <span class="text-[9px] font-bold dark:text-white ${v===0?'opacity-30':''}">${v}</span>
-                        <div class="w-full rounded-t-md bg-purple-500/60" style="height:${h}%"></div>
-                        <span class="text-[7px] uppercase font-bold text-apple-secondary" style="writing-mode:vertical-lr;transform:rotate(180deg)">${t.replace('#','')}</span>
-                    </div>`;
-                }).join('');
-            }
-
-            // Team bar chart
-            const teamEl = document.getElementById('qa-chart-teams');
-            if(teamEl) {
-                const maxT = Math.max(...Object.values(teamCounts), 1);
-                const sorted = Object.entries(teamCounts).sort((a,b) => b[1]-a[1]);
-                teamEl.innerHTML = sorted.length ? sorted.map(([team, count]) => `
-                    <div class="flex items-center gap-3">
-                        <span class="text-xs font-bold dark:text-white w-20 truncate">${team}</span>
-                        <div class="flex-1 h-2 bg-apple-canvas dark:bg-[#2C2C2E] rounded-full overflow-hidden">
-                            <div class="h-full bg-purple-500 rounded-full" style="width:${(count/maxT)*100}%"></div>
-                        </div>
-                        <span class="text-xs font-bold dark:text-gray-300 w-5 text-right">${count}</span>
-                    </div>`).join('') : '<p class="text-xs text-apple-secondary italic">No data yet.</p>';
-            }
-
-            // Agent leaderboard
-            const agents = {};
-            globalQACases.forEach(c => {
-                if(!agents[c.agent_name]) agents[c.agent_name] = { count: 0, fatals: 0, topStatus: 'Verbal' };
-                agents[c.agent_name].count++;
-                if(c.issue_type === '#Fatal') agents[c.agent_name].fatals++;
-                if(QA_COACHING_STATUSES.indexOf(c.coaching_status) > QA_COACHING_STATUSES.indexOf(agents[c.agent_name].topStatus))
-                    agents[c.agent_name].topStatus = c.coaching_status;
-            });
-            const lb = document.getElementById('qaAgentLeaderboard');
-            if(lb) {
-                const rows = Object.entries(agents).sort((a,b) => b[1].count - a[1].count);
-                lb.innerHTML = rows.length ? rows.map(([name, d], i) => `
-                    <tr class="border-b border-apple-border dark:border-[#2C2C2E]">
-                        <td class="py-3 px-5 text-xs font-bold dark:text-white">${i+1}</td>
-                        <td class="py-3 px-5 text-xs font-bold dark:text-white">${name}</td>
-                        <td class="py-3 px-5 text-center text-sm font-bold dark:text-white">${d.count}</td>
-                        <td class="py-3 px-5 text-center text-sm font-bold text-red-500">${d.fatals}</td>
-                        <td class="py-3 px-5"><span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter ${STATUS_COLORS[d.topStatus]||''}">${d.topStatus}</span></td>
-                    </tr>`).join('') : `<tr><td colspan="5" class="py-8 text-center text-xs text-apple-secondary italic">No cases yet.</td></tr>`;
-            }
-        }
-
-        function openEditQACase(id) {
-            activeQACaseId = id;
-            const c = globalQACases.find(x => x.id == id);
-            if(!c) return;
-            document.getElementById('edit-qa-agent-name').value = c.agent_name || '';
-            document.getElementById('edit-qa-call-date').value = c.call_date || '';
-            document.getElementById('edit-qa-issue-type').value = c.issue_type || '#Fatal';
-            document.getElementById('edit-qa-team').value = c.team || '';
-            document.getElementById('edit-qa-coaching-status').value = c.coaching_status || 'Verbal';
-            document.getElementById('edit-qa-coaching-date').value = c.coaching_date || '';
-            document.getElementById('edit-qa-comment').value = c.comment || '';
-            document.getElementById('edit-qa-wrong-dispo').checked = !!c.wrong_dispo;
-            document.getElementById('edit-qa-warning-sent').checked = !!c.warning_sent;
-            document.getElementById('edit-qa-deduction').checked = !!c.deduction_sheet;
-            openModal('editQACaseModal');
-        }
-
-        document.getElementById('submitQACaseBtn').addEventListener('click', async () => {
-            const btn = document.getElementById('submitQACaseBtn'); if(btn.disabled) return;
-            const agentName = document.getElementById('qa-agent-name').value.trim();
-            if(!agentName) { showToast('Agent name is required'); return; }
-            btn.disabled = true; btn.innerText = 'Logging...';
-            const { error } = await supabaseClient.from('qa_cases').insert([{
-                agent_name: agentName,
-                call_date: document.getElementById('qa-call-date').value || null,
-                issue_type: document.getElementById('qa-issue-type').value,
-                team: document.getElementById('qa-team').value.trim(),
-                coaching_status: document.getElementById('qa-coaching-status').value,
-                coaching_date: document.getElementById('qa-coaching-date').value || null,
-                comment: document.getElementById('qa-comment').value.trim(),
-                wrong_dispo: document.getElementById('qa-wrong-dispo').checked,
-                warning_sent: document.getElementById('qa-warning-sent').checked,
-                deduction_sheet: document.getElementById('qa-deduction').checked,
-                department: currentUser.department,
-                logged_by: currentUser.name
-            }]);
-            btn.disabled = false; btn.innerText = 'Log Case';
-            if(error) { showToast('Error: ' + error.message); return; }
-            closeModal('newQACaseModal');
-            // reset form
-            ['qa-agent-name','qa-call-date','qa-team','qa-coaching-date','qa-comment'].forEach(id => document.getElementById(id).value = '');
-            ['qa-wrong-dispo','qa-warning-sent','qa-deduction'].forEach(id => document.getElementById(id).checked = false);
-            showToast('Case logged.'); playSound('pop'); loadQACases();
-        });
-
-        document.getElementById('updateQACaseBtn').addEventListener('click', async () => {
-            const btn = document.getElementById('updateQACaseBtn'); if(btn.disabled || !activeQACaseId) return;
+        document.getElementById('saveCoachingBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('saveCoachingBtn'); if(btn.disabled) return;
+            const agent = document.getElementById('coach-agent').value;
+            const date = document.getElementById('coach-date').value;
+            const topic = document.getElementById('coach-topic').value;
+            const notes = document.getElementById('coach-notes').value.trim();
+            const errEl = document.getElementById('coachError');
+            if(!agent) { errEl.innerText = 'Pick an agent.'; errEl.classList.remove('hidden'); return; }
             btn.disabled = true; btn.innerText = 'Saving...';
-            const { error } = await supabaseClient.from('qa_cases').update({
-                agent_name: document.getElementById('edit-qa-agent-name').value.trim(),
-                call_date: document.getElementById('edit-qa-call-date').value || null,
-                issue_type: document.getElementById('edit-qa-issue-type').value,
-                team: document.getElementById('edit-qa-team').value.trim(),
-                coaching_status: document.getElementById('edit-qa-coaching-status').value,
-                coaching_date: document.getElementById('edit-qa-coaching-date').value || null,
-                comment: document.getElementById('edit-qa-comment').value.trim(),
-                wrong_dispo: document.getElementById('edit-qa-wrong-dispo').checked,
-                warning_sent: document.getElementById('edit-qa-warning-sent').checked,
-                deduction_sheet: document.getElementById('edit-qa-deduction').checked,
-            }).eq('id', activeQACaseId);
-            btn.disabled = false; btn.innerText = 'Save Changes';
-            if(error) { showToast('Error: ' + error.message); return; }
-            closeModal('editQACaseModal'); showToast('Updated.'); playSound('pop'); loadQACases();
+            const { error } = await supabaseClient.from('coaching_sessions').insert([{
+                agent_name: agent, session_date: date || null, topic, notes,
+                coached_by: currentUser.name, department: currentUser.department
+            }]);
+            btn.disabled = false; btn.innerText = 'Save Session';
+            if(error) { errEl.innerText = error.message; errEl.classList.remove('hidden'); return; }
+            closeModal('newCoachingModal'); playSound('pop'); showToast('Coaching session logged.');
+            logAction(`Coached: ${agent} (${topic})`); loadCoachingSessions();
         });
 
-        document.getElementById('deleteQACaseBtn').addEventListener('click', async () => {
-            if(!activeQACaseId || !confirm('Delete this QA case?')) return;
-            await supabaseClient.from('qa_cases').delete().eq('id', activeQACaseId);
-            closeModal('editQACaseModal'); showToast('Deleted.'); loadQACases();
-        });
-
-        // Parse a date in M/D/YYYY (Excel style) or ISO into YYYY-MM-DD, else null.
-        function parseQADate(str) {
-            if(!str) return null;
-            str = str.trim();
-            if(/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
-            const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
-            if(m) {
-                let [, mo, d, y] = m;
-                if(y.length === 2) y = '20' + y;
-                return `${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-            }
-            const parsed = new Date(str);
-            return isNaN(parsed) ? null : parsed.toISOString().slice(0, 10);
+        async function deleteCoaching(id) {
+            if(!confirm('Delete this coaching session?')) return;
+            const { error } = await supabaseClient.from('coaching_sessions').delete().eq('id', id);
+            if(error) { alert(error.message); return; }
+            showToast('Deleted.'); loadCoachingSessions();
         }
+        // ── END COACHING LOG ──────────────────────────────────────────
 
-        document.getElementById('submitBulkQABtn').addEventListener('click', async () => {
-            const btn = document.getElementById('submitBulkQABtn'); if(btn.disabled) return;
-            const raw = document.getElementById('bulkQAInput').value;
-            const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            if(!lines.length) return;
-            if(lines.length > 200) { alert('Please paste 200 rows or fewer at a time.'); return; }
-
-            const validIssues = ['#Fatal','#Feedback','#Sticking','#SystemFocus','#Interaction','#CallFocus','#Brand','#Clarity','#Other'];
-            btn.disabled = true; btn.innerText = `Importing ${lines.length}...`;
-
-            const rows = lines.map(line => {
-                const cols = line.split('\t').map(c => c.trim());
-                // tab-separated preferred; fall back to comma if no tabs present
-                const parts = cols.length > 1 ? cols : line.split(',').map(c => c.trim());
-                // Excel column order (left → right):
-                // A Agent | B Date | C Issue | D Comment | E WrongDispo | F Repetitive | G NeedCoaching |
-                // H Team | I CoachingNotes(=progression) | J CoachingStatus(=review outcome) |
-                // K CoachingDate/Comment | L WarningEmail | M DeductionsSheet | N Alinai | O FeedbackComments
-                const [agent, date, issue, comment, wrongDispoRaw, , , team, progressionRaw, outcomeRaw, coachingDateRaw, warningSentRaw, deductionRaw, , feedbackRaw] = parts;
-                let issueType = validIssues.find(v => v.toLowerCase() === (issue||'').toLowerCase()) || '#Feedback';
-                let coachingStatus = QA_COACHING_STATUSES.find(s => s.toLowerCase() === (progressionRaw||'').toLowerCase()) || 'Verbal';
-                // Preserve the col-J review outcome and any feedback-session comments inside the comment field.
-                let fullComment = comment || '';
-                const extras = [];
-                if((outcomeRaw||'').trim()) extras.push('Review: ' + outcomeRaw.trim());
-                if((feedbackRaw||'').trim()) extras.push('Feedback: ' + feedbackRaw.trim());
-                if(extras.length) fullComment += (fullComment ? ' | ' : '') + extras.join(' | ');
-                return {
-                    agent_name: agent || 'Unknown',
-                    call_date: parseQADate(date),
-                    issue_type: issueType,
-                    comment: fullComment,
-                    team: team || '',
-                    coaching_status: coachingStatus,
-                    wrong_dispo: (wrongDispoRaw||'').toLowerCase() === 'yes',
-                    warning_sent: (warningSentRaw||'').toLowerCase() === 'yes',
-                    deduction_sheet: (deductionRaw||'').toLowerCase() === 'yes',
-                    coaching_date: parseQADate(coachingDateRaw),
-                    department: currentUser.department,
-                    logged_by: currentUser.name
-                };
-            }).filter(r => r.agent_name && r.agent_name !== 'Unknown');
-
-            if(!rows.length) { btn.disabled = false; btn.innerText = 'Import Cases'; alert('No valid rows found — make sure each row starts with an agent name.'); return; }
-
-            const { error } = await supabaseClient.from('qa_cases').insert(rows);
-            btn.disabled = false; btn.innerText = 'Import Cases';
-            if(error) { alert('Import error: ' + error.message); return; }
-            document.getElementById('bulkQAInput').value = '';
-            closeModal('bulkQAModal'); playSound('chime'); showToast(`Imported ${rows.length} cases.`); loadQACases();
-        });
-
-        function exportQAToCSV() {
-            if(!globalQACases.length) return;
-            let csv = "Agent,Date,Issue,Comment,Team,Coaching Status,Warning Sent,Coaching Date,Wrong Dispo,Deduction Sheet\n";
-            globalQACases.forEach(c => csv += `"${c.agent_name}","${c.call_date||''}","${c.issue_type}","${(c.comment||'').replace(/"/g,'""')}","${c.team||''}","${c.coaching_status}","${c.warning_sent?'Yes':'No'}","${c.coaching_date||''}","${c.wrong_dispo?'Yes':'No'}","${c.deduction_sheet?'Yes':'No'}"\n`);
-            const blob = new Blob([csv], {type:'text/csv'});
-            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'QA_Cases.csv'; a.click();
-            showToast('Exported.');
-        }
-
-        // ── END QA MODULE ─────────────────────────────────────────────
+        supabaseClient.channel('db-sync-coaching').on('postgres_changes', { event: '*', schema: 'public', table: 'coaching_sessions' }, () => { if(currentUser) loadCoachingSessions(); }).subscribe();
 
         supabaseClient.channel('db-sync-logs').on('postgres_changes', { event: '*', schema: 'public', table: 'activity_logs' }, () => fetchLogs()).subscribe();
         
