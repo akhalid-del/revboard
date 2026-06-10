@@ -183,15 +183,21 @@
                                 <div id="sparklineContainer" class="h-6 w-full flex items-end"></div>
                             </div>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="openModal('bulkPasteModal')" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-apple-blue text-white shadow-sm transition-all flex items-center justify-center gap-2 hover:opacity-80">
-                                <i class="fa-solid fa-paste"></i> BULK
+                        <div class="flex gap-2 flex-wrap">
+                            <button onclick="openModal('templatesModal')" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-apple-blue text-white shadow-sm transition-all flex items-center justify-center gap-2 hover:opacity-90">
+                                <i class="fa-solid fa-bolt"></i> TEMPLATES
+                            </button>
+                            <button onclick="openModal('bulkPasteModal')" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary hover:text-apple-primary dark:text-gray-400 dark:hover:text-white shadow-sm transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paste"></i> IMPORT TASKS
                             </button>
                             <button onclick="copyShiftReport()" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary hover:text-apple-primary dark:text-gray-400 dark:hover:text-white shadow-sm transition-all flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-copy"></i> REPORT
                             </button>
                             <button onclick="exportToCSV()" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-green-600 hover:text-green-700 dark:text-green-500 dark:hover:text-green-400 shadow-sm transition-all flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-file-csv"></i> EXPORT
+                            </button>
+                            <button onclick="backupAllData()" class="admin-only flex-1 sm:flex-none h-9 px-3 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 shadow-sm transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-shield-halved"></i> BACKUP
                             </button>
                         </div>
                     </div>
@@ -563,6 +569,16 @@
         </div>
     </div>
 
+    <!-- Task Templates Modal -->
+    <div id="templatesModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-6 rounded-2xl w-full max-w-lg shadow-2xl">
+            <h2 class="text-lg font-bold dark:text-white mb-1">Task Templates</h2>
+            <p class="text-[10px] text-apple-secondary uppercase tracking-widest mb-5">One tap to create a recurring floor task</p>
+            <div id="templatesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[55vh] overflow-y-auto scrollbar-hide"></div>
+            <button onclick="closeModal('templatesModal')" class="w-full h-11 mt-5 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Close</button>
+        </div>
+    </div>
+
 
     <div id="toastAlert" class="fixed top-6 left-1/2 -translate-x-1/2 -translate-y-24 transition-transform bg-apple-primary dark:bg-apple-blue px-6 py-3 rounded-full shadow-lg z-[500] flex items-center gap-3">
         <i class="fa-solid fa-bell text-green-400 dark:text-white text-sm"></i><p id="toastMessage" class="text-sm font-medium text-white">Action Confirmed</p>
@@ -662,6 +678,7 @@
                 document.getElementById('coach-notes').value = '';
                 document.getElementById('coachError').classList.add('hidden');
             }
+            if(id === 'templatesModal') renderTemplates();
         }
         function closeModal(id) { 
             document.getElementById(id).style.display = 'none'; 
@@ -1384,6 +1401,66 @@
             
             logAction(`Deleted: "${t.title}"`); showToast('Deleted.'); closeDrawer(); loadData();
         });
+
+        // ── TASK TEMPLATES ────────────────────────────────────────────
+        const TASK_TEMPLATES = [
+            { label: 'Hourly Report', zone: 'Hourly Report', priority: 'Standard', icon: 'fa-clock', color: 'text-blue-500' },
+            { label: 'Daily Report', zone: 'Daily Report', priority: 'High', icon: 'fa-calendar-day', color: 'text-indigo-500' },
+            { label: 'Walk the Floor', zone: 'Walking the Floor', priority: 'Standard', icon: 'fa-person-walking', color: 'text-teal-500' },
+            { label: 'Team Meeting', zone: 'Meetings', priority: 'Standard', icon: 'fa-users', color: 'text-purple-500' },
+            { label: 'Handle Escalation', zone: 'Escalations', priority: 'Critical', icon: 'fa-triangle-exclamation', color: 'text-red-500' },
+            { label: 'Coaching Session', zone: 'Coaching Session', priority: 'High', icon: 'fa-comments', color: 'text-orange-500' },
+            { label: 'Training Session', zone: 'Training', priority: 'Standard', icon: 'fa-chalkboard-user', color: 'text-green-500' },
+            { label: 'Run Spiffs', zone: 'Spiffs', priority: 'Standard', icon: 'fa-gift', color: 'text-pink-500' }
+        ];
+
+        function renderTemplates() {
+            const grid = document.getElementById('templatesGrid');
+            if(!grid) return;
+            grid.innerHTML = TASK_TEMPLATES.map((t, i) => `
+                <button onclick="createFromTemplate(${i})" class="flex items-center gap-3 p-3 rounded-xl border border-apple-border dark:border-[#2C2C2E] bg-apple-canvas dark:bg-[#2C2C2E] hover:border-apple-blue dark:hover:border-apple-blue text-left transition-all active:scale-95">
+                    <i class="fa-solid ${t.icon} ${t.color} text-lg w-6 text-center"></i>
+                    <div class="min-w-0">
+                        <p class="text-xs font-bold dark:text-white truncate">${t.label}</p>
+                        <p class="text-[8px] uppercase tracking-widest text-apple-secondary">${t.zone} &bull; ${t.priority}</p>
+                    </div>
+                </button>`).join('');
+        }
+
+        async function createFromTemplate(i) {
+            const t = TASK_TEMPLATES[i]; if(!t) return;
+            const { data, error } = await supabaseClient.from('pulses').insert([{
+                title: t.label, linked_entity: 'N/A', zone: t.zone, assigned_to: 'None',
+                priority: t.priority, status: 'Radar', department: currentUser.department
+            }]).select();
+            if(error) { alert('Could not create: ' + error.message); return; }
+            if(data && data.length) logAction(`Created from template: "${t.label}"`);
+            closeModal('templatesModal'); playSound('pop'); showToast(`Added "${t.label}".`); loadData();
+        }
+
+        async function backupAllData() {
+            try {
+                const dept = currentUser.department;
+                const [pulses, users, coaching, logs] = await Promise.all([
+                    supabaseClient.from('pulses').select('*').eq('department', dept),
+                    supabaseClient.from('floor_users').select('name,role,status,department,team,probation_passed').eq('department', dept),
+                    supabaseClient.from('coaching_sessions').select('*').eq('department', dept),
+                    supabaseClient.from('activity_logs').select('*').eq('department', dept)
+                ]);
+                const backup = {
+                    exported_at: new Date().toISOString(), department: dept,
+                    tasks: pulses.data || [], team: users.data || [],
+                    coaching_sessions: coaching.data || [], activity_logs: logs.data || []
+                };
+                const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `LogiSync-Backup-${dept}-${new Date().toISOString().slice(0,10)}.json`;
+                a.click();
+                showToast('Backup downloaded.');
+            } catch(e) { alert('Backup failed: ' + e.message); }
+        }
+        // ── END TASK TEMPLATES ────────────────────────────────────────
 
         document.getElementById('createTaskBtn').addEventListener('click', async () => {
             const btn = document.getElementById('createTaskBtn'); if(btn.disabled) return;
