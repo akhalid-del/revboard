@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LogiSync | Floor Operations</title>
+    <title>Tempo | Floor Operations</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -39,6 +39,19 @@
             background-image: url("data:image/svg+xml;utf8,<svg fill='%2386868B' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
             background-repeat: no-repeat; background-position-x: calc(100% - 12px); background-position-y: 50%;
         }
+
+        /* TEMPO LOGIN — animated rhythm/equalizer accent */
+        .tempo-eq { display: flex; align-items: flex-end; gap: 4px; height: 28px; }
+        .tempo-eq span { width: 4px; border-radius: 2px; background: linear-gradient(to top, #007AFF, #6366f1); animation: tempoBeat 1.1s ease-in-out infinite; }
+        .tempo-eq span:nth-child(1) { animation-delay: 0s; }
+        .tempo-eq span:nth-child(2) { animation-delay: .15s; }
+        .tempo-eq span:nth-child(3) { animation-delay: .3s; }
+        .tempo-eq span:nth-child(4) { animation-delay: .45s; }
+        .tempo-eq span:nth-child(5) { animation-delay: .6s; }
+        .tempo-eq span:nth-child(6) { animation-delay: .75s; }
+        .tempo-eq span:nth-child(7) { animation-delay: .9s; }
+        @keyframes tempoBeat { 0%, 100% { height: 6px; opacity: .55; } 50% { height: 28px; opacity: 1; } }
+        @media (prefers-reduced-motion: reduce) { .tempo-eq span { animation: none; height: 16px; } }
 
         /* MOBILE OPTIMIZATIONS */
         @media (max-width: 767px) {
@@ -81,11 +94,11 @@
         <div class="relative z-10 w-full max-w-[380px]">
             <!-- brand -->
             <div class="flex flex-col items-center mb-9">
-                <div class="h-14 w-14 rounded-2xl flex items-center justify-center mb-5 bg-gradient-to-br from-apple-blue to-indigo-500" style="box-shadow: 0 10px 30px rgba(79,70,229,0.25);">
-                    <i class="fa-solid fa-layer-group text-white text-xl"></i>
+                <div class="tempo-eq mb-5">
+                    <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
                 </div>
-                <h1 class="text-[28px] font-bold tracking-tight text-apple-primary dark:text-white">LogiSync</h1>
-                <p class="text-[13px] text-apple-secondary dark:text-gray-400 mt-1">Floor Operations Platform</p>
+                <h1 class="text-[30px] font-bold tracking-tight text-apple-primary dark:text-white">Tempo</h1>
+                <p class="text-[13px] text-apple-secondary dark:text-gray-400 mt-1">Set the pace of your floor</p>
             </div>
 
             <!-- card -->
@@ -117,7 +130,7 @@
                 </p>
             </div>
 
-            <p class="text-center text-[11px] text-apple-secondary/60 dark:text-gray-600 mt-7">Authorized personnel only &bull; LogiSync &copy; 2026</p>
+            <p class="text-center text-[11px] text-apple-secondary/60 dark:text-gray-600 mt-7">Authorized personnel only &bull; Tempo &copy; 2026</p>
         </div>
     </div>
 
@@ -126,7 +139,7 @@
             <div class="h-9 w-9 bg-gradient-to-br from-apple-blue to-indigo-500 rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
                 <i class="fa-solid fa-layer-group text-base"></i>
             </div>
-            <span class="font-bold text-sm tracking-tight dark:text-white">LogiSync</span>
+            <span class="font-bold text-sm tracking-tight dark:text-white">Tempo</span>
         </div>
         <nav class="flex flex-row md:flex-col gap-2 md:gap-1 w-full items-center md:items-stretch justify-around md:justify-start">
             <button onclick="switchView('table')" id="nav-table" class="text-apple-blue relative p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
@@ -195,7 +208,7 @@
         <header class="h-16 border-b border-apple-border dark:border-[#2C2C2E] bg-white/70 dark:bg-[#1C1C1E]/80 backdrop-blur-xl z-10 flex items-center justify-between px-6 transition-colors">
             <div class="flex items-center gap-3">
                 <i class="fa-solid fa-layer-group text-apple-blue text-xl md:hidden"></i>
-                <span class="font-bold text-sm tracking-tight md:hidden dark:text-white">LogiSync</span>
+                <span class="font-bold text-sm tracking-tight md:hidden dark:text-white">Tempo</span>
             </div>
             
             <div id="searchContainer" class="hidden flex-1 max-w-md mx-6 relative">
@@ -1213,7 +1226,7 @@
             const blob = new Blob(["﻿" + csv], { type: 'text/csv;charset=utf-8;' });
             const url = window.URL.createObjectURL(blob);
             const stamp = new Date().toISOString().slice(0, 10);
-            const a = document.createElement('a'); a.setAttribute('href', url); a.setAttribute('download', `LogiSync_Report_${stamp}.csv`); a.click();
+            const a = document.createElement('a'); a.setAttribute('href', url); a.setAttribute('download', `Tempo_Report_${stamp}.csv`); a.click();
             window.URL.revokeObjectURL(url);
             showToast("Exported.");
         }
@@ -1721,7 +1734,7 @@
                 const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(blob);
-                a.download = `LogiSync-Backup-${dept}-${new Date().toISOString().slice(0,10)}.json`;
+                a.download = `Tempo-Backup-${dept}-${new Date().toISOString().slice(0,10)}.json`;
                 a.click();
                 showToast('Backup downloaded.');
             } catch(e) { alert('Backup failed: ' + e.message); }
