@@ -78,42 +78,71 @@
         </div>
     </div>
 
-    <aside class="fixed bottom-0 left-0 right-0 h-16 md:relative md:h-full md:w-[68px] bg-apple-surface dark:bg-[#1C1C1E] border-t md:border-t-0 md:border-r border-apple-border dark:border-[#2C2C2E] flex flex-row md:flex-col items-center justify-around md:justify-start md:py-6 z-40">
-        <div class="hidden md:flex h-10 w-10 bg-apple-primary dark:bg-apple-blue rounded-xl items-center justify-center text-white mb-8 shadow-sm">
-            <i class="fa-solid fa-layer-group text-lg"></i>
+    <aside class="fixed bottom-0 left-0 right-0 h-16 md:relative md:h-full md:w-[210px] bg-apple-surface dark:bg-[#1C1C1E] border-t md:border-t-0 md:border-r border-apple-border dark:border-[#2C2C2E] flex flex-row md:flex-col items-center md:items-stretch justify-around md:justify-start md:py-6 md:px-3 z-40">
+        <div class="hidden md:flex items-center gap-2 px-2 mb-8">
+            <div class="h-9 w-9 bg-apple-primary dark:bg-apple-blue rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
+                <i class="fa-solid fa-layer-group text-base"></i>
+            </div>
+            <span class="font-bold text-sm tracking-tight dark:text-white">LogiSync</span>
         </div>
-        <nav class="flex flex-row md:flex-col gap-2 md:gap-6 w-full items-center justify-around md:justify-start">
-            <button onclick="switchView('table')" id="nav-table" class="text-apple-blue relative p-2 md:w-full flex justify-center transition-colors">
-                <i class="fa-solid fa-list text-xl"></i>
+        <nav class="flex flex-row md:flex-col gap-2 md:gap-1 w-full items-center md:items-stretch justify-around md:justify-start">
+            <button onclick="switchView('table')" id="nav-table" class="text-apple-blue relative p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
+                <i class="fa-solid fa-list text-xl md:text-base w-5 text-center"></i>
+                <span class="hidden md:inline text-xs font-semibold">Directives</span>
                 <div id="indicator-table" class="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('board')" id="nav-board" class="text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors">
-                <i class="fa-solid fa-border-all text-xl"></i>
+            <button onclick="switchView('board')" id="nav-board" class="text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
+                <i class="fa-solid fa-border-all text-xl md:text-base w-5 text-center"></i>
+                <span class="hidden md:inline text-xs font-semibold">Floor Board</span>
                 <div id="indicator-board" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('team')" id="nav-team" class="admin-only text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors">
-                <i class="fa-solid fa-users text-xl"></i>
+            <button onclick="switchView('rankings')" id="nav-rankings" class="text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
+                <i class="fa-solid fa-ranking-star text-xl md:text-base w-5 text-center"></i>
+                <span class="hidden md:inline text-xs font-semibold">Team Totals</span>
+                <div id="indicator-rankings" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
+            </button>
+            <button onclick="switchView('team')" id="nav-team" class="admin-only text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
+                <i class="fa-solid fa-users text-xl md:text-base w-5 text-center"></i>
+                <span class="hidden md:inline text-xs font-semibold">People</span>
                 <div id="indicator-team" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('log')" id="nav-log" class="text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors">
-                <i class="fa-solid fa-bolt text-xl"></i>
+            <button onclick="switchView('log')" id="nav-log" class="text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
+                <i class="fa-solid fa-bolt text-xl md:text-base w-5 text-center"></i>
+                <span class="hidden md:inline text-xs font-semibold">Activity</span>
                 <div id="indicator-log" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('analytics')" id="nav-analytics" class="text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors">
-                <i class="fa-solid fa-chart-line text-xl"></i>
+            <button onclick="switchView('analytics')" id="nav-analytics" class="text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
+                <i class="fa-solid fa-chart-line text-xl md:text-base w-5 text-center"></i>
+                <span class="hidden md:inline text-xs font-semibold">Performance</span>
                 <div id="indicator-analytics" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('qa')" id="nav-qa" class="qa-only text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors relative">
-                <i class="fa-solid fa-magnifying-glass-chart text-xl"></i>
+            <button onclick="switchView('qa')" id="nav-qa" class="qa-only text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors relative">
+                <i class="fa-solid fa-magnifying-glass-chart text-xl md:text-base w-5 text-center"></i>
+                <span class="hidden md:inline text-xs font-semibold">Quality</span>
                 <div id="indicator-qa" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-purple-500 rounded-r-md"></div>
             </button>
         </nav>
-        <div class="md:mt-auto flex flex-row md:flex-col gap-2 md:gap-6 items-center">
-            <button onclick="toggleTheme()" class="text-apple-secondary dark:text-gray-400 p-2 md:w-full flex justify-center transition-colors">
-                <i id="themeIcon" class="fa-solid fa-moon text-xl"></i>
+
+        <!-- Logged-in user card (desktop) with probation badge -->
+        <div id="sidebarUserCard" class="hidden md:flex md:mt-auto md:mb-3 items-center gap-2 px-3 py-2 mx-1 rounded-xl bg-apple-canvas dark:bg-[#2C2C2E]">
+            <div class="h-8 w-8 rounded-full bg-apple-blue flex items-center justify-center text-white text-[10px] font-black shrink-0" id="sidebarUserInit">--</div>
+            <div class="min-w-0">
+                <p class="text-[11px] font-bold dark:text-white truncate flex items-center gap-1">
+                    <span id="sidebarUserName" class="truncate">Locked</span>
+                    <i id="sidebarProbationBadge" class="fa-solid fa-graduation-cap text-green-500 text-[10px] hidden" title="Passed probation period"></i>
+                </p>
+                <p class="text-[8px] uppercase tracking-widest text-apple-secondary truncate" id="sidebarUserRole">—</p>
+            </div>
+        </div>
+
+        <div class="md:flex flex-row md:flex-col gap-2 md:gap-1 items-center md:items-stretch flex">
+            <button onclick="toggleTheme()" class="text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
+                <i id="themeIcon" class="fa-solid fa-moon text-xl md:text-base w-5 text-center"></i>
+                <span class="hidden md:inline text-xs font-semibold">Theme</span>
             </button>
-            <button onclick="lockSystem()" class="text-apple-secondary dark:text-gray-400 hover:text-red-500 transition-colors p-2 md:w-full flex justify-center">
-                <i class="fa-solid fa-power-off text-xl"></i>
+            <button onclick="lockSystem()" class="text-apple-secondary dark:text-gray-400 hover:text-red-500 transition-colors p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3">
+                <i class="fa-solid fa-power-off text-xl md:text-base w-5 text-center"></i>
+                <span class="hidden md:inline text-xs font-semibold">Lock</span>
             </button>
         </div>
     </aside>
@@ -132,6 +161,7 @@
 
             <div class="flex items-center gap-3 ml-auto">
                 <p id="activeUserName" class="text-[10px] font-bold text-apple-secondary dark:text-gray-400 uppercase tracking-widest">LOCKED</p>
+                <span id="activeUserRole" class="hidden text-[9px] font-black uppercase tracking-widest text-apple-blue border border-apple-blue/40 bg-apple-blue/10 px-2 py-1 rounded-md"></span>
                 <div class="h-7 w-7 rounded-full bg-apple-blue flex items-center justify-center text-white text-[10px] font-black">
                     <i class="fa-solid fa-user"></i>
                 </div>
@@ -221,6 +251,39 @@
                     <div class="w-72 shrink-0 flex flex-col bg-white/40 dark:bg-[#1C1C1E]/40 border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-4 opacity-60 h-fit">
                         <h3 class="text-[9px] uppercase font-black text-apple-secondary mb-4 flex justify-between">Completed <span id="board-count-done" class="text-apple-primary dark:text-white">0</span></h3>
                         <div id="col-completed" class="space-y-3"></div>
+                    </div>
+                </div>
+
+                <div id="view-rankings" class="hidden flex-col gap-6">
+                    <div class="flex items-center justify-between mb-1">
+                        <div>
+                            <h2 class="text-lg font-bold dark:text-white">Team Totals</h2>
+                            <p class="text-[10px] text-apple-secondary uppercase tracking-widest">Zone rankings by floor numbers &bull; <span id="rank-dept">your floor</span></p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Total Directives</p>
+                            <h3 class="text-3xl font-bold dark:text-white" id="rank-total">0</h3>
+                        </div>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Completed</p>
+                            <h3 class="text-3xl font-bold text-green-500" id="rank-completed">0</h3>
+                        </div>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Completion Rate</p>
+                            <h3 class="text-3xl font-bold text-apple-blue" id="rank-rate">0%</h3>
+                        </div>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Active Zones</p>
+                            <h3 class="text-3xl font-bold dark:text-white" id="rank-zones">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-[10px] uppercase font-black text-apple-secondary tracking-widest mb-4">Leaderboard &mdash; Zones by Completed Directives</h3>
+                        <div id="rankingsBoard" class="space-y-3"></div>
                     </div>
                 </div>
 
@@ -436,7 +499,7 @@
                     <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Priority</label><select id="drawerPriority" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="Standard">Standard</option><option value="High">High</option><option value="Critical">Critical</option></select></div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Department</label><select id="drawerZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="General">General Floor</option><option value="Inbound">Tier 1 (Inbound)</option><option value="Escalations">Escalations</option><option value="QA">Quality Assurance</option><option value="Outbound">Outbound</option><option value="Training">Training</option><option value="Coaching">Coaching Session</option><option value="Reports">Reports & Analytics</option></select></div>
+                    <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Department</label><select id="drawerZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="Escalations">Escalations</option><option value="Meetings">Meetings</option><option value="Walking the Floor">Walking the Floor</option><option value="Training">Training</option><option value="Coaching Session">Coaching Session</option><option value="Hourly Report">Hourly Report</option><option value="Daily Report">Daily Report</option><option value="Spiffs">Spiffs</option></select></div>
                     <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase">Assignee</label><select id="drawerAssignee" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"></select></div>
                 </div>
                 <div><label class="text-[10px] font-bold text-apple-secondary mb-1 block uppercase"><i class="fa-solid fa-lock mr-1"></i> Blocked By</label><select id="drawerBlocker" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-10 px-3 text-xs rounded-lg dark:text-white"><option value="">None (Unblocked)</option></select></div>
@@ -461,7 +524,7 @@
             <p class="text-xs text-apple-secondary dark:text-gray-400 mb-4">Pasted rows will automatically distribute across online Team Leaders/SMEs based on their real-time workload balance.</p>
             <div class="space-y-4 mb-6">
                 <textarea id="bulkPasteInput" placeholder="Paste IDs here...&#10;ID-9942&#10;ID-9943" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-32 p-4 rounded-lg text-sm dark:text-white font-mono resize-none"></textarea>
-                <select id="bulkPasteZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white"><option value="General">General Floor</option><option value="Inbound">Tier 1 (Inbound)</option><option value="Escalations">Escalations</option><option value="QA">Quality Assurance</option><option value="Outbound">Outbound</option><option value="Training">Training</option><option value="Coaching">Coaching Session</option><option value="Reports">Reports & Analytics</option></select>
+                <select id="bulkPasteZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white"><option value="Escalations">Escalations</option><option value="Meetings">Meetings</option><option value="Walking the Floor">Walking the Floor</option><option value="Training">Training</option><option value="Coaching Session">Coaching Session</option><option value="Hourly Report">Hourly Report</option><option value="Daily Report">Daily Report</option><option value="Spiffs">Spiffs</option></select>
             </div>
             <div class="flex gap-2">
                 <button onclick="closeModal('bulkPasteModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
@@ -493,7 +556,7 @@
                 <input type="text" id="newTitle" placeholder="Directive Title" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
                 <div class="grid grid-cols-2 gap-4">
                     <input type="text" id="newTarget" placeholder="Reference (Call ID)..." class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
-                    <select id="newZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white"><option value="General">General Floor</option><option value="Inbound">Tier 1 (Inbound)</option><option value="Escalations">Escalations</option><option value="QA">Quality Assurance</option><option value="Outbound">Outbound</option><option value="Training">Training</option><option value="Coaching">Coaching Session</option><option value="Reports">Reports & Analytics</option></select>
+                    <select id="newZone" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white"><option value="Escalations">Escalations</option><option value="Meetings">Meetings</option><option value="Walking the Floor">Walking the Floor</option><option value="Training">Training</option><option value="Coaching Session">Coaching Session</option><option value="Hourly Report">Hourly Report</option><option value="Daily Report">Daily Report</option><option value="Spiffs">Spiffs</option></select>
                 </div>
                 <div>
                     <select id="newAssignee" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
@@ -769,24 +832,27 @@
         }
 
         function switchView(viewName) {
-            const views = ['table', 'board', 'team', 'log', 'analytics', 'qa'];
+            const views = ['table', 'board', 'rankings', 'team', 'log', 'analytics', 'qa'];
             views.forEach(v => {
                 const nav = document.getElementById('nav-' + v);
                 const ind = document.getElementById('indicator-' + v);
                 const viewEl = document.getElementById('view-' + v);
-                if(nav && viewEl) {
+                if(nav) {
                     const isActive = v === viewName;
                     nav.classList.toggle('text-apple-blue', isActive);
+                    nav.classList.toggle('md:bg-apple-blue/10', isActive);
                     nav.classList.toggle('text-apple-secondary', !isActive);
                     if(ind) ind.style.display = isActive ? 'block' : 'none';
-                    viewEl.style.display = isActive ? (v === 'board' ? 'flex' : 'flex') : 'none';
+                    if(viewEl) viewEl.style.display = isActive ? 'flex' : 'none';
                 }
             });
-            if(viewName === 'log') fetchLogs();
-            if(viewName === 'analytics') { fetchLogs(); renderAnalytics(); }
-            if(viewName === 'qa') { loadQACases(); switchQATab('cases'); }
+            // The ops KPI header belongs to the task views only.
             const opsHeader = document.getElementById('ops-header');
             if(opsHeader) opsHeader.style.display = (viewName === 'table' || viewName === 'board') ? 'block' : 'none';
+            if(viewName === 'log') fetchLogs();
+            if(viewName === 'analytics') { fetchLogs(); renderAnalytics(); }
+            if(viewName === 'rankings') renderRankings();
+            if(viewName === 'qa') { loadQACases(); switchQATab('cases'); }
         }
 
         function applyRolePermissions() {
@@ -806,6 +872,19 @@
         function handleSearch(val) {
             currentSearchQuery = val.trim().toLowerCase();
             renderData();
+        }
+
+        function updateSidebarUserCard(profile) {
+            if(!profile) return;
+            const init = (profile.name || '?').split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            const setTxt = (id, v) => { const el = document.getElementById(id); if(el) el.innerText = v; };
+            setTxt('sidebarUserInit', init);
+            setTxt('sidebarUserName', profile.name || 'User');
+            setTxt('sidebarUserRole', profile.role || '—');
+            const badge = document.getElementById('sidebarProbationBadge');
+            if(badge) badge.classList.toggle('hidden', !profile.probation_passed);
+            const roleChip = document.getElementById('activeUserRole');
+            if(roleChip) { roleChip.innerText = profile.role || ''; roleChip.classList.toggle('hidden', !profile.role); }
         }
 
         async function verifyLogin() {
@@ -845,6 +924,7 @@
                 document.getElementById('lockScreen').style.opacity = '0';
                 setTimeout(() => document.getElementById('lockScreen').style.display = 'none', 500);
                 document.getElementById('activeUserName').innerText = profile.name + ' (' + (profile.department || 'SYS') + ')';
+                updateSidebarUserCard(profile);
                 document.getElementById('searchContainer').classList.remove('hidden');
 
                 document.getElementById('loginUsername').value = '';
@@ -926,7 +1006,19 @@
                 if(newSelect) newSelect.insertAdjacentHTML('beforeend', `<option value="${user.name}">${user.name}</option>`);
                 
                 const init = user.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-                grid.insertAdjacentHTML('beforeend', `<div onclick="revokeUser('${user.name}')" class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-4 text-center cursor-pointer group relative overflow-hidden transition-all hover:border-red-500"><div class="h-12 w-12 mx-auto rounded-full bg-apple-canvas dark:bg-[#2C2C2E] flex items-center justify-center font-bold text-apple-primary dark:text-white mb-2">${init}</div><h3 class="text-xs font-bold dark:text-white uppercase tracking-tighter">${user.name}</h3><p class="text-[8px] text-apple-secondary uppercase mb-2 tracking-widest">${user.role}</p><span class="text-[8px] font-black bg-green-50 dark:bg-green-900/20 text-green-600 px-2 py-0.5 rounded-full uppercase tracking-tighter">Ready</span><div class="absolute inset-0 bg-red-500/90 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-black text-[9px] uppercase tracking-widest">Revoke</span></div></div>`);
+                const passed = !!user.probation_passed;
+                const probaBadge = passed
+                    ? `<span class="text-[8px] font-black bg-green-50 dark:bg-green-900/20 text-green-600 px-2 py-0.5 rounded-full uppercase tracking-tighter flex items-center gap-1"><i class="fa-solid fa-graduation-cap"></i> Passed Probation</span>`
+                    : `<span class="text-[8px] font-black bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 px-2 py-0.5 rounded-full uppercase tracking-tighter">On Probation</span>`;
+                const safeName = user.name.replace(/'/g, "\\'");
+                grid.insertAdjacentHTML('beforeend', `<div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-4 text-center relative overflow-hidden transition-all">
+                    <button onclick="toggleProbation('${safeName}', ${passed})" title="${passed ? 'Mark as still on probation' : 'Mark probation as passed'}" class="absolute top-2 right-2 h-7 w-7 rounded-full flex items-center justify-center text-[11px] transition-colors ${passed ? 'bg-green-100 dark:bg-green-900/30 text-green-600' : 'bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary hover:text-green-500'}"><i class="fa-solid fa-graduation-cap"></i></button>
+                    <button onclick="revokeUser('${safeName}')" title="Revoke access" class="absolute top-2 left-2 h-7 w-7 rounded-full flex items-center justify-center text-[11px] bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary hover:text-red-500 transition-colors"><i class="fa-solid fa-user-slash"></i></button>
+                    <div class="h-12 w-12 mx-auto rounded-full bg-apple-canvas dark:bg-[#2C2C2E] flex items-center justify-center font-bold text-apple-primary dark:text-white mb-2 mt-3">${init}</div>
+                    <h3 class="text-xs font-bold dark:text-white uppercase tracking-tighter">${user.name}</h3>
+                    <p class="text-[8px] text-apple-secondary uppercase mb-2 tracking-widest">${user.role}</p>
+                    <div class="flex justify-center">${probaBadge}</div>
+                </div>`);
             });
         }
 
@@ -935,6 +1027,18 @@
                 await supabaseClient.from('floor_users').delete().eq('name', name);
                 logAction(`Revoked: ${name}`); initTeam();
             }
+        }
+
+        async function toggleProbation(name, currentlyPassed) {
+            const newVal = !currentlyPassed;
+            const { error } = await supabaseClient.from('floor_users')
+                .update({ probation_passed: newVal }).eq('name', name).eq('department', currentUser.department);
+            if(error) { alert('Could not update: ' + error.message); return; }
+            logAction(`${newVal ? 'Passed' : 'Reset'} probation: ${name}`);
+            // Keep the logged-in user's own sidebar badge in sync.
+            if(currentUser && currentUser.name === name) { currentUser.probation_passed = newVal; updateSidebarUserCard(currentUser); }
+            showToast(newVal ? `${name} passed probation 🎓` : `${name} set back on probation`);
+            initTeam();
         }
 
         document.getElementById('submitMemberBtn').addEventListener('click', async () => {
@@ -1055,8 +1159,8 @@
                 if(item.priority === 'Critical') c.crit++;
                 
                 // COACHING MATRIX ANALYTICS LOGIC
-                if(item.zone === 'Coaching' && item.status !== 'Completed') c.coach++;
-                if(item.zone === 'Reports' && item.status !== 'Completed') c.rep++;
+                if(item.zone === 'Coaching Session' && item.status !== 'Completed') c.coach++;
+                if((item.zone === 'Daily Report' || item.zone === 'Hourly Report') && item.status !== 'Completed') c.rep++;
                 
                 let isBlocked = false;
                 if(item.blocked_by) {
@@ -1136,6 +1240,53 @@
             const avg = durations.reduce((a, b) => a + b, 0) / durations.length;
             if(avg < 60) return Math.round(avg) + 'm';
             return (avg / 60).toFixed(1) + 'h';
+        }
+
+        function renderRankings() {
+            const deptEl = document.getElementById('rank-dept');
+            if(deptEl && currentUser) deptEl.innerText = currentUser.department || 'your floor';
+
+            const setTxt = (id, v) => { const el = document.getElementById(id); if(el) el.innerText = v; };
+            const board = document.getElementById('rankingsBoard');
+
+            // Aggregate the department's directives by zone.
+            const zones = {};
+            let total = 0, completed = 0;
+            globalTasks.forEach(t => {
+                const z = t.zone || 'Unzoned';
+                if(!zones[z]) zones[z] = { total: 0, done: 0 };
+                zones[z].total++; total++;
+                if(t.status === 'Completed') { zones[z].done++; completed++; }
+            });
+
+            setTxt('rank-total', total);
+            setTxt('rank-completed', completed);
+            setTxt('rank-rate', total > 0 ? Math.round((completed / total) * 100) + '%' : '0%');
+            setTxt('rank-zones', Object.keys(zones).length);
+
+            if(!board) return;
+            const entries = Object.entries(zones).sort((a, b) => b[1].done - a[1].done || b[1].total - a[1].total);
+            if(!entries.length) { board.innerHTML = `<p class="text-xs text-apple-secondary italic text-center py-8">No directives logged yet.</p>`; return; }
+
+            const maxDone = Math.max(...entries.map(e => e[1].done), 1);
+            const medals = ['text-yellow-500', 'text-gray-400', 'text-amber-700'];
+            board.innerHTML = entries.map(([zone, s], i) => {
+                const pct = Math.round((s.done / maxDone) * 100);
+                const rate = s.total > 0 ? Math.round((s.done / s.total) * 100) : 0;
+                const rankIco = i < 3 ? `<i class="fa-solid fa-medal ${medals[i]}"></i>` : `<span class="text-apple-secondary">${i + 1}</span>`;
+                return `<div class="flex items-center gap-3">
+                    <div class="w-6 text-center text-xs font-black">${rankIco}</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold dark:text-white truncate">${zone}</span>
+                            <span class="text-[10px] text-apple-secondary shrink-0 ml-2">${s.done}/${s.total} done &bull; ${rate}%</span>
+                        </div>
+                        <div class="h-2 w-full bg-apple-canvas dark:bg-[#2C2C2E] rounded-full overflow-hidden">
+                            <div class="h-full bg-apple-blue rounded-full transition-all" style="width:${pct}%"></div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
         }
 
         function renderAnalytics() {
