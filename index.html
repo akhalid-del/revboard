@@ -255,35 +255,62 @@
                 </div>
 
                 <div id="view-rankings" class="hidden flex-col gap-6">
-                    <div class="flex items-center justify-between mb-1">
-                        <div>
-                            <h2 class="text-lg font-bold dark:text-white">Team Totals</h2>
-                            <p class="text-[10px] text-apple-secondary uppercase tracking-widest">Zone rankings by floor numbers &bull; <span id="rank-dept">your floor</span></p>
+                    <div class="flex items-center justify-between gap-3 flex-wrap">
+                        <div class="flex items-center gap-3">
+                            <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-apple-blue to-indigo-500 flex items-center justify-center text-white shadow-sm"><i class="fa-solid fa-ranking-star"></i></div>
+                            <div>
+                                <h2 class="text-xl font-bold dark:text-white">Team Totals</h2>
+                                <p class="text-[10px] text-apple-secondary uppercase tracking-widest">Team ranking by floor numbers &bull; <span id="rank-dept">your floor</span></p>
+                            </div>
                         </div>
+                        <button onclick="copyRankingReport()" class="h-9 px-4 rounded-lg text-[11px] font-bold bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] text-apple-secondary hover:text-apple-primary dark:text-gray-400 dark:hover:text-white shadow-sm flex items-center gap-2 transition-all">
+                            <i class="fa-solid fa-clipboard"></i> COPY REPORT
+                        </button>
                     </div>
 
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
-                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Total Directives</p>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm border-t-4 border-t-apple-blue">
+                            <i class="fa-solid fa-list-check text-lg text-apple-blue mb-2"></i>
                             <h3 class="text-3xl font-bold dark:text-white" id="rank-total">0</h3>
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Total Directives</p>
                         </div>
-                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
-                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Completed</p>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm border-t-4 border-t-green-500">
+                            <i class="fa-solid fa-circle-check text-lg text-green-500 mb-2"></i>
                             <h3 class="text-3xl font-bold text-green-500" id="rank-completed">0</h3>
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Completed</p>
                         </div>
-                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
-                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Completion Rate</p>
-                            <h3 class="text-3xl font-bold text-apple-blue" id="rank-rate">0%</h3>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm border-t-4 border-t-indigo-500">
+                            <i class="fa-solid fa-gauge-high text-lg text-indigo-500 mb-2"></i>
+                            <h3 class="text-3xl font-bold text-indigo-500" id="rank-rate">0%</h3>
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Completion Rate</p>
                         </div>
-                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm">
-                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest mb-1">Active Zones</p>
-                            <h3 class="text-3xl font-bold dark:text-white" id="rank-zones">0</h3>
+                        <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm border-t-4 border-t-purple-500">
+                            <i class="fa-solid fa-people-group text-lg text-purple-500 mb-2"></i>
+                            <h3 class="text-3xl font-bold dark:text-white" id="rank-teams">0</h3>
+                            <p class="text-[9px] uppercase font-black text-apple-secondary tracking-widest">Teams Ranked</p>
                         </div>
                     </div>
 
                     <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-6 shadow-sm">
-                        <h3 class="text-[10px] uppercase font-black text-apple-secondary tracking-widest mb-4">Leaderboard &mdash; Zones by Completed Directives</h3>
-                        <div id="rankingsBoard" class="space-y-3"></div>
+                        <h3 class="text-[10px] uppercase font-black text-apple-secondary tracking-widest mb-5">Leaderboard &mdash; Teams by Completed Directives</h3>
+                        <div id="rankingsBoard" class="space-y-4"></div>
+                    </div>
+
+                    <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl overflow-hidden shadow-sm">
+                        <div class="px-6 pt-5 pb-2"><h3 class="text-[10px] uppercase font-black text-apple-secondary tracking-widest">Numbers by Team</h3></div>
+                        <div class="overflow-x-auto scrollbar-hide">
+                            <table class="w-full text-left border-collapse min-w-[560px]">
+                                <thead><tr class="border-b border-apple-border dark:border-[#2C2C2E]">
+                                    <th class="py-3 px-6 text-[9px] uppercase font-bold text-apple-secondary">Rank</th>
+                                    <th class="py-3 px-6 text-[9px] uppercase font-bold text-apple-secondary">Team</th>
+                                    <th class="py-3 px-6 text-[9px] uppercase font-bold text-apple-secondary text-center">Members</th>
+                                    <th class="py-3 px-6 text-[9px] uppercase font-bold text-apple-secondary text-center">Total</th>
+                                    <th class="py-3 px-6 text-[9px] uppercase font-bold text-apple-secondary text-center">Done</th>
+                                    <th class="py-3 px-6 text-[9px] uppercase font-bold text-apple-secondary text-center">Rate</th>
+                                </tr></thead>
+                                <tbody id="rankTableBody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -840,9 +867,19 @@
                     <div class="h-12 w-12 mx-auto rounded-full bg-apple-canvas dark:bg-[#2C2C2E] flex items-center justify-center font-bold text-apple-primary dark:text-white mb-2 mt-3">${init}</div>
                     <h3 class="text-xs font-bold dark:text-white uppercase tracking-tighter">${user.name}</h3>
                     <p class="text-[8px] text-apple-secondary uppercase mb-2 tracking-widest">${user.role}</p>
+                    <button onclick="setTeam('${safeName}', '${(user.team||'').replace(/'/g, "\\'")}')" class="text-[9px] font-bold mb-2 px-2 py-0.5 rounded-full bg-apple-blue/10 text-apple-blue hover:bg-apple-blue/20 transition-colors flex items-center gap-1 mx-auto"><i class="fa-solid fa-people-group text-[8px]"></i> ${user.team ? user.team : 'Set team'}</button>
                     <div class="flex justify-center">${probaBadge}</div>
                 </div>`);
             });
+        }
+
+        async function setTeam(name, current) {
+            const team = prompt(`Team / supervisor for ${name}:`, current || '');
+            if(team === null) return;
+            const { error } = await supabaseClient.from('floor_users')
+                .update({ team: team.trim() }).eq('name', name).eq('department', currentUser.department);
+            if(error) { alert('Could not update: ' + error.message); return; }
+            logAction(`Set team for ${name}: ${team.trim() || '(none)'}`); initTeam();
         }
 
         async function revokeUser(name) {
@@ -1065,51 +1102,97 @@
             return (avg / 60).toFixed(1) + 'h';
         }
 
+        // Build a map of member name -> team (falls back to the person's own name
+        // when no team is assigned, so everyone still shows up somewhere).
+        function buildTeamMap() {
+            const map = {};
+            (globalUsers || []).forEach(u => { map[u.name] = (u.team && u.team.trim()) ? u.team.trim() : u.name; });
+            return map;
+        }
+
+        let rankEntriesCache = [];
+
         function renderRankings() {
             const deptEl = document.getElementById('rank-dept');
             if(deptEl && currentUser) deptEl.innerText = currentUser.department || 'your floor';
 
             const setTxt = (id, v) => { const el = document.getElementById(id); if(el) el.innerText = v; };
             const board = document.getElementById('rankingsBoard');
+            const tbody = document.getElementById('rankTableBody');
+            const teamOf = buildTeamMap();
 
-            // Aggregate the department's directives by zone.
-            const zones = {};
+            // Aggregate the department's directives by the assignee's team.
+            const teams = {};
             let total = 0, completed = 0;
             globalTasks.forEach(t => {
-                const z = t.zone || 'Unzoned';
-                if(!zones[z]) zones[z] = { total: 0, done: 0 };
-                zones[z].total++; total++;
-                if(t.status === 'Completed') { zones[z].done++; completed++; }
+                const team = teamOf[t.assigned_to] || t.assigned_to || 'Unassigned';
+                if(!teams[team]) teams[team] = { total: 0, done: 0, members: new Set() };
+                teams[team].total++; total++;
+                if(t.assigned_to) teams[team].members.add(t.assigned_to);
+                if(t.status === 'Completed') { teams[team].done++; completed++; }
             });
 
             setTxt('rank-total', total);
             setTxt('rank-completed', completed);
             setTxt('rank-rate', total > 0 ? Math.round((completed / total) * 100) + '%' : '0%');
-            setTxt('rank-zones', Object.keys(zones).length);
+            setTxt('rank-teams', Object.keys(teams).length);
 
-            if(!board) return;
-            const entries = Object.entries(zones).sort((a, b) => b[1].done - a[1].done || b[1].total - a[1].total);
-            if(!entries.length) { board.innerHTML = `<p class="text-xs text-apple-secondary italic text-center py-8">No directives logged yet.</p>`; return; }
+            const entries = Object.entries(teams).sort((a, b) => b[1].done - a[1].done || b[1].total - a[1].total);
+            rankEntriesCache = entries;
 
-            const maxDone = Math.max(...entries.map(e => e[1].done), 1);
-            const medals = ['text-yellow-500', 'text-gray-400', 'text-amber-700'];
-            board.innerHTML = entries.map(([zone, s], i) => {
-                const pct = Math.round((s.done / maxDone) * 100);
+            if(board) {
+                if(!entries.length) { board.innerHTML = `<p class="text-xs text-apple-secondary italic text-center py-8">No directives assigned yet.</p>`; }
+                else {
+                    const maxDone = Math.max(...entries.map(e => e[1].done), 1);
+                    const medals = ['text-yellow-500', 'text-gray-400', 'text-amber-700'];
+                    board.innerHTML = entries.map(([team, s], i) => {
+                        const pct = Math.round((s.done / maxDone) * 100);
+                        const rate = s.total > 0 ? Math.round((s.done / s.total) * 100) : 0;
+                        const rankIco = i < 3 ? `<i class="fa-solid fa-medal ${medals[i]} text-base"></i>` : `<span class="text-apple-secondary text-xs font-black">${i + 1}</span>`;
+                        const init = team.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                        return `<div class="flex items-center gap-3">
+                            <div class="w-6 text-center">${rankIco}</div>
+                            <div class="h-8 w-8 rounded-full bg-apple-canvas dark:bg-[#2C2C2E] flex items-center justify-center text-[10px] font-black dark:text-white shrink-0">${init}</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-xs font-bold dark:text-white truncate">${team}</span>
+                                    <span class="text-[10px] text-apple-secondary shrink-0 ml-2">${s.done}/${s.total} &bull; ${rate}%</span>
+                                </div>
+                                <div class="h-2.5 w-full bg-apple-canvas dark:bg-[#2C2C2E] rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-apple-blue to-indigo-500 rounded-full transition-all" style="width:${pct}%"></div>
+                                </div>
+                            </div>
+                        </div>`;
+                    }).join('');
+                }
+            }
+
+            if(tbody) {
+                const medals = ['🥇', '🥈', '🥉'];
+                tbody.innerHTML = entries.map(([team, s], i) => {
+                    const rate = s.total > 0 ? Math.round((s.done / s.total) * 100) : 0;
+                    return `<tr class="border-b border-apple-border dark:border-[#2C2C2E] hover:bg-apple-canvas dark:hover:bg-[#242426] transition-colors">
+                        <td class="py-3 px-6 text-xs font-black dark:text-white">${medals[i] || (i + 1)}</td>
+                        <td class="py-3 px-6 text-xs font-bold dark:text-white">${team}</td>
+                        <td class="py-3 px-6 text-xs text-center dark:text-gray-300">${s.members.size}</td>
+                        <td class="py-3 px-6 text-xs text-center dark:text-gray-300">${s.total}</td>
+                        <td class="py-3 px-6 text-xs text-center font-bold text-green-600 dark:text-green-400">${s.done}</td>
+                        <td class="py-3 px-6 text-xs text-center font-bold text-indigo-500">${rate}%</td>
+                    </tr>`;
+                }).join('');
+            }
+        }
+
+        function copyRankingReport() {
+            if(!rankEntriesCache.length) { showToast('Nothing to copy yet.'); return; }
+            const dept = (currentUser && currentUser.department) || 'Floor';
+            let txt = `📊 TEAM TOTALS — ${dept}\n${new Date().toLocaleDateString()}\n\n`;
+            rankEntriesCache.forEach(([team, s], i) => {
                 const rate = s.total > 0 ? Math.round((s.done / s.total) * 100) : 0;
-                const rankIco = i < 3 ? `<i class="fa-solid fa-medal ${medals[i]}"></i>` : `<span class="text-apple-secondary">${i + 1}</span>`;
-                return `<div class="flex items-center gap-3">
-                    <div class="w-6 text-center text-xs font-black">${rankIco}</div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-xs font-bold dark:text-white truncate">${zone}</span>
-                            <span class="text-[10px] text-apple-secondary shrink-0 ml-2">${s.done}/${s.total} done &bull; ${rate}%</span>
-                        </div>
-                        <div class="h-2 w-full bg-apple-canvas dark:bg-[#2C2C2E] rounded-full overflow-hidden">
-                            <div class="h-full bg-apple-blue rounded-full transition-all" style="width:${pct}%"></div>
-                        </div>
-                    </div>
-                </div>`;
-            }).join('');
+                const medal = ['🥇','🥈','🥉'][i] || `${i + 1}.`;
+                txt += `${medal} ${team} — ${s.done}/${s.total} done (${rate}%)\n`;
+            });
+            navigator.clipboard.writeText(txt).then(() => showToast('Report copied!')).catch(() => showToast('Copy failed.'));
         }
 
         function renderAnalytics() {
