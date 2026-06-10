@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SYNC | Command Center</title>
+    <title>LogiSync | Floor Operations</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
@@ -59,8 +59,11 @@
 
     <div id="lockScreen" class="fixed inset-0 z-[100] bg-[#F5F5F7]/95 dark:bg-[#121212]/95 backdrop-blur-md flex flex-col items-center justify-center p-6 transition-opacity duration-500 select-none">
         <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-8 md:p-10 rounded-[24px] w-full max-w-[360px] shadow-apple-soft text-center transition-colors">
-            <h1 class="text-2xl font-bold tracking-tight dark:text-white mb-2">SYNC Access</h1>
-            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-8">Enter your credentials to continue</p>
+            <div class="h-14 w-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-apple-blue to-indigo-500 flex items-center justify-center text-white shadow-lg">
+                <i class="fa-solid fa-layer-group text-2xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight dark:text-white mb-1">LogiSync</h1>
+            <p class="text-xs text-apple-secondary dark:text-gray-400 mb-8">Floor Operations &bull; sign in to continue</p>
             
             <div class="space-y-4 mb-6 w-full text-left">
                 <div>
@@ -73,14 +76,14 @@
                 </div>
             </div>
 
-            <button onclick="verifyLogin()" id="loginBtn" class="w-full h-12 bg-apple-blue text-white rounded-xl font-bold text-sm shadow-sm active:scale-95 transition-all">Access Command Center</button>
+            <button onclick="verifyLogin()" id="loginBtn" class="w-full h-12 bg-gradient-to-r from-apple-blue to-indigo-500 text-white rounded-xl font-bold text-sm shadow-md active:scale-95 transition-all hover:opacity-95">Sign In</button>
             <p id="pinError" class="text-red-500 text-[10px] font-semibold tracking-wider uppercase text-center mt-6 h-4 opacity-0 transition-opacity">Denied</p>
         </div>
     </div>
 
     <aside class="fixed bottom-0 left-0 right-0 h-16 md:relative md:h-full md:w-[210px] bg-apple-surface dark:bg-[#1C1C1E] border-t md:border-t-0 md:border-r border-apple-border dark:border-[#2C2C2E] flex flex-row md:flex-col items-center md:items-stretch justify-around md:justify-start md:py-6 md:px-3 z-40">
         <div class="hidden md:flex items-center gap-2 px-2 mb-8">
-            <div class="h-9 w-9 bg-apple-primary dark:bg-apple-blue rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
+            <div class="h-9 w-9 bg-gradient-to-br from-apple-blue to-indigo-500 rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
                 <i class="fa-solid fa-layer-group text-base"></i>
             </div>
             <span class="font-bold text-sm tracking-tight dark:text-white">LogiSync</span>
@@ -151,7 +154,7 @@
         <header class="h-16 border-b border-apple-border dark:border-[#2C2C2E] bg-white/70 dark:bg-[#1C1C1E]/80 backdrop-blur-xl z-10 flex items-center justify-between px-6 transition-colors">
             <div class="flex items-center gap-3">
                 <i class="fa-solid fa-layer-group text-apple-blue text-xl md:hidden"></i>
-                <span class="font-bold text-sm tracking-tight md:hidden dark:text-white">SYNC</span>
+                <span class="font-bold text-sm tracking-tight md:hidden dark:text-white">LogiSync</span>
             </div>
             
             <div id="searchContainer" class="hidden flex-1 max-w-md mx-6 relative">
@@ -175,8 +178,8 @@
                     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-4">
                         <div class="flex items-center gap-6">
                             <div>
-                                <h1 class="text-2xl font-bold tracking-tight dark:text-white">Command Operations</h1>
-                                <p class="text-xs text-apple-secondary dark:text-gray-400">See everything. Solve anything.</p>
+                                <h1 class="text-2xl font-bold tracking-tight dark:text-white">Floor Operations</h1>
+                                <p class="text-xs text-apple-secondary dark:text-gray-400">Run the floor. Track every move.</p>
                             </div>
                             <div class="hidden lg:block h-10 w-32 border-l border-apple-border dark:border-[#2C2C2E] pl-6 ml-2" title="8-Hour Execution Velocity">
                                 <p class="text-[8px] uppercase font-bold text-apple-secondary mb-1">Velocity</p>
@@ -441,7 +444,7 @@
             </div>
         </main>
 
-        <button id="fab-add-task" onclick="openModal('newTaskModal')" class="admin-only fixed bottom-20 md:bottom-10 right-6 md:right-10 h-14 w-14 bg-apple-blue text-white rounded-full shadow-lg active:scale-90 transition-all flex items-center justify-center text-xl z-30 border border-white/20"><i class="fa-solid fa-plus"></i></button>
+        <button id="fab-add-task" onclick="openModal('newTaskModal')" class="admin-only fixed bottom-20 md:bottom-10 right-6 md:right-10 h-14 w-14 bg-gradient-to-br from-apple-blue to-indigo-500 text-white rounded-full shadow-xl active:scale-90 hover:scale-105 transition-all flex items-center justify-center text-xl z-30 border border-white/20"><i class="fa-solid fa-plus"></i></button>
 
         <div id="slideDrawer" class="fixed top-0 bottom-0 right-0 w-full sm:w-[420px] bg-white dark:bg-[#1C1C1E] shadow-2xl border-l border-apple-border dark:border-[#2C2C2E] z-[120] translate-x-full flex flex-col transition-transform duration-300">
             <div class="p-6 border-b border-apple-border dark:border-[#2C2C2E] flex justify-between items-center">
@@ -804,7 +807,7 @@
                 errEl.style.opacity = '1';
                 setTimeout(() => errEl.style.opacity = '0', 2000);
             }
-            btn.innerText = "Access Command Center"; btn.disabled = false;
+            btn.innerText = "Sign In"; btn.disabled = false;
         }
 
         async function logAction(text) {
