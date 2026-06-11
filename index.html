@@ -238,13 +238,19 @@
                                 </div>
                                 <div>
                                     <div class="flex items-center gap-2">
-                                        <h1 class="text-xl font-bold tracking-tight text-apple-primary dark:text-white">Ops Console</h1>
+                                        <h1 id="opsGreeting" class="text-xl font-bold tracking-tight text-apple-primary dark:text-white">Good morning</h1>
                                         <span class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20">
                                             <span class="relative flex h-1.5 w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span></span>
                                             <span class="text-[8px] font-black text-green-600 dark:text-green-400 uppercase tracking-widest">Live</span>
                                         </span>
                                     </div>
-                                    <p class="text-[10px] text-apple-secondary uppercase tracking-widest font-bold mt-0.5">Run the floor &bull; track every move</p>
+                                    <p class="text-[11px] text-apple-secondary font-semibold mt-1 flex items-center gap-2">
+                                        <span><span id="bar-active" class="font-black text-apple-primary dark:text-white">0</span> active</span>
+                                        <span class="opacity-30">&middot;</span>
+                                        <span><span id="bar-critical" class="font-black text-red-500">0</span> critical</span>
+                                        <span class="opacity-30">&middot;</span>
+                                        <span><span id="bar-done" class="font-black text-green-600">0</span> done today</span>
+                                    </p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-5">
@@ -253,10 +259,6 @@
                                     <p id="opsDate" class="text-[9px] text-apple-secondary uppercase tracking-widest font-bold mt-1">—</p>
                                 </div>
                                 <div class="h-10 w-px bg-apple-border dark:bg-[#2C2C2E] hidden sm:block"></div>
-                                <div class="hidden lg:block w-28" title="8-Hour Execution Velocity">
-                                    <p class="text-[8px] uppercase font-bold text-apple-secondary mb-1 tracking-widest">Velocity</p>
-                                    <div id="sparklineContainer" class="h-6 w-full flex items-end"></div>
-                                </div>
                                 <!-- ACTIONS MENU -->
                                 <div class="relative admin-only">
                                     <button onclick="toggleActionsMenu(event)" id="actionsMenuBtn" class="h-10 px-4 rounded-xl flex items-center gap-2 text-[11px] font-bold bg-apple-blue text-white shadow-sm hover:bg-apple-blueHover transition-all">
@@ -862,6 +864,14 @@
             clk.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
             const dt = document.getElementById('opsDate');
             if(dt) dt.textContent = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+            setOpsGreeting();
+        }
+        function setOpsGreeting() {
+            const el = document.getElementById('opsGreeting'); if(!el) return;
+            const h = new Date().getHours();
+            const part = h < 12 ? 'Good morning' : (h < 18 ? 'Good afternoon' : 'Good evening');
+            const first = currentUser && currentUser.name ? String(currentUser.name).trim().split(/\s+/)[0] : '';
+            el.textContent = first ? `${part}, ${first}` : part;
         }
         tickOpsClock(); setInterval(tickOpsClock, 1000 * 15);
         function lockSystem() {
@@ -1052,6 +1062,7 @@
                 }
 
                 currentUser = profile;
+                setOpsGreeting();
                 document.getElementById('lockScreen').style.opacity = '0';
                 setTimeout(() => document.getElementById('lockScreen').style.display = 'none', 500);
                 document.getElementById('activeUserName').innerText = profile.name + ' (' + (profile.department || 'SYS') + ')';
@@ -1355,10 +1366,15 @@
                 }
             });
             
-            document.getElementById('kpi-total').innerText = c.t; 
-            document.getElementById('kpi-radar').innerText = c.r + c.a; 
-            document.getElementById('kpi-progress').innerText = c.p + c.rev; 
+            document.getElementById('kpi-total').innerText = c.t;
+            document.getElementById('kpi-radar').innerText = c.r + c.a;
+            document.getElementById('kpi-progress').innerText = c.p + c.rev;
             document.getElementById('kpi-completed').innerText = c.d;
+
+            const setBar = (id, v) => { const el = document.getElementById(id); if(el) el.innerText = v; };
+            setBar('bar-active', c.t);
+            setBar('bar-critical', globalTasks.filter(t => t.priority === 'Critical' && t.status !== 'Completed').length);
+            setBar('bar-done', c.d);
             
             document.getElementById('board-count-radar').innerText = c.r; 
             document.getElementById('board-count-assigned').innerText = c.a; 
