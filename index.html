@@ -704,6 +704,11 @@
                 <input type="text" id="newMemberName" placeholder="Full Name" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
                 <input type="email" id="newMemberEmail" placeholder="Email Address" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
                 <input type="text" id="newMemberPassword" placeholder="Initial Password (min 6 chars)" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white font-mono">
+                <select id="newMemberRole" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] h-11 px-4 rounded-lg text-sm dark:text-white">
+                    <option value="Team Leader">Team Leader — works assigned tasks</option>
+                    <option value="Manager">Manager — full floor access</option>
+                    <option value="Admin">Admin — full access</option>
+                </select>
             </div>
             <div class="flex gap-2">
                 <button onclick="closeModal('addMemberModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
@@ -957,7 +962,7 @@
         }
         function closeModal(id) { 
             document.getElementById(id).style.display = 'none'; 
-            if(id === 'addMemberModal') { document.getElementById('newMemberName').value = ''; document.getElementById('newMemberEmail').value = ''; document.getElementById('newMemberPassword').value = ''; }
+            if(id === 'addMemberModal') { document.getElementById('newMemberName').value = ''; document.getElementById('newMemberEmail').value = ''; document.getElementById('newMemberPassword').value = ''; document.getElementById('newMemberRole').value = 'Team Leader'; }
             if(id === 'newTaskModal') { 
                 document.getElementById('newTitle').value = ''; 
                 document.getElementById('newTarget').value = ''; 
@@ -1207,11 +1212,22 @@
                     <button onclick="revokeUser('${safeName}')" title="Revoke access" class="absolute top-2 left-2 h-7 w-7 rounded-full flex items-center justify-center text-[11px] bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary hover:text-red-500 transition-colors"><i class="fa-solid fa-user-slash"></i></button>
                     <div class="h-12 w-12 mx-auto rounded-full bg-apple-canvas dark:bg-[#2C2C2E] flex items-center justify-center font-bold text-apple-primary dark:text-white mb-2 mt-3">${init}</div>
                     <h3 class="text-xs font-bold dark:text-white uppercase tracking-tighter">${user.name}</h3>
-                    <p class="text-[8px] text-apple-secondary uppercase mb-2 tracking-widest">${user.role}</p>
+                    <select onchange="changeUserRole('${safeName}', this.value)" onclick="event.stopPropagation()" class="text-[8px] text-apple-secondary uppercase tracking-widest mb-2 bg-transparent border-0 text-center cursor-pointer hover:text-apple-blue focus:outline-none mx-auto block">
+                        <option value="Team Leader" ${user.role === 'Team Leader' ? 'selected' : ''}>Team Leader</option>
+                        <option value="Manager" ${user.role === 'Manager' ? 'selected' : ''}>Manager</option>
+                        <option value="Admin" ${user.role === 'Admin' ? 'selected' : ''}>Admin</option>
+                    </select>
                     <button onclick="setTeam('${safeName}', '${(user.team||'').replace(/'/g, "\\'")}')" class="text-[9px] font-bold mb-2 px-2 py-0.5 rounded-full bg-apple-blue/10 text-apple-blue hover:bg-apple-blue/20 transition-colors flex items-center gap-1 mx-auto"><i class="fa-solid fa-people-group text-[8px]"></i> ${user.team ? user.team : 'Set team'}</button>
                     <div class="flex justify-center">${probaBadge}</div>
                 </div>`);
             });
+        }
+
+        async function changeUserRole(name, role) {
+            const { error } = await supabaseClient.from('floor_users')
+                .update({ role }).eq('name', name).eq('department', currentUser.department);
+            if(error) { alert('Could not update role: ' + error.message); initTeam(); return; }
+            logAction(`Role for ${name}: ${role}`); showToast(`${name} is now ${role}`); initTeam();
         }
 
         async function setTeam(name, current) {
@@ -1271,9 +1287,10 @@
                 }
 
                 // 3. Create the linked profile (RLS allows managers to do this).
+                const selectedRole = document.getElementById('newMemberRole').value || 'Team Leader';
                 const { error: profileError } = await supabaseClient.from('floor_users').insert([{
                     user_id: signUpData.user.id, name, email,
-                    status: 'Active', role: 'Team Leader', department: currentUser.department
+                    status: 'Active', role: selectedRole, department: currentUser.department
                 }]);
                 if(profileError) throw new Error(profileError.message);
 
@@ -1418,7 +1435,11 @@
                 let badge = `<span class="px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter ${badgeColor}">${item.status}</span>`;
                 let blockIco = isBlocked ? `<i class="fa-solid fa-lock text-red-500 ml-2" title="Blocked"></i>` : '';
 
-                tbody.insertAdjacentHTML('beforeend', `<tr class="border-b border-apple-border dark:border-[#2C2C2E] hover:bg-apple-canvas dark:hover:bg-[#242426] transition-colors cursor-pointer" onclick="openDrawer('${item.id}')"><td class="py-3 px-4 text-xs font-bold dark:text-white">${item.title} ${blockIco}</td><td class="py-3 px-4 text-[9px] font-mono opacity-50 uppercase dark:text-white">${item.linked_entity}</td><td class="py-3 px-4 text-[9px] font-bold uppercase dark:text-gray-400">${item.sub_department || 'Survey'}</td><td class="py-3 px-4 text-xs dark:text-gray-300">${item.assigned_to}</td><td class="py-3 px-4">${badge}</td><td class="py-3 px-4 text-right"><i class="fa-solid fa-chevron-right text-[8px] opacity-20 dark:text-white"></i></td></tr>`);
+                const mineUnaccepted = currentUser && item.assigned_to === currentUser.name && item.status === 'Assigned To';
+                const lastCell = mineUnaccepted
+                    ? `<button onclick="event.stopPropagation(); acceptTask('${item.id}')" class="h-7 px-3 rounded-full bg-green-500 text-white text-[9px] font-black uppercase tracking-tighter hover:bg-green-600 transition-colors"><i class="fa-solid fa-check mr-1"></i>Accept</button>`
+                    : `<i class="fa-solid fa-chevron-right text-[8px] opacity-20 dark:text-white"></i>`;
+                tbody.insertAdjacentHTML('beforeend', `<tr class="border-b border-apple-border dark:border-[#2C2C2E] hover:bg-apple-canvas dark:hover:bg-[#242426] transition-colors cursor-pointer" onclick="openDrawer('${item.id}')"><td class="py-3 px-4 text-xs font-bold dark:text-white">${item.title} ${blockIco}</td><td class="py-3 px-4 text-[9px] font-mono opacity-50 uppercase dark:text-white">${item.linked_entity}</td><td class="py-3 px-4 text-[9px] font-bold uppercase dark:text-gray-400">${item.sub_department || 'Survey'}</td><td class="py-3 px-4 text-xs dark:text-gray-300">${item.assigned_to}</td><td class="py-3 px-4">${badge}</td><td class="py-3 px-4 text-right">${lastCell}</td></tr>`);
                 
                 if(cols[item.status]) {
                     let border = item.priority === 'Critical' ? 'border-l-4 border-l-red-500' : (item.priority === 'High' ? 'border-l-4 border-l-orange-500' : 'border border-apple-border dark:border-[#2C2C2E]');
@@ -1430,7 +1451,13 @@
                     // THE EXECUTIVE SHIELD: NON-MANAGERS CANNOT MOVE TO COMPLETED
                     if(nextState === 'Completed' && !isAdmin) canMove = false; 
 
-                    let moveBtn = (!nextState || !canMove) ? '' : `<button onclick="event.stopPropagation(); quickMove('${item.id}', '${nextState}')" class="h-5 w-5 rounded-full bg-apple-blue text-white text-[8px] flex items-center justify-center hover:scale-110 transition-transform"><i class="fa-solid ${nextState === 'Completed' ? 'fa-check' : 'fa-arrow-right'}"></i></button>`;
+                    const mineToAccept = currentUser && item.assigned_to === currentUser.name && item.status === 'Assigned To';
+                    let moveBtn;
+                    if(mineToAccept) {
+                        moveBtn = `<button onclick="event.stopPropagation(); acceptTask('${item.id}')" class="h-6 px-2.5 rounded-full bg-green-500 text-white text-[8px] font-black uppercase tracking-tighter hover:bg-green-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-check"></i>Accept</button>`;
+                    } else {
+                        moveBtn = (!nextState || !canMove) ? '' : `<button onclick="event.stopPropagation(); quickMove('${item.id}', '${nextState}')" class="h-5 w-5 rounded-full bg-apple-blue text-white text-[8px] flex items-center justify-center hover:scale-110 transition-transform"><i class="fa-solid ${nextState === 'Completed' ? 'fa-check' : 'fa-arrow-right'}"></i></button>`;
+                    }
                     
                     document.getElementById(cols[item.status]).insertAdjacentHTML('beforeend', `<div class="bg-white dark:bg-[#1C1C1E] ${border} rounded-xl p-4 shadow-sm active:scale-95 transition-all cursor-pointer" onclick="openDrawer('${item.id}')"><div class="flex justify-between items-start mb-2"><span class="text-[8px] font-black uppercase opacity-40 dark:text-white">${item.zone || 'General'} • ${item.assigned_to}</span>${moveBtn}</div><h4 class="text-xs font-bold leading-tight dark:text-white">${item.title} ${blockIco}</h4></div>`);
                 }
@@ -1784,8 +1811,16 @@
             if(!nextStat) return;
             const task = globalTasks.find(t => t.id == id);
             await supabaseClient.from('pulses').update({ status: nextStat }).eq('id', id);
-            playSound('pop'); 
+            playSound('pop');
             logAction(`Moved: "${task.title}" to ${nextStat}`); loadData();
+        }
+
+        // Team Leader acknowledges an assigned task and starts working it.
+        async function acceptTask(id) {
+            const task = globalTasks.find(t => t.id == id);
+            await supabaseClient.from('pulses').update({ status: 'In Progress' }).eq('id', id);
+            playSound('pop');
+            logAction(`Accepted: "${task.title}"`); showToast('Task accepted — now In Progress.'); loadData();
         }
 
         function switchDrawerTab(tab) {
