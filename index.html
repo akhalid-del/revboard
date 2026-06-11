@@ -275,6 +275,7 @@
                                         <button onclick="closeActionsMenu(); copyShiftReport()" class="w-full text-left px-3 py-2 rounded-lg text-[12px] font-semibold text-apple-primary dark:text-white hover:bg-apple-canvas dark:hover:bg-[#2C2C2E] flex items-center gap-3"><i class="fa-solid fa-copy w-4 text-apple-secondary"></i> Shift Report</button>
                                         <div class="h-px bg-apple-border dark:bg-[#2C2C2E] my-1.5"></div>
                                         <button onclick="closeActionsMenu(); exportToSheets()" class="w-full text-left px-3 py-2 rounded-lg text-[12px] font-semibold text-apple-primary dark:text-white hover:bg-apple-canvas dark:hover:bg-[#2C2C2E] flex items-center gap-3"><i class="fa-solid fa-table-cells w-4 text-green-600"></i> Export to Sheets</button>
+                                        <button onclick="closeActionsMenu(); exportHeadsetsToSheets()" class="w-full text-left px-3 py-2 rounded-lg text-[12px] font-semibold text-apple-primary dark:text-white hover:bg-apple-canvas dark:hover:bg-[#2C2C2E] flex items-center gap-3"><i class="fa-solid fa-headset w-4 text-green-600"></i> Export Headsets</button>
                                         <button onclick="closeActionsMenu(); exportToCSV()" class="w-full text-left px-3 py-2 rounded-lg text-[12px] font-semibold text-apple-primary dark:text-white hover:bg-apple-canvas dark:hover:bg-[#2C2C2E] flex items-center gap-3"><i class="fa-solid fa-file-csv w-4 text-green-600"></i> Export CSV</button>
                                         <button onclick="closeActionsMenu(); backupAllData()" class="w-full text-left px-3 py-2 rounded-lg text-[12px] font-semibold text-apple-primary dark:text-white hover:bg-apple-canvas dark:hover:bg-[#2C2C2E] flex items-center gap-3"><i class="fa-solid fa-shield-halved w-4 text-indigo-600"></i> Backup Data</button>
                                     </div>
@@ -1298,6 +1299,27 @@
                 showToast(globalTasks.length
                     ? "Copied! Opening Google Sheets — press Ctrl+V to paste."
                     : "Headers copied — opening Sheets, press Ctrl+V to paste.");
+            } catch(e) {
+                showToast("Opening Sheets — use Ctrl+V to paste.");
+            }
+            window.open('https://sheets.new', '_blank');
+        }
+
+        function headsetsTSV() {
+            const rows = [...HS_TEAM_KEYS, ...HS_ROLE_KEYS].map(k => {
+                const d = globalHeadsets[k] || { label: k, count: 0 };
+                return [(d.label || k), (d.count ?? 0)].join('\t');
+            });
+            let total = 0;
+            [...HS_TEAM_KEYS, ...HS_ROLE_KEYS].forEach(k => total += parseInt(globalHeadsets[k]?.count || 0));
+            return ["Group\tHeadsets", ...rows, `TOTAL\t${total}`].join('\n');
+        }
+
+        async function exportHeadsetsToSheets() {
+            if(!Object.keys(globalHeadsets).length) await loadHeadsets();
+            try {
+                await navigator.clipboard.writeText(headsetsTSV());
+                showToast("Headsets copied — opening Sheets, press Ctrl+V to paste.");
             } catch(e) {
                 showToast("Opening Sheets — use Ctrl+V to paste.");
             }
