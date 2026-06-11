@@ -567,11 +567,16 @@
                                         <p class="text-[9px] text-white/50 uppercase tracking-widest font-bold">Tap a name to rename &bull; Tap a score to edit</p>
                                     </div>
                                 </div>
-                                <div class="text-right">
-                                    <p id="tr-leader" class="text-sm font-black text-amber-400 leading-none">—</p>
-                                    <p class="text-[8px] text-white/40 uppercase tracking-widest font-bold mt-1">In the lead</p>
+                                <div class="flex items-center gap-3">
+                                    <div class="text-right mr-1">
+                                        <p id="tr-leader" class="text-sm font-black text-amber-400 leading-none">—</p>
+                                        <p class="text-[8px] text-white/40 uppercase tracking-widest font-bold mt-1">In the lead</p>
+                                    </div>
+                                    <button onclick="openImportRace()" title="Import from RingCentral sheet/Excel" class="h-9 px-3 rounded-xl text-[10px] font-black uppercase tracking-widest bg-white/10 hover:bg-white/20 text-white border border-white/10 transition-colors flex items-center gap-2"><i class="fa-solid fa-file-import"></i><span class="hidden sm:inline">Import</span></button>
+                                    <button onclick="resetTeamRace(true)" title="Reset all scores to zero" class="h-9 px-3 rounded-xl text-[10px] font-black uppercase tracking-widest bg-white/10 hover:bg-red-500/80 text-white border border-white/10 transition-colors flex items-center gap-2"><i class="fa-solid fa-rotate-left"></i><span class="hidden sm:inline">Reset</span></button>
                                 </div>
                             </div>
+                            <p id="tr-reset-note" class="text-[8px] text-white/30 uppercase tracking-widest font-bold mb-3">Scores reset automatically each day</p>
                             <div id="teamRaceRows" class="space-y-2.5"></div>
                         </div>
                     </div>
@@ -740,6 +745,23 @@
         </div>
     </div>
 
+    <div id="importRaceModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-6 rounded-2xl w-full max-w-md shadow-2xl">
+            <h3 class="text-lg font-bold mb-1 dark:text-white">Import Team Scores</h3>
+            <p class="text-[11px] text-apple-secondary mb-4">From RingCentral: paste rows (team name + number), or upload the CSV/Excel export. Names are matched to your teams; new names fill empty slots.</p>
+            <p id="importRaceError" class="text-red-500 text-[10px] font-bold mb-3 hidden bg-red-50 dark:bg-red-900/20 p-2 rounded border border-red-100"></p>
+            <textarea id="importRaceText" rows="6" placeholder="Survey A&#9;42&#10;Survey B&#9;37&#10;Night Shift&#9;28" class="w-full bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] p-3 rounded-lg text-sm dark:text-white font-mono mb-3"></textarea>
+            <label class="flex items-center justify-center gap-2 h-11 mb-4 rounded-lg border-2 border-dashed border-apple-border dark:border-[#3A3A3C] text-apple-secondary text-xs font-bold cursor-pointer hover:border-apple-blue transition-colors">
+                <i class="fa-solid fa-paperclip"></i> <span id="importRaceFileName">Choose CSV or Excel file…</span>
+                <input type="file" id="importRaceFile" accept=".csv,.tsv,.xlsx,.xls" class="hidden" onchange="handleRaceFile(event)">
+            </label>
+            <div class="flex gap-2">
+                <button onclick="closeModal('importRaceModal')" class="flex-1 h-11 text-xs font-bold bg-apple-canvas dark:bg-[#2C2C2E] dark:text-white rounded-xl">Cancel</button>
+                <button onclick="applyRaceImport()" class="flex-1 h-11 text-xs font-bold bg-apple-blue text-white rounded-xl shadow-sm">Apply Scores</button>
+            </div>
+        </div>
+    </div>
+
     <div id="newTaskModal" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
         <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] p-6 rounded-2xl w-full max-w-md shadow-2xl">
             <h3 class="text-lg font-bold mb-4 dark:text-white">Create Task</h3>
@@ -864,6 +886,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
     <script>
         const supabaseUrl = 'https://pmhmuzctbstrhtmwxlay.supabase.co';
         const supabaseKey = 'sb_publishable_8dtRYPrztDbEt3bZhU3ibQ_5PAt_FsP';
@@ -1751,13 +1774,129 @@
         const RACE_KEYS = ['RACE1','RACE2','RACE3','RACE4','RACE5','RACE6','RACE7','RACE8'];
         let globalRace = {};
 
+        const RACE_META_KEY = 'RACE_META';
+
         async function loadTeamRace() {
             if(!currentUser) return;
             const { data } = await supabaseClient.from('headsets').select('*')
-                .eq('department', currentUser.department).in('slot_key', RACE_KEYS);
+                .eq('department', currentUser.department).in('slot_key', [...RACE_KEYS, RACE_META_KEY]);
             globalRace = {};
-            (data || []).forEach(r => { globalRace[r.slot_key] = { label: r.label, count: r.count }; });
+            let metaDate = null;
+            (data || []).forEach(r => {
+                if(r.slot_key === RACE_META_KEY) metaDate = r.label;
+                else globalRace[r.slot_key] = { label: r.label, count: r.count };
+            });
+
+            // Daily auto-reset: if the stored date isn't today, zero all scores once.
+            const today = new Date().toISOString().slice(0, 10);
+            if(metaDate !== today) {
+                await resetTeamRace(false);
+                if(metaDate) globalRace = {}; // counts cleared by reset
+                // record today's date in the meta row
+                if(metaDate === null) {
+                    await supabaseClient.from('headsets').insert([{ slot_key: RACE_META_KEY, department: currentUser.department, label: today, count: 0 }]);
+                } else {
+                    await supabaseClient.from('headsets').update({ label: today }).eq('department', currentUser.department).eq('slot_key', RACE_META_KEY);
+                }
+                // reload cleared scores
+                const { data: d2 } = await supabaseClient.from('headsets').select('*')
+                    .eq('department', currentUser.department).in('slot_key', RACE_KEYS);
+                globalRace = {};
+                (d2 || []).forEach(r => { globalRace[r.slot_key] = { label: r.label, count: r.count }; });
+            }
             renderTeamRace();
+        }
+
+        // Zero every team's score (keeps the names). confirmFirst=true when triggered manually.
+        async function resetTeamRace(confirmFirst) {
+            if(!currentUser) return;
+            if(confirmFirst && !confirm('Reset all team scores to zero? Team names are kept.')) return;
+            for(const key of RACE_KEYS) {
+                if(globalRace[key]) {
+                    await supabaseClient.from('headsets').update({ count: 0 })
+                        .eq('department', currentUser.department).eq('slot_key', key);
+                    globalRace[key].count = 0;
+                }
+            }
+            if(confirmFirst) { logAction('Reset Team Race scores'); showToast('Scores reset.'); renderTeamRace(); }
+        }
+
+        function openImportRace() {
+            document.getElementById('importRaceText').value = '';
+            document.getElementById('importRaceFileName').innerText = 'Choose CSV or Excel file…';
+            const err = document.getElementById('importRaceError'); err.style.display = 'none';
+            document.getElementById('importRaceFile').value = '';
+            openModal('importRaceModal');
+        }
+
+        function handleRaceFile(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            document.getElementById('importRaceFileName').innerText = file.name;
+            const reader = new FileReader();
+            const isExcel = /\.xlsx?$/i.test(file.name);
+            reader.onload = (ev) => {
+                try {
+                    let rows = [];
+                    if(isExcel && window.XLSX) {
+                        const wb = XLSX.read(ev.target.result, { type: 'array' });
+                        const sheet = wb.Sheets[wb.SheetNames[0]];
+                        rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+                    } else {
+                        rows = ev.target.result.split(/\r?\n/).map(line => line.split(/\t|,/));
+                    }
+                    const text = rows.map(r => (r || []).join('\t')).join('\n');
+                    document.getElementById('importRaceText').value = text;
+                } catch(err) {
+                    const el = document.getElementById('importRaceError');
+                    el.innerText = 'Could not read file: ' + err.message; el.style.display = 'block';
+                }
+            };
+            if(isExcel) reader.readAsArrayBuffer(file); else reader.readAsText(file);
+        }
+
+        async function applyRaceImport() {
+            const raw = document.getElementById('importRaceText').value.trim();
+            const errEl = document.getElementById('importRaceError');
+            errEl.style.display = 'none';
+            if(!raw) { errEl.innerText = 'Paste rows or choose a file first.'; errEl.style.display = 'block'; return; }
+
+            // Parse: each line = name + a number somewhere on the line.
+            const parsed = [];
+            raw.split(/\r?\n/).forEach(line => {
+                const cells = line.split(/\t|,/).map(c => c.trim()).filter(c => c !== '');
+                if(!cells.length) return;
+                // find the last numeric cell as the score, the first non-numeric as the name
+                let score = null, name = null;
+                for(let i = cells.length - 1; i >= 0; i--) { if(/^-?\d+(\.\d+)?$/.test(cells[i])) { score = parseInt(cells[i]); break; } }
+                name = cells.find(c => !/^-?\d+(\.\d+)?$/.test(c)) || null;
+                if(name && score !== null) parsed.push({ name, score });
+            });
+            if(!parsed.length) { errEl.innerText = 'No "team name + number" rows found.'; errEl.style.display = 'block'; return; }
+
+            // Match by current label (case-insensitive); unmatched names fill empty/default slots.
+            const labelOf = (k, i) => (globalRace[k]?.label || `Team ${i + 1}`).trim().toLowerCase();
+            const usedKeys = new Set();
+            let applied = 0;
+            for(const row of parsed) {
+                let key = RACE_KEYS.find((k, i) => labelOf(k, i) === row.name.toLowerCase() && !usedKeys.has(k));
+                if(!key) {
+                    // first slot still on its default name and not yet used
+                    key = RACE_KEYS.find((k, i) => !usedKeys.has(k) && (!globalRace[k] || /^team \d$/i.test(globalRace[k].label || '')));
+                }
+                if(!key) continue;
+                usedKeys.add(key);
+                const idx = RACE_KEYS.indexOf(key);
+                await saveRaceField(key, 'count', row.score, `Team ${idx + 1}`);
+                if(row.name && (!globalRace[key] || /^team \d$/i.test(globalRace[key].label || ''))) {
+                    await saveRaceField(key, 'label', row.name, `Team ${idx + 1}`);
+                }
+                applied++;
+            }
+            logAction(`Imported ${applied} team scores`);
+            closeModal('importRaceModal');
+            showToast(`Imported ${applied} team${applied === 1 ? '' : 's'}.`);
+            loadTeamRace();
         }
 
         async function saveRaceField(key, field, value, defaultLabel) {
