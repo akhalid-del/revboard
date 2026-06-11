@@ -178,6 +178,11 @@
                 <span class="hidden md:inline text-xs font-semibold">Performance</span>
                 <div id="indicator-analytics" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
+            <button onclick="switchView('headsets')" id="nav-headsets" class="text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors relative">
+                <i class="fa-solid fa-headset text-xl md:text-base w-5 text-center"></i>
+                <span class="hidden md:inline text-xs font-semibold">Headsets</span>
+                <div id="indicator-headsets" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
+            </button>
         </nav>
 
         <!-- Logged-in user card (desktop) with probation badge -->
@@ -270,6 +275,7 @@
                                         <button onclick="closeActionsMenu(); copyShiftReport()" class="w-full text-left px-3 py-2 rounded-lg text-[12px] font-semibold text-apple-primary dark:text-white hover:bg-apple-canvas dark:hover:bg-[#2C2C2E] flex items-center gap-3"><i class="fa-solid fa-copy w-4 text-apple-secondary"></i> Shift Report</button>
                                         <div class="h-px bg-apple-border dark:bg-[#2C2C2E] my-1.5"></div>
                                         <button onclick="closeActionsMenu(); exportToSheets()" class="w-full text-left px-3 py-2 rounded-lg text-[12px] font-semibold text-apple-primary dark:text-white hover:bg-apple-canvas dark:hover:bg-[#2C2C2E] flex items-center gap-3"><i class="fa-solid fa-table-cells w-4 text-green-600"></i> Export to Sheets</button>
+                                        <button onclick="closeActionsMenu(); exportHeadsetsToSheets()" class="w-full text-left px-3 py-2 rounded-lg text-[12px] font-semibold text-apple-primary dark:text-white hover:bg-apple-canvas dark:hover:bg-[#2C2C2E] flex items-center gap-3"><i class="fa-solid fa-headset w-4 text-green-600"></i> Export Headsets</button>
                                         <button onclick="closeActionsMenu(); exportToCSV()" class="w-full text-left px-3 py-2 rounded-lg text-[12px] font-semibold text-apple-primary dark:text-white hover:bg-apple-canvas dark:hover:bg-[#2C2C2E] flex items-center gap-3"><i class="fa-solid fa-file-csv w-4 text-green-600"></i> Export CSV</button>
                                         <button onclick="closeActionsMenu(); backupAllData()" class="w-full text-left px-3 py-2 rounded-lg text-[12px] font-semibold text-apple-primary dark:text-white hover:bg-apple-canvas dark:hover:bg-[#2C2C2E] flex items-center gap-3"><i class="fa-solid fa-shield-halved w-4 text-indigo-600"></i> Backup Data</button>
                                     </div>
@@ -595,6 +601,37 @@
                     </div>
                 </div>
 
+
+                <!-- HEADSETS VIEW -->
+                <div id="view-headsets" class="hidden flex-col gap-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-bold dark:text-white">Headsets Tracker</h2>
+                            <p class="text-[10px] text-apple-secondary uppercase tracking-widest mt-0.5">Click a team name to rename it &bull; Click a count to edit</p>
+                        </div>
+                        <div class="flex items-center gap-2 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl px-4 py-2">
+                            <i class="fa-solid fa-headset text-apple-blue text-sm"></i>
+                            <span class="text-[10px] font-black text-apple-secondary uppercase tracking-widest">Total</span>
+                            <span id="hs-total" class="text-2xl font-black text-apple-primary dark:text-white ml-1">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Teams section -->
+                    <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl overflow-hidden shadow-sm">
+                        <div class="px-5 py-3 border-b border-apple-border dark:border-[#2C2C2E] bg-apple-canvas dark:bg-[#2C2C2E]">
+                            <p class="text-[9px] font-black uppercase tracking-widest text-apple-secondary">Teams</p>
+                        </div>
+                        <div id="hs-teams-rows"></div>
+                    </div>
+
+                    <!-- Fixed roles section -->
+                    <div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl overflow-hidden shadow-sm">
+                        <div class="px-5 py-3 border-b border-apple-border dark:border-[#2C2C2E] bg-apple-canvas dark:bg-[#2C2C2E]">
+                            <p class="text-[9px] font-black uppercase tracking-widest text-apple-secondary">Roles & Inventory</p>
+                        </div>
+                        <div id="hs-roles-rows"></div>
+                    </div>
+                </div>
 
             </div>
         </main>
@@ -936,7 +973,7 @@
         }
 
         function switchView(viewName) {
-            const views = ['table', 'board', 'rankings', 'coaching', 'leave', 'team', 'log', 'analytics'];
+            const views = ['table', 'board', 'rankings', 'coaching', 'leave', 'team', 'log', 'analytics', 'headsets'];
             views.forEach(v => {
                 const nav = document.getElementById('nav-' + v);
                 const ind = document.getElementById('indicator-' + v);
@@ -960,6 +997,7 @@
             if(viewName === 'rankings') renderRankings();
             if(viewName === 'coaching') loadCoachingSessions();
             if(viewName === 'leave') loadLeave();
+            if(viewName === 'headsets') loadHeadsets();
         }
 
         let currentLayout = 'table';
@@ -1261,6 +1299,27 @@
                 showToast(globalTasks.length
                     ? "Copied! Opening Google Sheets — press Ctrl+V to paste."
                     : "Headers copied — opening Sheets, press Ctrl+V to paste.");
+            } catch(e) {
+                showToast("Opening Sheets — use Ctrl+V to paste.");
+            }
+            window.open('https://sheets.new', '_blank');
+        }
+
+        function headsetsTSV() {
+            const rows = [...HS_TEAM_KEYS, ...HS_ROLE_KEYS].map(k => {
+                const d = globalHeadsets[k] || { label: k, count: 0 };
+                return [(d.label || k), (d.count ?? 0)].join('\t');
+            });
+            let total = 0;
+            [...HS_TEAM_KEYS, ...HS_ROLE_KEYS].forEach(k => total += parseInt(globalHeadsets[k]?.count || 0));
+            return ["Group\tHeadsets", ...rows, `TOTAL\t${total}`].join('\n');
+        }
+
+        async function exportHeadsetsToSheets() {
+            if(!Object.keys(globalHeadsets).length) await loadHeadsets();
+            try {
+                await navigator.clipboard.writeText(headsetsTSV());
+                showToast("Headsets copied — opening Sheets, press Ctrl+V to paste.");
             } catch(e) {
                 showToast("Opening Sheets — use Ctrl+V to paste.");
             }
@@ -1584,6 +1643,85 @@
                     }).join('');
                 }
             }
+        }
+
+        // ---- Headsets Tracker ----
+        const HS_TEAM_KEYS = ['T1','T2','T3','T4','T5','T6'];
+        const HS_ROLE_KEYS = ['Managers','Sales','Nesting','Quality','Admin','Stock','Damaged'];
+        let globalHeadsets = {}; // key -> { label, count }
+
+        async function loadHeadsets() {
+            if(!currentUser) return;
+            const { data } = await supabaseClient.from('headsets').select('*').eq('department', currentUser.department);
+            globalHeadsets = {};
+            (data || []).forEach(r => { globalHeadsets[r.slot_key] = { label: r.label, count: r.count }; });
+            renderHeadsets();
+        }
+
+        async function saveHeadsetField(key, field, value) {
+            if(!currentUser) return;
+            const existing = globalHeadsets[key];
+            if(existing) {
+                await supabaseClient.from('headsets').update({ [field]: value }).eq('department', currentUser.department).eq('slot_key', key);
+            } else {
+                const defaults = { slot_key: key, department: currentUser.department, label: key, count: 0, [field]: value };
+                await supabaseClient.from('headsets').insert([defaults]);
+            }
+            if(!globalHeadsets[key]) globalHeadsets[key] = { label: key, count: 0 };
+            globalHeadsets[key][field] = value;
+            renderHeadsets();
+        }
+
+        function renderHeadsets() {
+            const allKeys = [...HS_TEAM_KEYS, ...HS_ROLE_KEYS];
+            let total = 0;
+            allKeys.forEach(k => { total += parseInt(globalHeadsets[k]?.count || 0); });
+            const totalEl = document.getElementById('hs-total');
+            if(totalEl) totalEl.innerText = total;
+
+            const renderRow = (key, isTeam) => {
+                const d = globalHeadsets[key] || { label: key, count: 0 };
+                const label = d.label || key;
+                const count = d.count ?? 0;
+                return `<div class="flex items-center px-5 py-3.5 border-b border-apple-border dark:border-[#2C2C2E] last:border-b-0 gap-4">
+                    <div class="flex-1 min-w-0">
+                        ${isTeam
+                            ? `<span class="hs-label text-sm font-bold dark:text-white cursor-pointer hover:text-apple-blue transition-colors" data-key="${key}" title="Click to rename">${label}</span>`
+                            : `<span class="text-sm font-semibold text-apple-secondary dark:text-gray-400">${label}</span>`
+                        }
+                    </div>
+                    <input type="number" min="0" value="${count}" data-key="${key}"
+                        class="hs-count w-20 text-center text-base font-black dark:text-white bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] rounded-lg h-9 px-2 focus:outline-none focus:ring-2 focus:ring-apple-blue transition-all"
+                        onchange="saveHeadsetField('${key}','count', parseInt(this.value)||0)"
+                        onclick="this.select()">
+                </div>`;
+            };
+
+            const teamsEl = document.getElementById('hs-teams-rows');
+            if(teamsEl) teamsEl.innerHTML = HS_TEAM_KEYS.map(k => renderRow(k, true)).join('');
+            const rolesEl = document.getElementById('hs-roles-rows');
+            if(rolesEl) rolesEl.innerHTML = HS_ROLE_KEYS.map(k => renderRow(k, false)).join('');
+
+            // Inline rename for team labels
+            document.querySelectorAll('.hs-label').forEach(el => {
+                el.addEventListener('click', function() {
+                    const key = this.dataset.key;
+                    const current = this.innerText;
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = current;
+                    input.className = 'text-sm font-bold dark:text-white bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-blue rounded px-2 py-0.5 w-32 focus:outline-none';
+                    this.replaceWith(input);
+                    input.focus();
+                    input.select();
+                    const commit = () => {
+                        const newLabel = input.value.trim() || current;
+                        saveHeadsetField(key, 'label', newLabel);
+                    };
+                    input.addEventListener('blur', commit);
+                    input.addEventListener('keydown', e => { if(e.key === 'Enter') input.blur(); if(e.key === 'Escape') { input.value = current; input.blur(); } });
+                });
+            });
         }
 
         async function copyPerformanceReport() {
