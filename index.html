@@ -141,49 +141,99 @@
             </div>
             <span class="font-bold text-sm tracking-tight dark:text-white">Tempo</span>
         </div>
-        <nav class="flex flex-row md:flex-col gap-2 md:gap-1 w-full items-center md:items-stretch justify-around md:justify-start">
-            <button onclick="switchView('table')" id="nav-table" class="text-apple-blue relative p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
-                <i class="fa-solid fa-list text-xl md:text-base w-5 text-center"></i>
-                <span class="hidden md:inline text-xs font-semibold">Directives</span>
-                <div id="indicator-table" class="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
+        <!-- Desktop nav: all items visible -->
+        <nav class="hidden md:flex md:flex-col gap-1 w-full items-stretch">
+            <button onclick="switchView('table')" id="nav-table" class="text-apple-blue relative px-3 py-2.5 rounded-xl flex items-center justify-start gap-3 transition-colors">
+                <i class="fa-solid fa-list text-base w-5 text-center"></i>
+                <span class="text-xs font-semibold">Directives</span>
+                <div id="indicator-table" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('rankings')" id="nav-rankings" class="text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
-                <i class="fa-solid fa-ranking-star text-xl md:text-base w-5 text-center"></i>
-                <span class="hidden md:inline text-xs font-semibold">Team Totals</span>
+            <button onclick="switchView('rankings')" id="nav-rankings" class="text-apple-secondary dark:text-gray-400 px-3 py-2.5 rounded-xl flex items-center justify-start gap-3 transition-colors">
+                <i class="fa-solid fa-ranking-star text-base w-5 text-center"></i>
+                <span class="text-xs font-semibold">Team Totals</span>
                 <div id="indicator-rankings" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('coaching')" id="nav-coaching" class="text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
-                <i class="fa-solid fa-comments text-xl md:text-base w-5 text-center"></i>
-                <span class="hidden md:inline text-xs font-semibold">Coaching</span>
+            <button onclick="switchView('coaching')" id="nav-coaching" class="text-apple-secondary dark:text-gray-400 px-3 py-2.5 rounded-xl flex items-center justify-start gap-3 transition-colors">
+                <i class="fa-solid fa-comments text-base w-5 text-center"></i>
+                <span class="text-xs font-semibold">Coaching</span>
                 <div id="indicator-coaching" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('leave')" id="nav-leave" class="text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors relative">
-                <i class="fa-solid fa-plane-departure text-xl md:text-base w-5 text-center"></i>
-                <span class="hidden md:inline text-xs font-semibold">Leave</span>
-                <span id="leaveTodayDot" class="hidden absolute top-1 right-2 md:right-3 h-2 w-2 rounded-full bg-orange-500"></span>
+            <button onclick="switchView('leave')" id="nav-leave" class="text-apple-secondary dark:text-gray-400 px-3 py-2.5 rounded-xl flex items-center justify-start gap-3 transition-colors relative">
+                <i class="fa-solid fa-plane-departure text-base w-5 text-center"></i>
+                <span class="text-xs font-semibold">Leave</span>
+                <span id="leaveTodayDot" class="hidden absolute top-2 right-3 h-2 w-2 rounded-full bg-orange-500"></span>
                 <div id="indicator-leave" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('team')" id="nav-team" class="admin-only text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
-                <i class="fa-solid fa-users text-xl md:text-base w-5 text-center"></i>
-                <span class="hidden md:inline text-xs font-semibold">People</span>
+            <button onclick="switchView('team')" id="nav-team" class="admin-only text-apple-secondary dark:text-gray-400 px-3 py-2.5 rounded-xl flex items-center justify-start gap-3 transition-colors">
+                <i class="fa-solid fa-users text-base w-5 text-center"></i>
+                <span class="text-xs font-semibold">People</span>
                 <div id="indicator-team" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('log')" id="nav-log" class="text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
-                <i class="fa-solid fa-bolt text-xl md:text-base w-5 text-center"></i>
-                <span class="hidden md:inline text-xs font-semibold">Activity</span>
+            <button onclick="switchView('log')" id="nav-log" class="text-apple-secondary dark:text-gray-400 px-3 py-2.5 rounded-xl flex items-center justify-start gap-3 transition-colors">
+                <i class="fa-solid fa-bolt text-base w-5 text-center"></i>
+                <span class="text-xs font-semibold">Activity</span>
                 <div id="indicator-log" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('analytics')" id="nav-analytics" class="text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors">
-                <i class="fa-solid fa-chart-line text-xl md:text-base w-5 text-center"></i>
-                <span class="hidden md:inline text-xs font-semibold">Performance</span>
+            <button onclick="switchView('analytics')" id="nav-analytics" class="text-apple-secondary dark:text-gray-400 px-3 py-2.5 rounded-xl flex items-center justify-start gap-3 transition-colors">
+                <i class="fa-solid fa-chart-line text-base w-5 text-center"></i>
+                <span class="text-xs font-semibold">Performance</span>
                 <div id="indicator-analytics" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
-            <button onclick="switchView('headsets')" id="nav-headsets" class="text-apple-secondary dark:text-gray-400 p-2 md:px-3 md:py-2.5 md:rounded-xl flex md:items-center justify-center md:justify-start gap-3 transition-colors relative">
-                <i class="fa-solid fa-headset text-xl md:text-base w-5 text-center"></i>
-                <span class="hidden md:inline text-xs font-semibold">Headsets</span>
+            <button onclick="switchView('headsets')" id="nav-headsets" class="text-apple-secondary dark:text-gray-400 px-3 py-2.5 rounded-xl flex items-center justify-start gap-3 transition-colors relative">
+                <i class="fa-solid fa-headset text-base w-5 text-center"></i>
+                <span class="text-xs font-semibold">Headsets</span>
                 <div id="indicator-headsets" class="hidden absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-apple-blue rounded-r-md"></div>
             </button>
         </nav>
+
+        <!-- Mobile bottom bar: 4 primary tabs + More -->
+        <nav class="flex md:hidden flex-row w-full items-stretch justify-around">
+            <button onclick="switchView('table')" id="mob-nav-table" class="flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 text-apple-blue transition-colors">
+                <i class="fa-solid fa-list text-[18px]"></i>
+                <span class="text-[9px] font-semibold tracking-tight">Tasks</span>
+            </button>
+            <button onclick="switchView('leave')" id="mob-nav-leave" class="flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 text-apple-secondary dark:text-gray-400 transition-colors relative">
+                <i class="fa-solid fa-plane-departure text-[18px]"></i>
+                <span class="text-[9px] font-semibold tracking-tight">Leave</span>
+                <span id="leaveTodayDotMob" class="hidden absolute top-1.5 right-[calc(50%-10px)] h-1.5 w-1.5 rounded-full bg-orange-500"></span>
+            </button>
+            <button onclick="switchView('analytics')" id="mob-nav-analytics" class="flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 text-apple-secondary dark:text-gray-400 transition-colors">
+                <i class="fa-solid fa-chart-line text-[18px]"></i>
+                <span class="text-[9px] font-semibold tracking-tight">Stats</span>
+            </button>
+            <button onclick="toggleMobileMore()" id="mob-nav-more" class="flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 text-apple-secondary dark:text-gray-400 transition-colors">
+                <i class="fa-solid fa-grid-2 text-[18px]"></i>
+                <span class="text-[9px] font-semibold tracking-tight">More</span>
+            </button>
+        </nav>
+
+        <!-- Mobile More sheet -->
+        <div id="mobileMoreBackdrop" onclick="closeMobileMore()" class="hidden fixed inset-0 z-40 bg-black/40 md:hidden"></div>
+        <div id="mobileMoreSheet" class="hidden fixed inset-x-0 bottom-0 z-50 rounded-t-2xl bg-white dark:bg-[#1C1C1E] border-t border-apple-border dark:border-[#2C2C2E] pb-8 pt-3 px-4 md:hidden">
+            <div class="mx-auto mb-3 h-1 w-10 rounded-full bg-apple-border dark:bg-[#3A3A3C]"></div>
+            <div class="grid grid-cols-3 gap-3">
+                <button onclick="closeMobileMore(); switchView('rankings')" id="mob-nav-rankings" class="flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary dark:text-gray-300 transition-colors">
+                    <i class="fa-solid fa-ranking-star text-xl"></i>
+                    <span class="text-[10px] font-semibold">Totals</span>
+                </button>
+                <button onclick="closeMobileMore(); switchView('coaching')" id="mob-nav-coaching" class="flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary dark:text-gray-300 transition-colors">
+                    <i class="fa-solid fa-comments text-xl"></i>
+                    <span class="text-[10px] font-semibold">Coaching</span>
+                </button>
+                <button onclick="closeMobileMore(); switchView('team')" id="mob-nav-team" class="admin-only flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary dark:text-gray-300 transition-colors">
+                    <i class="fa-solid fa-users text-xl"></i>
+                    <span class="text-[10px] font-semibold">People</span>
+                </button>
+                <button onclick="closeMobileMore(); switchView('log')" id="mob-nav-log" class="flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary dark:text-gray-300 transition-colors">
+                    <i class="fa-solid fa-bolt text-xl"></i>
+                    <span class="text-[10px] font-semibold">Activity</span>
+                </button>
+                <button onclick="closeMobileMore(); switchView('headsets')" id="mob-nav-headsets" class="flex flex-col items-center justify-center gap-1.5 py-3.5 rounded-2xl bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary dark:text-gray-300 transition-colors">
+                    <i class="fa-solid fa-headset text-xl"></i>
+                    <span class="text-[10px] font-semibold">Headsets</span>
+                </button>
+            </div>
+        </div>
 
         <!-- Logged-in user card (desktop) with probation badge -->
         <div id="sidebarUserCard" class="hidden md:flex md:mt-auto md:mb-3 items-center gap-2 px-3 py-2 mx-1 rounded-xl bg-apple-canvas dark:bg-[#2C2C2E]">
@@ -1028,6 +1078,7 @@
 
         function switchView(viewName) {
             const views = ['table', 'board', 'rankings', 'coaching', 'leave', 'team', 'log', 'analytics', 'headsets'];
+            const mobileMain = ['table', 'leave', 'analytics'];
             views.forEach(v => {
                 const nav = document.getElementById('nav-' + v);
                 const ind = document.getElementById('indicator-' + v);
@@ -1040,7 +1091,25 @@
                     if(ind) ind.style.display = isActive ? 'block' : 'none';
                     if(viewEl) viewEl.style.display = isActive ? 'flex' : 'none';
                 }
+                // mobile bottom bar highlights
+                const mobNav = document.getElementById('mob-nav-' + v);
+                if(mobNav) {
+                    const isActive = v === viewName;
+                    mobNav.classList.toggle('text-apple-blue', isActive);
+                    mobNav.classList.toggle('dark:text-blue-400', isActive);
+                    mobNav.classList.toggle('text-apple-secondary', !isActive);
+                    mobNav.classList.toggle('dark:text-gray-400', !isActive);
+                }
             });
+            // Reset "More" button to highlight only when active view is in the overflow set
+            const moreBtn = document.getElementById('mob-nav-more');
+            if(moreBtn) {
+                const isMoreActive = !mobileMain.includes(viewName);
+                moreBtn.classList.toggle('text-apple-blue', isMoreActive);
+                moreBtn.classList.toggle('dark:text-blue-400', isMoreActive);
+                moreBtn.classList.toggle('text-apple-secondary', !isMoreActive);
+                moreBtn.classList.toggle('dark:text-gray-400', !isMoreActive);
+            }
             // The ops console header (incl. List/Board toggle) belongs to the Directives view only.
             const opsHeader = document.getElementById('ops-header');
             if(opsHeader) opsHeader.style.display = (viewName === 'table') ? 'block' : 'none';
@@ -1077,6 +1146,18 @@
             if(tBtn) tBtn.className = currentLayout === 'table' ? active : idle;
             if(bBtn) bBtn.className = currentLayout === 'board' ? active : idle;
         }
+        function toggleMobileMore() {
+            const sheet = document.getElementById('mobileMoreSheet');
+            const bd = document.getElementById('mobileMoreBackdrop');
+            const isHidden = sheet.classList.contains('hidden');
+            sheet.classList.toggle('hidden', !isHidden);
+            if(bd) bd.classList.toggle('hidden', !isHidden);
+        }
+        function closeMobileMore() {
+            document.getElementById('mobileMoreSheet')?.classList.add('hidden');
+            document.getElementById('mobileMoreBackdrop')?.classList.add('hidden');
+        }
+
         function toggleActionsMenu(e) {
             if(e) e.stopPropagation();
             const open = document.getElementById('actionsMenu').classList.toggle('hidden');
@@ -2439,6 +2520,8 @@
             // Sidebar dot + "out today" banner
             const dot = document.getElementById('leaveTodayDot');
             if(dot) dot.classList.toggle('hidden', outToday.length === 0);
+            const dotMob = document.getElementById('leaveTodayDotMob');
+            if(dotMob) dotMob.classList.toggle('hidden', outToday.length === 0);
             const banner = document.getElementById('leaveOutToday');
             const list = document.getElementById('leaveOutTodayList');
             if(banner && list) {
