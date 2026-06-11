@@ -269,7 +269,9 @@
                                     <button onclick="toggleActionsMenu(event)" id="actionsMenuBtn" class="h-10 px-4 rounded-xl flex items-center gap-2 text-[11px] font-bold bg-apple-blue text-white shadow-sm hover:bg-apple-blueHover transition-all">
                                         <i class="fa-solid fa-bars text-xs"></i><span class="hidden sm:inline">ACTIONS</span>
                                     </button>
-                                    <div id="actionsMenu" class="hidden absolute right-0 top-12 z-50 w-52 bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-xl shadow-2xl p-1.5">
+                                    <div id="actionsBackdrop" onclick="closeActionsMenu()" class="hidden sm:!hidden fixed inset-0 z-40 bg-black/40"></div>
+                                    <div id="actionsMenu" class="hidden fixed inset-x-0 bottom-0 z-50 rounded-t-2xl pb-6 sm:absolute sm:inset-x-auto sm:right-0 sm:top-12 sm:bottom-auto sm:w-52 sm:rounded-xl sm:pb-1.5 bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] shadow-2xl p-1.5">
+                                        <div class="sm:hidden mx-auto mb-2 mt-1 h-1 w-10 rounded-full bg-apple-border dark:bg-[#3A3A3C]"></div>
                                         <button onclick="closeActionsMenu(); openModal('templatesModal')" class="w-full text-left px-3 py-2 rounded-lg text-[12px] font-semibold text-apple-primary dark:text-white hover:bg-apple-canvas dark:hover:bg-[#2C2C2E] flex items-center gap-3"><i class="fa-solid fa-bolt w-4 text-apple-blue"></i> Templates</button>
                                         <button onclick="closeActionsMenu(); openModal('bulkPasteModal')" class="w-full text-left px-3 py-2 rounded-lg text-[12px] font-semibold text-apple-primary dark:text-white hover:bg-apple-canvas dark:hover:bg-[#2C2C2E] flex items-center gap-3"><i class="fa-solid fa-paste w-4 text-apple-secondary"></i> Import Tasks</button>
                                         <button onclick="closeActionsMenu(); copyShiftReport()" class="w-full text-left px-3 py-2 rounded-lg text-[12px] font-semibold text-apple-primary dark:text-white hover:bg-apple-canvas dark:hover:bg-[#2C2C2E] flex items-center gap-3"><i class="fa-solid fa-copy w-4 text-apple-secondary"></i> Shift Report</button>
@@ -604,15 +606,17 @@
 
                 <!-- HEADSETS VIEW -->
                 <div id="view-headsets" class="hidden flex-col gap-5">
-                    <div class="flex items-center justify-between">
-                        <div>
+                    <div class="flex items-center justify-between gap-3 flex-wrap">
+                        <div class="min-w-0">
                             <h2 class="text-lg font-bold dark:text-white">Headsets Tracker</h2>
-                            <p class="text-[10px] text-apple-secondary uppercase tracking-widest mt-0.5">Click a team name to rename it &bull; Click a count to edit</p>
+                            <p class="text-[10px] text-apple-secondary uppercase tracking-widest mt-0.5">Tap a team name to rename &bull; Tap a count to edit</p>
                         </div>
-                        <div class="flex items-center gap-2 bg-apple-canvas dark:bg-[#2C2C2E] rounded-xl px-4 py-2">
-                            <i class="fa-solid fa-headset text-apple-blue text-sm"></i>
-                            <span class="text-[10px] font-black text-apple-secondary uppercase tracking-widest">Total</span>
-                            <span id="hs-total" class="text-2xl font-black text-apple-primary dark:text-white ml-1">0</span>
+                        <div class="flex items-center gap-3 rounded-2xl px-5 py-3 bg-gradient-to-br from-apple-blue to-indigo-500 shadow-lg shrink-0" style="box-shadow: 0 8px 20px rgba(79,70,229,0.25);">
+                            <i class="fa-solid fa-headset text-white/80 text-base"></i>
+                            <div class="leading-none">
+                                <p class="text-[8px] font-black text-white/70 uppercase tracking-widest mb-0.5">Total Headsets</p>
+                                <span id="hs-total" class="text-2xl font-black text-white">0</span>
+                            </div>
                         </div>
                     </div>
 
@@ -998,6 +1002,10 @@
             if(viewName === 'coaching') loadCoachingSessions();
             if(viewName === 'leave') loadLeave();
             if(viewName === 'headsets') loadHeadsets();
+            // The + task FAB only makes sense on the directives view (admins only)
+            const fab = document.getElementById('fab-add-task');
+            const isAdmin = currentUser && (currentUser.role.includes('Manager') || currentUser.role === 'Admin');
+            if(fab) fab.style.display = (viewName === 'table' && isAdmin) ? 'flex' : 'none';
         }
 
         let currentLayout = 'table';
@@ -1021,11 +1029,15 @@
         }
         function toggleActionsMenu(e) {
             if(e) e.stopPropagation();
-            document.getElementById('actionsMenu').classList.toggle('hidden');
+            const open = document.getElementById('actionsMenu').classList.toggle('hidden');
+            const bd = document.getElementById('actionsBackdrop');
+            if(bd) bd.classList.toggle('hidden', open);
         }
         function closeActionsMenu() {
             const m = document.getElementById('actionsMenu');
             if(m) m.classList.add('hidden');
+            const bd = document.getElementById('actionsBackdrop');
+            if(bd) bd.classList.add('hidden');
         }
         document.addEventListener('click', (e) => {
             const menu = document.getElementById('actionsMenu');
@@ -1679,19 +1691,29 @@
             const totalEl = document.getElementById('hs-total');
             if(totalEl) totalEl.innerText = total;
 
+            const roleIcons = {
+                Managers: 'fa-user-tie', Sales: 'fa-handshake', Nesting: 'fa-graduation-cap',
+                Quality: 'fa-clipboard-check', Admin: 'fa-gear', Stock: 'fa-box', Damaged: 'fa-triangle-exclamation'
+            };
             const renderRow = (key, isTeam) => {
                 const d = globalHeadsets[key] || { label: key, count: 0 };
                 const label = d.label || key;
                 const count = d.count ?? 0;
-                return `<div class="flex items-center px-5 py-3.5 border-b border-apple-border dark:border-[#2C2C2E] last:border-b-0 gap-4">
+                const isDamaged = key === 'Damaged';
+                const icon = isTeam ? 'fa-users' : (roleIcons[key] || 'fa-circle');
+                const iconColor = isDamaged ? 'text-red-500 bg-red-500/10' : (isTeam ? 'text-apple-blue bg-apple-blue/10' : 'text-apple-secondary bg-apple-canvas dark:bg-[#2C2C2E]');
+                return `<div class="flex items-center px-4 py-3 border-b border-apple-border dark:border-[#2C2C2E] last:border-b-0 gap-3 hover:bg-apple-canvas/60 dark:hover:bg-[#242426] transition-colors">
+                    <div class="h-9 w-9 rounded-xl flex items-center justify-center shrink-0 ${iconColor}">
+                        <i class="fa-solid ${icon} text-xs"></i>
+                    </div>
                     <div class="flex-1 min-w-0">
                         ${isTeam
-                            ? `<span class="hs-label text-sm font-bold dark:text-white cursor-pointer hover:text-apple-blue transition-colors" data-key="${key}" title="Click to rename">${label}</span>`
-                            : `<span class="text-sm font-semibold text-apple-secondary dark:text-gray-400">${label}</span>`
+                            ? `<span class="hs-label text-sm font-bold dark:text-white cursor-pointer hover:text-apple-blue transition-colors inline-flex items-center gap-1.5" data-key="${key}" title="Tap to rename">${label}<i class="fa-solid fa-pen text-[8px] opacity-30"></i></span>`
+                            : `<span class="text-sm font-semibold ${isDamaged ? 'text-red-500' : 'text-apple-primary dark:text-gray-300'}">${label}</span>`
                         }
                     </div>
-                    <input type="number" min="0" value="${count}" data-key="${key}"
-                        class="hs-count w-20 text-center text-base font-black dark:text-white bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] rounded-lg h-9 px-2 focus:outline-none focus:ring-2 focus:ring-apple-blue transition-all"
+                    <input type="number" min="0" inputmode="numeric" value="${count}" data-key="${key}"
+                        class="hs-count w-16 sm:w-20 text-center text-base font-black ${isDamaged ? 'text-red-500' : 'dark:text-white'} bg-apple-canvas dark:bg-[#2C2C2E] border border-apple-border dark:border-[#3A3A3C] rounded-lg h-10 px-2 focus:outline-none focus:ring-2 focus:ring-apple-blue transition-all"
                         onchange="saveHeadsetField('${key}','count', parseInt(this.value)||0)"
                         onclick="this.select()">
                 </div>`;
