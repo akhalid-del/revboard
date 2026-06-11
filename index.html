@@ -585,6 +585,9 @@
                 </div>
 
                 <div id="view-team" class="hidden flex-col admin-only">
+                    <div id="teamBreakBanner" class="hidden mb-4 px-4 py-2.5 rounded-xl bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-500/30 text-orange-600 text-xs font-semibold flex items-center gap-2">
+                        <i class="fa-solid fa-mug-hot"></i> <span id="teamBreakText"></span>
+                    </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="teamGrid"></div>
                 </div>
 
@@ -1334,7 +1337,11 @@
                     ? `<span class="text-[8px] font-black bg-green-50 dark:bg-green-900/20 text-green-600 px-2 py-0.5 rounded-full uppercase tracking-tighter flex items-center gap-1"><i class="fa-solid fa-graduation-cap"></i> Passed Probation</span>`
                     : `<span class="text-[8px] font-black bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 px-2 py-0.5 rounded-full uppercase tracking-tighter">On Probation</span>`;
                 const safeName = user.name.replace(/'/g, "\\'");
-                grid.insertAdjacentHTML('beforeend', `<div class="bg-white dark:bg-[#1C1C1E] border border-apple-border dark:border-[#2C2C2E] rounded-2xl p-4 text-center relative overflow-hidden transition-all">
+                const onBreak = !!user.on_break;
+                const breakBadge = onBreak
+                    ? `<span class="text-[8px] font-black bg-orange-50 dark:bg-orange-900/20 text-orange-500 px-2 py-0.5 rounded-full uppercase tracking-tighter flex items-center gap-1"><i class="fa-solid fa-mug-hot"></i> On Break</span>`
+                    : '';
+                grid.insertAdjacentHTML('beforeend', `<div class="bg-white dark:bg-[#1C1C1E] border ${onBreak ? 'border-orange-300 dark:border-orange-500/40 ring-2 ring-orange-200 dark:ring-orange-500/20' : 'border-apple-border dark:border-[#2C2C2E]'} rounded-2xl p-4 text-center relative overflow-hidden transition-all">
                     <button onclick="toggleProbation('${safeName}', ${passed})" title="${passed ? 'Mark as still on probation' : 'Mark probation as passed'}" class="absolute top-2 right-2 h-7 w-7 rounded-full flex items-center justify-center text-[11px] transition-colors ${passed ? 'bg-green-100 dark:bg-green-900/30 text-green-600' : 'bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary hover:text-green-500'}"><i class="fa-solid fa-graduation-cap"></i></button>
                     <button onclick="revokeUser('${safeName}')" title="Revoke access" class="absolute top-2 left-2 h-7 w-7 rounded-full flex items-center justify-center text-[11px] bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary hover:text-red-500 transition-colors"><i class="fa-solid fa-user-slash"></i></button>
                     <div class="h-12 w-12 mx-auto rounded-full bg-apple-canvas dark:bg-[#2C2C2E] flex items-center justify-center font-bold text-apple-primary dark:text-white mb-2 mt-3">${init}</div>
@@ -1345,9 +1352,22 @@
                         <option value="Admin" ${user.role === 'Admin' ? 'selected' : ''}>Admin</option>
                     </select>
                     <button onclick="setTeam('${safeName}', '${(user.team||'').replace(/'/g, "\\'")}')" class="text-[9px] font-bold mb-2 px-2 py-0.5 rounded-full bg-apple-blue/10 text-apple-blue hover:bg-apple-blue/20 transition-colors flex items-center gap-1 mx-auto"><i class="fa-solid fa-people-group text-[8px]"></i> ${user.team ? user.team : 'Set team'}</button>
-                    <div class="flex justify-center">${probaBadge}</div>
+                    <div class="flex justify-center gap-1.5 flex-wrap">${breakBadge}${probaBadge}</div>
+                    <button onclick="toggleBreak('${safeName}', ${onBreak})" class="mt-3 w-full text-[10px] font-bold py-1.5 rounded-lg transition-colors flex items-center justify-center gap-1.5 ${onBreak ? 'bg-orange-500 text-white hover:bg-orange-600' : 'bg-apple-canvas dark:bg-[#2C2C2E] text-apple-secondary dark:text-gray-300 hover:text-orange-500'}"><i class="fa-solid ${onBreak ? 'fa-arrow-right-to-bracket' : 'fa-mug-hot'} text-[9px]"></i> ${onBreak ? 'Back on floor' : 'Send on break'}</button>
                 </div>`);
             });
+
+            const onBreakNames = data.filter(u => u.on_break).map(u => u.name);
+            const banner = document.getElementById('teamBreakBanner');
+            const txt = document.getElementById('teamBreakText');
+            if(banner && txt) {
+                if(onBreakNames.length) {
+                    txt.textContent = `${onBreakNames.length} on break — ${onBreakNames.join(', ')}`;
+                    banner.classList.remove('hidden');
+                } else {
+                    banner.classList.add('hidden');
+                }
+            }
         }
 
         async function changeUserRole(name, role) {
@@ -1376,6 +1396,17 @@
                 await supabaseClient.from('floor_users').delete().eq('name', name);
                 logAction(`Revoked: ${name}`); initTeam();
             }
+        }
+
+        async function toggleBreak(name, currentlyOnBreak) {
+            const newVal = !currentlyOnBreak;
+            const { error } = await supabaseClient.from('floor_users')
+                .update({ on_break: newVal, break_since: newVal ? new Date().toISOString() : null })
+                .eq('name', name).eq('department', currentUser.department);
+            if(error) { alert('Could not update: ' + error.message); return; }
+            logAction(`${name} ${newVal ? 'went on break' : 'is back on floor'}`);
+            showToast(`${name} ${newVal ? 'is on break' : 'is back on the floor'}`);
+            initTeam();
         }
 
         async function toggleProbation(name, currentlyPassed) {
