@@ -553,6 +553,29 @@
                         </button>
                     </div>
 
+                    <!-- TEAM RACE LEADERBOARD (8 editable teams, ranked by score) -->
+                    <div class="rounded-3xl p-5 md:p-6 relative overflow-hidden bg-gradient-to-br from-[#0B1020] to-[#1a1f3a] dark:from-[#0B0B0C] dark:to-[#161622] shadow-xl">
+                        <div class="absolute top-0 right-0 w-72 h-72 opacity-20 pointer-events-none" style="background:radial-gradient(circle at top right, #6366f1 0%, transparent 70%)"></div>
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-5 gap-3 flex-wrap">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-11 w-11 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shrink-0" style="box-shadow:0 8px 20px rgba(245,158,11,.35)">
+                                        <i class="fa-solid fa-trophy text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-base font-black text-white tracking-tight">Team Race</h3>
+                                        <p class="text-[9px] text-white/50 uppercase tracking-widest font-bold">Tap a name to rename &bull; Tap a score to edit</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p id="tr-leader" class="text-sm font-black text-amber-400 leading-none">—</p>
+                                    <p class="text-[8px] text-white/40 uppercase tracking-widest font-bold mt-1">In the lead</p>
+                                </div>
+                            </div>
+                            <div id="teamRaceRows" class="space-y-2.5"></div>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                         <div class="bg-white dark:bg-[#1C1C1E] p-5 rounded-2xl border border-apple-border dark:border-[#2C2C2E] shadow-sm border-t-4 border-t-green-500">
                             <i class="fa-solid fa-circle-check text-xl text-green-500 mb-2"></i>
@@ -1001,7 +1024,7 @@
             if(viewName === 'table') applyLayout();
             closeActionsMenu();
             if(viewName === 'log') fetchLogs();
-            if(viewName === 'analytics') { fetchLogs(); renderAnalytics(); }
+            if(viewName === 'analytics') { fetchLogs(); renderAnalytics(); loadTeamRace(); }
             if(viewName === 'rankings') renderRankings();
             if(viewName === 'coaching') loadCoachingSessions();
             if(viewName === 'leave') loadLeave();
@@ -1722,6 +1745,89 @@
             if(!globalHeadsets[key]) globalHeadsets[key] = { label: key, count: 0 };
             globalHeadsets[key][field] = value;
             renderHeadsets();
+        }
+
+        // ---- Team Race leaderboard (8 editable teams, reuses the headsets table) ----
+        const RACE_KEYS = ['RACE1','RACE2','RACE3','RACE4','RACE5','RACE6','RACE7','RACE8'];
+        let globalRace = {};
+
+        async function loadTeamRace() {
+            if(!currentUser) return;
+            const { data } = await supabaseClient.from('headsets').select('*')
+                .eq('department', currentUser.department).in('slot_key', RACE_KEYS);
+            globalRace = {};
+            (data || []).forEach(r => { globalRace[r.slot_key] = { label: r.label, count: r.count }; });
+            renderTeamRace();
+        }
+
+        async function saveRaceField(key, field, value, defaultLabel) {
+            if(!currentUser) return;
+            if(globalRace[key]) {
+                await supabaseClient.from('headsets').update({ [field]: value })
+                    .eq('department', currentUser.department).eq('slot_key', key);
+            } else {
+                await supabaseClient.from('headsets').insert([{
+                    slot_key: key, department: currentUser.department,
+                    label: defaultLabel || key, count: 0, [field]: value
+                }]);
+                globalRace[key] = { label: defaultLabel || key, count: 0 };
+            }
+            globalRace[key][field] = value;
+            renderTeamRace();
+        }
+
+        function renderTeamRace() {
+            const rows = RACE_KEYS.map((key, i) => {
+                const d = globalRace[key] || { label: `Team ${i + 1}`, count: 0 };
+                return { key, label: d.label || `Team ${i + 1}`, score: parseInt(d.count || 0), idx: i };
+            });
+            const ranked = [...rows].sort((a, b) => b.score - a.score);
+            const maxScore = Math.max(1, ...ranked.map(r => r.score));
+            const leader = ranked[0];
+            const leaderEl = document.getElementById('tr-leader');
+            if(leaderEl) leaderEl.innerText = (leader && leader.score > 0) ? `${leader.label} · ${leader.score}` : '—';
+
+            const medals = ['🥇', '🥈', '🥉'];
+            const html = ranked.map((r, rank) => {
+                const pct = Math.round((r.score / maxScore) * 100);
+                const isTop = rank === 0 && r.score > 0;
+                const rankBadge = rank < 3 && r.score > 0
+                    ? `<span class="text-base w-6 text-center shrink-0">${medals[rank]}</span>`
+                    : `<span class="text-[11px] font-black text-white/40 w-6 text-center shrink-0">${rank + 1}</span>`;
+                const barColor = isTop ? 'from-amber-400 to-orange-500' : 'from-apple-blue to-indigo-500';
+                return `<div class="flex items-center gap-3">
+                    ${rankBadge}
+                    <div class="flex-1 min-w-0 rounded-xl px-3 py-2.5 ${isTop ? 'bg-amber-400/10 border border-amber-400/30' : 'bg-white/5 border border-white/10'}">
+                        <div class="flex items-center justify-between gap-2 mb-1.5">
+                            <span class="tr-label text-sm font-bold text-white cursor-pointer hover:text-amber-300 transition-colors truncate flex items-center gap-1.5" data-key="${r.key}" data-default="Team ${r.idx + 1}">${r.label}<i class="fa-solid fa-pen text-[8px] opacity-30"></i></span>
+                            <input type="number" min="0" inputmode="numeric" value="${r.score}" data-key="${r.key}" data-default="Team ${r.idx + 1}"
+                                class="tr-score w-16 text-right text-base font-black ${isTop ? 'text-amber-300' : 'text-white'} bg-transparent border-0 focus:bg-white/10 rounded-lg h-8 px-2 focus:outline-none focus:ring-1 focus:ring-amber-400 transition-all"
+                                onchange="saveRaceField('${r.key}','count', parseInt(this.value)||0, this.dataset.default)" onclick="this.select()">
+                        </div>
+                        <div class="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+                            <div class="h-full rounded-full bg-gradient-to-r ${barColor} transition-all duration-700" style="width:${pct}%"></div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            const container = document.getElementById('teamRaceRows');
+            if(container) container.innerHTML = html;
+
+            // Inline rename
+            document.querySelectorAll('.tr-label').forEach(el => {
+                el.addEventListener('click', function() {
+                    const key = this.dataset.key;
+                    const def = this.dataset.default;
+                    const current = this.childNodes[0].textContent.trim();
+                    const input = document.createElement('input');
+                    input.type = 'text'; input.value = current;
+                    input.className = 'text-sm font-bold text-white bg-white/10 border border-amber-400 rounded-lg px-2 h-7 w-36 focus:outline-none';
+                    this.replaceWith(input); input.focus(); input.select();
+                    const commit = () => saveRaceField(key, 'label', input.value.trim() || current, def);
+                    input.addEventListener('blur', commit);
+                    input.addEventListener('keydown', e => { if(e.key === 'Enter') input.blur(); if(e.key === 'Escape') { input.value = current; input.blur(); } });
+                });
+            });
         }
 
         function renderHeadsets() {
